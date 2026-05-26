@@ -38,7 +38,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://your-production-domain.com"
+        "https://digi-panch.vercel.app",
+        "https://digi-panch-fullstack.vercel.app",
     ], # Update with frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
