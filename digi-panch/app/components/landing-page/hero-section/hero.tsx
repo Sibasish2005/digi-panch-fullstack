@@ -31,7 +31,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/55 z-0" />
 
       {/* Hero Content */}
-      <div className="relative z-10 flex h-full items-center justify-center px-6">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-20">
 
         <div className="max-w-5xl text-center">
 

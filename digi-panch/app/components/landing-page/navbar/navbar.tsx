@@ -116,22 +116,26 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-white/80 backdrop-blur-xl shadow-sm">
       <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/">
-          <h1 className="cursor-pointer select-none text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-            Digi<span className="text-blue-600">Panch</span>
-            <Show when="signed-in">
-              <span className="hidden sm:inline-block text-[10px] sm:text-xs text-white bg-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">
-                {role}
-              </span>
-            </Show>
-          </h1>
-        </Link>
+        <div className="flex-1 flex items-center justify-start">
+          <Link href="/">
+            <h1 className="cursor-pointer select-none text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              Digi<span className="text-blue-600">Panch</span>
+              <Show when="signed-in">
+                <span className="hidden sm:inline-block text-[10px] sm:text-xs text-white bg-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">
+                  {role}
+                </span>
+              </Show>
+            </h1>
+          </Link>
+        </div>
 
         {/* Desktop Navigation */}
-        {renderDesktopLinks()}
+        <div className="hidden lg:flex flex-none items-center justify-center">
+          {renderDesktopLinks()}
+        </div>
 
         {/* Desktop Auth */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden lg:flex flex-1 items-center justify-end gap-4">
           <Show when="signed-out">
             <SignInButton mode="modal">
               <Button className="rounded-xl bg-blue-600 px-6 hover:bg-blue-700 text-white font-medium shadow-md shadow-blue-500/20">
