@@ -14,6 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Loader2, MoreHorizontal, Shield, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from 'boneyard-js/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,11 +113,8 @@ export default function UserManagementPage() {
     }
   };
 
-  if (loading && users.length === 0) {
-    return <div className="flex items-center justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-gray-500" /></div>;
-  }
-
   return (
+    <Skeleton name="admin-users" loading={loading && users.length === 0}>
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
       
@@ -220,5 +218,6 @@ export default function UserManagementPage() {
         </Table>
       </div>
     </div>
+    </Skeleton>
   );
 }

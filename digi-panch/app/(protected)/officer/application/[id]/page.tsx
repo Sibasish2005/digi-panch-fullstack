@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, CheckCircle, XCircle, FilePlus } from 'lucide-react';
 import { ImageKitUploader } from '@/components/ImageKitUploader';
 import { toast } from 'sonner';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function ApplicationReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -78,10 +79,10 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
     }
   };
 
-  if (loading) return <div className="flex justify-center p-12"><Loader2 className="h-8 w-8 animate-spin" /></div>;
-  if (!appData) return <div>Application not found.</div>;
+  if (!appData && !loading) return <div>Application not found.</div>;
 
   return (
+    <Skeleton name="officer-application-review" loading={loading}>
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Review Application</h1>
@@ -179,5 +180,6 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
         </CardFooter>
       </Card>
     </div>
+    </Skeleton>
   );
 }

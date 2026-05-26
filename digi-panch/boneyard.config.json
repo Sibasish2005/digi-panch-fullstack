@@ -1,0 +1,15 @@
+{
+  "breakpoints": [375, 768, 1280],
+  "out": "./src/bones",
+  "wait": 2000,
+  "routes": [
+    "/citizen",
+    "/citizen/applications",
+    "/citizen/grievances",
+    "/officer",
+    "/officer/grievances",
+    "/admin/users",
+    "/admin/document-types",
+    "/chatbot"
+  ]
+}
