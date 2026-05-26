@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import setting
@@ -19,10 +20,23 @@ from app.modules.rag.models import KnowledgeDocument, KnowledgeChunk
 from app.modules.notifications.models import Notification
 
 from app.core.exceptions import add_exception_handlers
+from app.init_db import init_db
+
+import logging
+logger = logging.getLogger(__name__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: create all tables if they don't exist
+    logger.info("Running database initialization on startup...")
+    init_db()
+    yield
+    # Shutdown: cleanup if needed
 
 app = FastAPI(
     title=setting.APP_NAME,
-    version=setting.APP_VERSION
+    version=setting.APP_VERSION,
+    lifespan=lifespan
 )
 
 # 1. Exception Handlers
@@ -40,7 +54,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "https://digi-panch.vercel.app",
         "https://digi-panch-fullstack.vercel.app",
-    ], # Update with frontend URLs
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
