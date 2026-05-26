@@ -30,6 +30,7 @@
 | Recharts | ^3.8.0 | Charts |
 | Lucide React | ^1.14.0 | Icons |
 | Radix UI | ^1.4.3 | Headless primitives |
+| Boneyard | ^1.0.0 | Skeleton loading screens |
 
 **Fonts:** DynaPuff (primary), Supermercado One, Inter
 
@@ -136,7 +137,12 @@ User logs in (Clerk) → Frontend gets token → Sends to FastAPI
 - `/` — landing page (Navbar, Hero, Services, About, Latest, Footer)
 - `/(protected)/dashboard` — dashboard UI (wired to fetch user data dynamically from backend)
 - `/(protected)/profile` — Clerk user profile
-- `/(protected)/chatbot` — fake demo chatbot UI
+- `/(protected)/chatbot` — chatbot UI (Gemini integrated)
+
+**Recent UI Enhancements:**
+- **Skeleton Screen Integration**: Added `boneyard-js` skeleton screens to support smooth, flicker-free layouts during loading states on protected views (admin users/document-types, citizen dashboard/applications/grievances, officer dashboard/grievances).
+- **Navigation Cleanup**: Removed "Audit Logs" from navigation menus to simplify administrative routing.
+- **Layout Alignment**: Centered navigation links in the primary Header/Navbar and fixed the top layout overlapping in the Hero section of the homepage.
 
 **Clerk already integrated:**
 - `ClerkProvider` wraps root layout
@@ -260,17 +266,17 @@ backend/
         │   ├── schemas.py         ← ✅ done
         │   └── routes.py          ← ✅ done
         ├── rag/
-        │   ├── models.py          ← ⬅ NEXT TASK
-        │   ├── repository.py
-        │   ├── service.py
-        │   └── ingestion.py
+        │   ├── models.py          ← ✅ done
+        │   ├── repository.py      ← ✅ done
+        │   ├── service.py         ← ✅ done
+        │   └── ingestion.py       ← ✅ done
         ├── dashboard/
-        │   ├── service.py
-        │   ├── routes.py
-        │   └── schemas.py
+        │   ├── service.py         ← ✅ done
+        │   ├── routes.py          ← ✅ done
+        │   └── schemas.py         ← ✅ done
         └── notifications/
-            ├── models.py
-            └── service.py
+            ├── models.py          ← ✅ done
+            └── service.py         ← ✅ done
 ```
 
 ---
@@ -418,7 +424,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 | 7 | Grievances — full lifecycle | ✅ Done |
 | 8 | Payments — Razorpay integration + webhooks | ✅ Done |
 | 9 | Chatbot — Gemini integration | ✅ Done |
-| 10 | RAG — knowledge ingestion + pgvector search | 🔄 Active |
+| 10 | RAG — knowledge ingestion + pgvector search | ✅ Done |
 
 ---
 
