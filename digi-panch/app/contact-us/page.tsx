@@ -112,7 +112,7 @@ export default function ContactPage() {
                   </h3>
 
                   <p className="mt-2 text-slate-600">
-                    +91 XXXXX XXXXX
+                    +91 98633 79440
                   </p>
 
                 </div>
