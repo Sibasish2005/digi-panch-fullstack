@@ -30,7 +30,7 @@ export default function Navbar() {
   const adminLinks = [
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
-    { name: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
+
   ];
 
   let authenticatedLinks = citizenLinks;

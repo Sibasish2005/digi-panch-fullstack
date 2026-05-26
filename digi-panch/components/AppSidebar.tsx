@@ -41,8 +41,8 @@ export function AppSidebar() {
   const adminLinks = [
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
-    { name: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
   ];
+
 
   let links = citizenLinks;
   if (pathname.startsWith('/officer') || role === 'OFFICER') {
