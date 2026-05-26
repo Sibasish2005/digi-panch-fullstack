@@ -76,14 +76,34 @@
 | Resend / SMTP | Email notifications |
 | WeasyPrint | Server-side PDF generation |
 
-### Deployment
+### Deployment Setup
 
-| Target | Platform |
-|---|---|
-| Frontend | Vercel |
-| Backend | Render or Railway |
-| Database | Supabase (hosted) |
-| Cache | Upstash Redis |
+| Target | Platform | URL |
+|---|---|---|
+| Frontend | Vercel | `https://digi-panch-fullstack.vercel.app` |
+| Backend | Render | `https://digi-panch-fullstack.onrender.com` |
+| Database | Supabase | PostgreSQL + Vector extensions hosted |
+| Cache | Upstash | Managed Redis instance |
+
+#### Frontend (Vercel) Configuration
+- **Automatic Deployment**: Linked to the GitHub repository; push events to the `main` branch trigger automated building.
+- **Environment Variables**:
+  - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Client authorization key.
+  - `CLERK_SECRET_KEY`: Backend validation secret.
+  - `NEXT_PUBLIC_API_URL`: points to the live backend on Render (`https://digi-panch-fullstack.onrender.com`).
+
+#### Backend (Render) Configuration
+- **Auto-Deploys**: Triggered on push to `main` branch.
+- **Build Command**: `pip install -r backend/requirements.txt`
+- **Start Command**: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+- **Lifespan Startup**: Triggers DB initialization (`init_db()`) to auto-create and sync the SQLModel tables.
+- **Environment Variables**:
+  - `DATABASE_URL`: Connection string to Supabase PostgreSQL.
+  - `REDIS_URL`: Connection string to Upstash Redis.
+  - `CLERK_SECRET_KEY` & `CLERK_JWT_ISSUER`: Verifies JWT bearer headers from incoming queries.
+  - `GEMINI_API_KEY`: API authentication credential for AI components.
+  - `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`: Setup values for ImageKit image upload endpoints.
+  - `RAZORPAY_KEY_ID` & `RAZORPAY_KEY_SECRET`: Config for Razorpay payments and webhooks.
 
 ---
 
@@ -277,6 +297,50 @@ backend/
         └── notifications/
             ├── models.py          ← ✅ done
             └── service.py         ← ✅ done
+```
+
+### FRONTEND FOLDER STRUCTURE
+
+```
+digi-panch/
+├── app/
+│   ├── layout.tsx                 ← Root layout wrapping Clerk & Toaster, imports bones/registry
+│   ├── page.tsx                   ← Public landing page (Hero, Services, About, etc.)
+│   ├── globals.css                ← CSS styling
+│   ├── components/                ← Landing page UI components
+│   │   ├── landing-page/
+│   │   │   ├── hero/
+│   │   │   └── navbar/
+│   │   └── ui/                    ← shadcn/ui components (Button, Input, Table, etc.)
+│   └── (protected)/               ← Clerk authentication protected routes
+│       ├── layout.tsx             ← Sidebar/Header navigation layout
+│       ├── dashboard/             ← Main landing dashboard redirect
+│       ├── chatbot/               ← AI assistant chat interface
+│       ├── profile/               ← User profile details
+│       ├── citizen/               ← Citizen module
+│       │   ├── page.tsx           ← Citizen summary/dashboard (Upstash Redis cached)
+│       │   ├── apply/             ← Apply for certificate forms
+│       │   ├── applications/      ← Submitted certificate applications tracking
+│       │   └── grievances/        ← Grievances file and history
+│       ├── officer/               ← Panchayat officer module
+│       │   ├── page.tsx           ← Queued pending applications
+│       │   ├── application/[id]/  ← Action reviews (Approve, Reject, Issue PDF)
+│       │   └── grievances/        ← Grievance resolution queue
+│       └── admin/                 ← Administration panel
+│           ├── document-types/    ← Configure certificate schemas/fees
+│           ├── users/             ← User RBAC role assignment
+│           └── audit-logs/        ← System operations history
+├── components/                    ← Reusable application-level shared components
+│   ├── AppSidebar.tsx             ← Sidebar navigation component with role filters
+│   └── ImageKitUploader.tsx       ← Upload helper generating signed ImageKit URLs
+├── lib/
+│   ├── api-client.ts              ← Fetch client wrapping API token & Base URL
+│   └── utils.ts
+└── src/
+    └── bones/                     ← Boneyard generated skeletons & configurations
+        ├── citizen-dashboard.bones.json
+        ├── registry.ts            ← Skeleton layout registration mapping
+        └── ...
 ```
 
 ---
