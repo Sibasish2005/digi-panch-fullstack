@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Send, Bot, User } from 'lucide-react';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ChatbotPage() {
   const { getToken } = useAuth();
@@ -104,8 +104,15 @@ export default function ChatbotPage() {
     }
   };
 
+  if (loadingHistory) {
+    return (
+      <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
+        <Skeleton className="flex-1 w-full rounded-xl" />
+      </div>
+    );
+  }
+
   return (
-    <Skeleton name="chatbot" loading={loadingHistory}>
     <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
       <Card className="flex-1 flex flex-col overflow-hidden">
         <CardHeader className="bg-slate-50 border-b">
@@ -165,6 +172,5 @@ export default function ChatbotPage() {
         </CardFooter>
       </Card>
     </div>
-    </Skeleton>
   );
 }

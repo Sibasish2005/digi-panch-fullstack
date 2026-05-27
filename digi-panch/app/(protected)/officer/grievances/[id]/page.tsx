@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function GrievanceReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -70,12 +70,27 @@ export default function GrievanceReviewPage({ params }: { params: Promise<{ id: 
     }
   };
 
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto space-y-6">
+        <Skeleton className="h-5 w-32" />
+        <div className="flex items-center justify-between mb-6">
+          <Skeleton className="h-10 w-3/4" />
+          <Skeleton className="h-8 w-24" />
+        </div>
+        <div className="grid gap-6">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-48 w-full" />
+        </div>
+      </div>
+    );
+  }
+
   if (!grievance && !loading) {
     return <div>Grievance not found.</div>;
   }
 
   return (
-    <Skeleton name="officer-grievance-detail" loading={loading}>
     <div className="max-w-3xl mx-auto space-y-6">
       <Link href="/officer/grievances" className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -169,6 +184,5 @@ export default function GrievanceReviewPage({ params }: { params: Promise<{ id: 
         )}
       </div>
     </div>
-    </Skeleton>
   );
 }
