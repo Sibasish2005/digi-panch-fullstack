@@ -81,13 +81,23 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
 
   if (!appData && !loading) return <div>Application not found.</div>;
 
+  const safeData = appData || {
+    status: '',
+    user: {},
+    application_number: '',
+    document_type: {},
+    created_at: new Date().toISOString(),
+    remarks: '',
+    proofs: []
+  };
+
   return (
     <Skeleton name="officer-application-review" loading={loading}>
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Review Application</h1>
         <Badge variant="outline" className="text-lg py-1 px-3 bg-white">
-          {appData.status}
+          {safeData.status}
         </Badge>
       </div>
       
@@ -97,11 +107,11 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
             <CardTitle>Applicant Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <p><strong>Name:</strong> {appData.user?.name || 'Citizen'}</p>
-            <p><strong>Application Number:</strong> {appData.application_number}</p>
-            <p><strong>Document Type:</strong> {appData.document_type?.name}</p>
-            <p><strong>Submitted On:</strong> {new Date(appData.created_at).toLocaleString()}</p>
-            {appData.remarks && <p><strong>Citizen Remarks:</strong> {appData.remarks}</p>}
+            <p><strong>Name:</strong> {safeData.user?.name || 'Citizen'}</p>
+            <p><strong>Application Number:</strong> {safeData.application_number}</p>
+            <p><strong>Document Type:</strong> {safeData.document_type?.name}</p>
+            <p><strong>Submitted On:</strong> {new Date(safeData.created_at).toLocaleString()}</p>
+            {safeData.remarks && <p><strong>Citizen Remarks:</strong> {safeData.remarks}</p>}
           </CardContent>
         </Card>
 
@@ -110,7 +120,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
             <CardTitle>Attached Proofs</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {appData.proofs?.map((proof: any) => (
+            {safeData.proofs?.map((proof: any) => (
               <div key={proof.id} className="flex justify-between items-center p-3 border rounded-md">
                 <span className="font-medium text-sm">{proof.file_type}</span>
                 <Button variant="outline" size="sm" asChild>
@@ -118,7 +128,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
                 </Button>
               </div>
             ))}
-            {(!appData.proofs || appData.proofs.length === 0) && (
+            {(!safeData.proofs || safeData.proofs.length === 0) && (
               <p className="text-muted-foreground text-sm">No proofs attached.</p>
             )}
           </CardContent>
@@ -136,12 +146,12 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
               value={remarks} 
               onChange={(e) => setRemarks(e.target.value)} 
               placeholder="Add remarks before approving/rejecting..."
-              disabled={appData.status === 'DOCUMENT_ISSUED'}
+              disabled={safeData.status === 'DOCUMENT_ISSUED'}
             />
           </div>
         </CardContent>
         <CardFooter className="flex gap-4">
-          {appData.status === 'SUBMITTED' && (
+          {safeData.status === 'SUBMITTED' && (
             <>
               <Button onClick={() => handleAction('approve')} disabled={actionLoading} className="bg-green-600 hover:bg-green-700">
                 <CheckCircle className="mr-2 h-4 w-4" /> Approve
@@ -151,10 +161,10 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
               </Button>
             </>
           )}
-          {appData.status === 'PENDING_PAYMENT' && (
+          {safeData.status === 'PENDING_PAYMENT' && (
             <p className="text-sm text-yellow-600 font-medium">Waiting for citizen payment.</p>
           )}
-          {appData.status === 'APPROVED' && ( // Assuming APPROVED means fee is paid or no fee
+          {safeData.status === 'APPROVED' && ( // Assuming APPROVED means fee is paid or no fee
             <div className="w-full space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Upload Approved Document (PDF/Image)</label>
@@ -174,7 +184,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
               </Button>
             </div>
           )}
-          {appData.status === 'DOCUMENT_ISSUED' && (
+          {safeData.status === 'DOCUMENT_ISSUED' && (
              <p className="text-sm text-green-600 font-medium">Document generated and issued successfully.</p>
           )}
         </CardFooter>
