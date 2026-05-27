@@ -84,17 +84,28 @@ def get_user_applications(session: Session, user_id: UUID, skip: int = 0, limit:
 
 def get_application_by_id(session: Session, application_id: UUID, user_id: UUID, user_role: str):
     repo = ApplicationRepository(session)
+    doc_repo = DocumentTypeRepository(session)
     app = repo.get_by_id(application_id)
     
     if not app:
         raise HTTPException(status_code=404, detail="Application not found")
         
     # SECURITY: Only the owner, an officer, or admin can view this specific application
-    if app.user_id != user_id and user_role not in ["OFFICER", "ADMIN"]:
+    if app.user_id != user_id and user_role.upper() not in ["OFFICER", "ADMIN"]:
         raise HTTPException(status_code=403, detail="Not authorized to view this application")
         
     app_dict = app.model_dump()
     app_dict["proofs"] = repo.get_proofs_for_application(app.id)
+    
+    doc_type = doc_repo.get_by_id(app.document_type_id)
+    if doc_type:
+        app_dict["document_type"] = {"name": doc_type.name, "fee_amount": doc_type.fee_amount}
+        
+    from app.modules.users.repository import UserRepository
+    user_repo = UserRepository(session)
+    applicant = user_repo.get_by_id(app.user_id)
+    if applicant:
+        app_dict["user"] = {"name": applicant.full_name, "email": applicant.email}
     
     if app.status == "DOCUMENT_ISSUED":
         final_doc = repo.get_final_document(app.id)
