@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { RazorpayCheckout } from '@/components/RazorpayCheckout';
 import { Loader2 } from 'lucide-react';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ApplicationsTrackingPage() {
   const { getToken } = useAuth();
@@ -49,67 +49,79 @@ export default function ApplicationsTrackingPage() {
     }
   };
 
-  return (
-    <Skeleton name="citizen-applications" loading={loading}>
+  if (loading) {
+    return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold tracking-tight">My Applications</h1>
-        
-        <div className="rounded-md border bg-white">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>App ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Submitted On</TableHead>
-                <TableHead className="text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {applications.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    No applications found.
-                  </TableCell>
-                </TableRow>
-              )}
-              {applications.map((app) => (
-                <TableRow key={app.id}>
-                  <TableCell className="font-medium">{app.application_number || app.id.split('-')[0]}</TableCell>
-                  <TableCell>{app.document_type?.name || 'Document'}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(app.status)} variant="outline">
-                      {app.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(app.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {app.status === 'PENDING_PAYMENT' && (
-                      <RazorpayCheckout 
-                        applicationId={app.id} 
-                        amount={app.document_type?.fee_amount || 100} 
-                        onSuccess={loadApplications} 
-                      />
-                    )}
-                    {app.status === 'DOCUMENT_ISSUED' && app.final_document?.pdf_url && (
-                      <Button variant="outline" asChild>
-                        <a href={app.final_document.pdf_url} target="_blank" rel="noopener noreferrer">
-                          Download PDF
-                        </a>
-                      </Button>
-                    )}
-                    {app.status !== 'PENDING_PAYMENT' && app.status !== 'DOCUMENT_ISSUED' && (
-                      <span className="text-sm text-gray-500">Under Review</span>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <Skeleton className="h-10 w-64" />
+        <div className="rounded-md border bg-white p-4">
+          <Skeleton className="h-12 w-full mb-4" />
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full mb-2" />
+          ))}
         </div>
       </div>
-    </Skeleton>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight">My Applications</h1>
+      
+      <div className="rounded-md border bg-white">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>App ID</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Submitted On</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {applications.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  No applications found.
+                </TableCell>
+              </TableRow>
+            )}
+            {applications.map((app) => (
+              <TableRow key={app.id}>
+                <TableCell className="font-medium">{app.application_number || app.id.split('-')[0]}</TableCell>
+                <TableCell>{app.document_type?.name || 'Document'}</TableCell>
+                <TableCell>
+                  <Badge className={getStatusColor(app.status)} variant="outline">
+                    {app.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {new Date(app.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  {app.status === 'PENDING_PAYMENT' && (
+                    <RazorpayCheckout 
+                      applicationId={app.id} 
+                      amount={app.document_type?.fee_amount || 100} 
+                      onSuccess={loadApplications} 
+                    />
+                  )}
+                  {app.status === 'DOCUMENT_ISSUED' && app.final_document?.pdf_url && (
+                    <Button variant="outline" asChild>
+                      <a href={app.final_document.pdf_url} target="_blank" rel="noopener noreferrer">
+                        Download PDF
+                      </a>
+                    </Button>
+                  )}
+                  {app.status !== 'PENDING_PAYMENT' && app.status !== 'DOCUMENT_ISSUED' && (
+                    <span className="text-sm text-gray-500">Under Review</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }

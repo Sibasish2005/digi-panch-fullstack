@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { Loader2, Plus, Trash2, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DocumentTypesPage() {
   const { getToken } = useAuth();
@@ -153,8 +153,24 @@ export default function DocumentTypesPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="rounded-md border bg-white p-4">
+          <Skeleton className="h-12 w-full mb-4" />
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full mb-2" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Skeleton name="admin-document-types" loading={loading}>
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Document Types</h1>
@@ -335,6 +351,5 @@ export default function DocumentTypesPage() {
         </Table>
       </div>
     </div>
-    </Skeleton>
   );
 }

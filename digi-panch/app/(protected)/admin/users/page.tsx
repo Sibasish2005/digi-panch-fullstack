@@ -14,7 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Loader2, MoreHorizontal, Shield, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -113,8 +113,21 @@ export default function UserManagementPage() {
     }
   };
 
+  if (loading && users.length === 0) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-10 w-64" />
+        <div className="rounded-md border bg-white p-4">
+          <Skeleton className="h-12 w-full mb-4" />
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full mb-2" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Skeleton name="admin-users" loading={loading && users.length === 0}>
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
       
@@ -218,6 +231,5 @@ export default function UserManagementPage() {
         </Table>
       </div>
     </div>
-    </Skeleton>
   );
 }

@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
 import { DynaPuff, Supermercado_One, Inter } from "next/font/google";
 import "./globals.css";
-import '../src/bones/registry';
-import { configureBoneyard } from 'boneyard-js/react';
-
-configureBoneyard({
-  animate: 'shimmer',
-  transition: true,
-  stagger: true
-});
 
 import Navbar from "./components/landing-page/navbar/navbar";
 import { Toaster } from "@/components/ui/sonner";

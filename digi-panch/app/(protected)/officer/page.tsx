@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { Skeleton } from 'boneyard-js/react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function OfficerQueuePage() {
   const { getToken } = useAuth();
@@ -48,55 +48,67 @@ export default function OfficerQueuePage() {
     }
   };
 
-  return (
-    <Skeleton name="officer-dashboard" loading={loading}>
+  if (loading) {
+    return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold tracking-tight">Pending Application Queue</h1>
-        
-        <div className="rounded-md border bg-white">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>App ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Applicant</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Submitted On</TableHead>
-                <TableHead className="text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {applications.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    No applications in queue.
-                  </TableCell>
-                </TableRow>
-              )}
-              {applications.map((app) => (
-                <TableRow key={app.id}>
-                  <TableCell className="font-medium">{app.application_number || app.id.split('-')[0]}</TableCell>
-                  <TableCell>{app.document_type?.name || 'Document'}</TableCell>
-                  <TableCell>{app.user?.name || 'Citizen'}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(app.status)} variant="outline">
-                      {app.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(app.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Link href={`/officer/application/${app.id}`}>
-                      <Button variant="outline" size="sm">Review</Button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <Skeleton className="h-10 w-64" />
+        <div className="rounded-md border bg-white p-4">
+          <Skeleton className="h-12 w-full mb-4" />
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-16 w-full mb-2" />
+          ))}
         </div>
       </div>
-    </Skeleton>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight">Pending Application Queue</h1>
+      
+      <div className="rounded-md border bg-white">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>App ID</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Applicant</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Submitted On</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {applications.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  No applications in queue.
+                </TableCell>
+              </TableRow>
+            )}
+            {applications.map((app) => (
+              <TableRow key={app.id}>
+                <TableCell className="font-medium">{app.application_number || app.id.split('-')[0]}</TableCell>
+                <TableCell>{app.document_type?.name || 'Document'}</TableCell>
+                <TableCell>{app.user?.name || 'Citizen'}</TableCell>
+                <TableCell>
+                  <Badge className={getStatusColor(app.status)} variant="outline">
+                    {app.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {new Date(app.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Link href={`/officer/application/${app.id}`}>
+                    <Button variant="outline" size="sm">Review</Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }
