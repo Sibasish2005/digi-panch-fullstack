@@ -52,6 +52,14 @@ class ApplicationRepository:
         for proof in proofs:
             self.session.delete(proof)
             
+        # Nullify payments referencing this application to prevent foreign key constraint violations
+        from app.modules.payments.models import Payment
+        stmt = select(Payment).where(Payment.application_id == application_id)
+        payments = self.session.execute(stmt).scalars().all()
+        for payment in payments:
+            payment.application_id = None
+            self.session.add(payment)
+            
         # Delete application
         self.session.delete(app)
         self.session.commit()
