@@ -122,8 +122,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Card */}
-        <Card className="rounded-none sm:rounded-3xl border-none shadow-sm mb-6">
-          <CardContent className="p-4 sm:p-2">
+        <Card className="rounded-2xl sm:rounded-3xl border-none shadow-sm mb-6">
+          <CardContent className="p-4 sm:p-8">
             <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-center sm:gap-6">
               <div className="relative h-24 w-24 overflow-hidden rounded-full border bg-slate-100 flex-shrink-0">
                 <Image

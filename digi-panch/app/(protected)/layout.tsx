@@ -15,9 +15,9 @@ export default async function ProtectedLayout({
   const showChatbot = role === "USER" || role === "CITIZEN";
 
   return (
-    <div className="flex h-screen bg-gray-50 pt-[72px] relative"> 
+    <div className="flex h-screen bg-gray-50 pt-20 relative"> 
       {/* The global Navbar handles navigation. */}
-      <main className="flex-1 overflow-y-auto px-0 py-4 sm:p-4 md:p-8 w-full">
+      <main className="flex-1 overflow-y-auto px-2 py-4 sm:p-4 md:p-8 w-full">
         {children}
       </main>
       

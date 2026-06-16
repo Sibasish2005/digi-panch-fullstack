@@ -8,6 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Activity, FileText, LayoutDashboard, MessageSquare, Loader2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function CitizenDashboard() {
   const { getToken } = useAuth();
@@ -20,6 +28,7 @@ export default function CitizenDashboard() {
   });
   const [issuedDocs, setIssuedDocs] = useState<any[]>([]);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const loadSummary = async () => {
     try {
@@ -49,8 +58,6 @@ export default function CitizenDashboard() {
   }, [getToken]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this certificate? This action cannot be undone.')) return;
-    
     setDeleteLoading(id);
     try {
       const token = await getToken();
@@ -61,6 +68,7 @@ export default function CitizenDashboard() {
       alert('Failed to delete the certificate.');
     } finally {
       setDeleteLoading(null);
+      setDeleteConfirmId(null);
     }
   };
 
@@ -158,7 +166,7 @@ export default function CitizenDashboard() {
                         variant="destructive" 
                         size="icon" 
                         disabled={deleteLoading === doc.id}
-                        onClick={() => handleDelete(doc.id)}
+                        onClick={() => setDeleteConfirmId(doc.id)}
                       >
                         {deleteLoading === doc.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                       </Button>
@@ -170,6 +178,44 @@ export default function CitizenDashboard() {
           </div>
         </div>
       )}
+      <Dialog open={!!deleteConfirmId} onOpenChange={(open) => { if (!open) setDeleteConfirmId(null); }}>
+        <DialogContent className="w-[calc(100vw-32px)] max-w-[440px] rounded-3xl p-6">
+          <DialogHeader className="space-y-3">
+            <DialogTitle className="text-xl font-bold text-slate-900">
+              Delete Certificate?
+            </DialogTitle>
+            <DialogDescription className="text-sm text-slate-500 leading-relaxed">
+              Are you sure you want to delete this certificate? This action cannot be undone and will permanently remove it from your records.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-6 flex flex-col-reverse sm:flex-row gap-3 sm:gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteConfirmId(null)}
+              className="rounded-xl flex-1 h-11"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (deleteConfirmId) handleDelete(deleteConfirmId);
+              }}
+              disabled={deleteLoading === deleteConfirmId}
+              className="rounded-xl flex-1 h-11 bg-red-600 hover:bg-red-700 text-white font-medium"
+            >
+              {deleteLoading === deleteConfirmId ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
