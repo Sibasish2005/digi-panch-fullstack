@@ -109,21 +109,21 @@ export default function ProfilePage() {
   const hasExtraDetails = !!(dbUser?.age || dbUser?.address || dbUser?.pin || dbUser?.panchayat || dbUser?.police_station || dbUser?.phone);
 
   return (
-    <main className="min-h-screen w-full bg-slate-50 px-6 py-20">
+    <div className="w-full py-6 sm:py-12 px-0 sm:px-4 pb-24 sm:pb-12">
       <div className="mx-auto max-w-3xl">
         {/* Heading */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold text-slate-900">
+        <div className="mb-6 sm:mb-10 px-4 sm:px-0">
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
             My Profile
           </h1>
-          <p className="mt-3 text-slate-600">
+          <p className="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600">
             View your account information and manage your session.
           </p>
         </div>
 
         {/* Profile Card */}
-        <Card className="rounded-3xl border-none shadow-sm mb-6">
-          <CardContent className="p-8">
+        <Card className="rounded-none sm:rounded-3xl border-none shadow-sm mb-6">
+          <CardContent className="p-4 sm:p-2">
             <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-center sm:gap-6">
               <div className="relative h-24 w-24 overflow-hidden rounded-full border bg-slate-100 flex-shrink-0">
                 <Image
@@ -145,8 +145,8 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
                 <div className="mt-2 flex items-center justify-center gap-2 text-slate-600 sm:justify-start">
-                  <Mail className="h-4 w-4" />
-                  <p className="text-sm">
+                  <Mail className="h-4 w-4 flex-shrink-0" />
+                  <p className="text-sm break-all">
                     {user?.primaryEmailAddress?.emailAddress}
                   </p>
                 </div>
@@ -163,46 +163,46 @@ export default function ProfilePage() {
                       )}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px]">
+                  <DialogContent className="w-[calc(100vw-32px)] max-w-[500px] rounded-3xl">
                     <DialogHeader>
                       <DialogTitle>{hasExtraDetails ? "Update Profile Details" : "Add Profile Details"}</DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={handleUpdate} className="space-y-4 py-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
+                    <form onSubmit={handleUpdate} className="space-y-4 py-2 sm:py-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div className="space-y-1.5 sm:col-span-2">
                           <Label htmlFor="full_name">Full Name</Label>
-                          <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} required />
+                          <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} required className="rounded-xl" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <Label htmlFor="age">Age</Label>
-                          <Input id="age" type="number" value={formData.age} onChange={(e) => setFormData({...formData, age: e.target.value})} />
+                          <Input id="age" type="number" value={formData.age} onChange={(e) => setFormData({...formData, age: e.target.value})} className="rounded-xl" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <Label htmlFor="phone">Mobile No</Label>
-                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="rounded-xl" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <Label htmlFor="pin">PIN Code</Label>
-                          <Input id="pin" value={formData.pin} onChange={(e) => setFormData({...formData, pin: e.target.value})} />
+                          <Input id="pin" value={formData.pin} onChange={(e) => setFormData({...formData, pin: e.target.value})} className="rounded-xl" />
                         </div>
-                        <div className="col-span-2 space-y-2">
-                          <Label htmlFor="address">Address</Label>
-                          <Input id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
-                        </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <Label htmlFor="panchayat">Panchayat</Label>
-                          <Input id="panchayat" value={formData.panchayat} onChange={(e) => setFormData({...formData, panchayat: e.target.value})} />
+                          <Input id="panchayat" value={formData.panchayat} onChange={(e) => setFormData({...formData, panchayat: e.target.value})} className="rounded-xl" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5 sm:col-span-2">
                           <Label htmlFor="police_station">Police Station</Label>
-                          <Input id="police_station" value={formData.police_station} onChange={(e) => setFormData({...formData, police_station: e.target.value})} />
+                          <Input id="police_station" value={formData.police_station} onChange={(e) => setFormData({...formData, police_station: e.target.value})} className="rounded-xl" />
+                        </div>
+                        <div className="space-y-1.5 sm:col-span-2">
+                          <Label htmlFor="address">Address</Label>
+                          <Input id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="rounded-xl" />
                         </div>
                       </div>
                       <DialogFooter className="mt-6">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSubmitting}>
+                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSubmitting} className="rounded-xl">
                           Cancel
                         </Button>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting} className="rounded-xl">
                           {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Save"}
                         </Button>
                       </DialogFooter>
@@ -217,19 +217,19 @@ export default function ProfilePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
               </div>
             ) : hasExtraDetails ? (
-              <div className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
+              <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-slate-50/50 p-4 sm:p-6 rounded-2xl border border-slate-100">
                 {dbUser.phone && (
                   <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-slate-400 mt-0.5" />
+                    <Phone className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-slate-900">Mobile Number</p>
-                      <p className="text-sm text-slate-600">{dbUser.phone}</p>
+                      <p className="text-sm text-slate-600 break-all">{dbUser.phone}</p>
                     </div>
                   </div>
                 )}
                 {dbUser.age && (
                   <div className="flex items-start gap-3">
-                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-500 mt-0.5">
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-500 mt-0.5 flex-shrink-0">
                       {dbUser.age}
                     </div>
                     <div>
@@ -239,29 +239,29 @@ export default function ProfilePage() {
                   </div>
                 )}
                 {dbUser.address && (
-                  <div className="flex items-start gap-3 col-span-1 md:col-span-2">
-                    <MapPin className="h-5 w-5 text-slate-400 mt-0.5" />
+                  <div className="flex items-start gap-3 col-span-1 sm:col-span-2">
+                    <MapPin className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-slate-900">Address</p>
-                      <p className="text-sm text-slate-600">{dbUser.address}{dbUser.pin ? `, PIN: ${dbUser.pin}` : ""}</p>
+                      <p className="text-sm text-slate-600 break-words">{dbUser.address}{dbUser.pin ? `, PIN: ${dbUser.pin}` : ""}</p>
                     </div>
                   </div>
                 )}
                 {dbUser.panchayat && (
                   <div className="flex items-start gap-3">
-                    <Map className="h-5 w-5 text-slate-400 mt-0.5" />
+                    <Map className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-slate-900">Panchayat</p>
-                      <p className="text-sm text-slate-600">{dbUser.panchayat}</p>
+                      <p className="text-sm text-slate-600 break-words">{dbUser.panchayat}</p>
                     </div>
                   </div>
                 )}
                 {dbUser.police_station && (
                   <div className="flex items-start gap-3">
-                    <Building className="h-5 w-5 text-slate-400 mt-0.5" />
+                    <Building className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium text-slate-900">Police Station</p>
-                      <p className="text-sm text-slate-600">{dbUser.police_station}</p>
+                      <p className="text-sm text-slate-600 break-words">{dbUser.police_station}</p>
                     </div>
                   </div>
                 )}
@@ -293,6 +293,6 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   );
 }
