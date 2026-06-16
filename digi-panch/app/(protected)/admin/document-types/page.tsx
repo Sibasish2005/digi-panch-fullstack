@@ -39,6 +39,7 @@ export default function DocumentTypesPage() {
   const [fee, setFee] = useState(0);
   const [processingDays, setProcessingDays] = useState(7);
   const [requiredDocs, setRequiredDocs] = useState<{name: string, type: string}[]>([]);
+  const [formFields, setFormFields] = useState<{name: string, type: string}[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function DocumentTypesPage() {
     setFee(0);
     setProcessingDays(7);
     setRequiredDocs([]);
+    setFormFields([]);
   };
 
   const handleCreateNewClick = () => {
@@ -79,6 +81,7 @@ export default function DocumentTypesPage() {
     setFee(docType.fee_amount);
     setProcessingDays(docType.processing_days);
     setRequiredDocs(docType.required_documents || []);
+    setFormFields(docType.form_fields || []);
     setIsDialogOpen(true);
   };
 
@@ -112,6 +115,20 @@ export default function DocumentTypesPage() {
     setRequiredDocs(requiredDocs.filter((_, i) => i !== index));
   };
 
+  const handleAddFormField = () => {
+    setFormFields([...formFields, { name: '', type: 'text' }]);
+  };
+
+  const handleUpdateFormField = (index: number, field: string, value: string) => {
+    const updated = [...formFields];
+    updated[index] = { ...updated[index], [field]: value };
+    setFormFields(updated);
+  };
+
+  const handleRemoveFormField = (index: number) => {
+    setFormFields(formFields.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -125,7 +142,8 @@ export default function DocumentTypesPage() {
         description,
         fee_amount: fee,
         processing_days: processingDays,
-        required_documents: requiredDocs
+        required_documents: requiredDocs,
+        form_fields: formFields
       };
 
       if (editingId) {
@@ -209,7 +227,7 @@ export default function DocumentTypesPage() {
                 <Input 
                   type="number" 
                   min="0"
-                  value={fee} 
+                  value={Number.isNaN(fee) ? '' : fee} 
                   onChange={(e) => setFee(parseFloat(e.target.value))} 
                   required 
                 />
@@ -219,7 +237,7 @@ export default function DocumentTypesPage() {
                 <Input 
                   type="number" 
                   min="1"
-                  value={processingDays} 
+                  value={Number.isNaN(processingDays) ? '' : processingDays} 
                   onChange={(e) => setProcessingDays(parseInt(e.target.value))} 
                   required 
                 />
@@ -259,6 +277,45 @@ export default function DocumentTypesPage() {
                     <option value="any">Any</option>
                   </select>
                   <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveRequiredDoc(idx)} className="text-red-500 hover:text-red-700">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-4 space-y-3 border-t">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-medium">Form Fields (Data to Collect)</h3>
+                <Button type="button" variant="outline" size="sm" onClick={handleAddFormField}>
+                  <Plus className="mr-2 h-4 w-4" /> Add Field
+                </Button>
+              </div>
+              
+              {formFields.length === 0 && (
+                <div className="text-sm text-gray-500 italic py-2">No form fields specified.</div>
+              )}
+              
+              {formFields.map((field, idx) => (
+                <div key={idx} className="flex gap-3 items-center">
+                  <Input 
+                    placeholder="Field Name (e.g. Full Name)" 
+                    value={field.name} 
+                    onChange={(e) => handleUpdateFormField(idx, 'name', e.target.value)} 
+                    required
+                    className="flex-1"
+                  />
+                  <select 
+                    className="flex h-9 w-32 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"
+                    value={field.type}
+                    onChange={(e) => handleUpdateFormField(idx, 'type', e.target.value)}
+                    aria-label="Field Type"
+                    title="Field Type"
+                  >
+                    <option value="text">Text</option>
+                    <option value="number">Number</option>
+                    <option value="date">Date</option>
+                  </select>
+                  <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveFormField(idx)} className="text-red-500 hover:text-red-700">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

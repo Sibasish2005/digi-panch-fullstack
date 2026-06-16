@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Any
 from uuid import UUID
 from datetime import datetime
 
@@ -23,6 +23,7 @@ class DocumentApplicationCreate(BaseModel):
     document_type_id: UUID
     proofs: List[ApplicationProofCreate]
     remarks: Optional[str] = None
+    form_data: dict[str, Any] = {}
 
 class SimpleUser(BaseModel):
     name: str
@@ -50,6 +51,7 @@ class DocumentApplicationResponse(BaseModel):
     assigned_officer_id: Optional[UUID] = None
     status: str
     remarks: Optional[str]
+    form_data: Optional[dict[str, Any]] = {}
     submitted_at: Optional[datetime]
     created_at: datetime
     

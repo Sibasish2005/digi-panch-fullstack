@@ -38,10 +38,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${dynaPuff.variable} ${supermercadoOne.variable} ${inter.variable} h-full antialiased`}
+        className={`${inter.variable} h-full antialiased`}
       >
         <body
-          className={`min-h-full flex flex-col ${dynaPuff.className}`}
+          className={`min-h-full flex flex-col ${inter.className}`}
         >
           <Navbar />
           {children}

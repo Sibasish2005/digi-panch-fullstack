@@ -34,6 +34,7 @@ def create_application(session: Session, user_id: UUID, data: DocumentApplicatio
         "document_type_id": data.document_type_id,
         "status": initial_status,
         "remarks": data.remarks,
+        "form_data": data.form_data,
         "submitted_at": datetime.utcnow()
     }
     application = app_repo.create_application(app_data)

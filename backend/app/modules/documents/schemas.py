@@ -7,7 +7,8 @@ class DocumentTypeBase(BaseModel):
     name: str
     slug: str
     description: Optional[str] = None
-    required_documents: List[dict[str, Any]] = []
+    required_documents: Optional[List[dict[str, Any]]] = []
+    form_fields: Optional[List[dict[str, Any]]] = []
     fee_amount: float = 0.0
     processing_days: int = 7
     is_active: bool = True
@@ -20,6 +21,7 @@ class DocumentTypeUpdate(BaseModel):
     slug: Optional[str] = None
     description: Optional[str] = None
     required_documents: Optional[List[dict[str, Any]]] = None
+    form_fields: Optional[List[dict[str, Any]]] = None
     fee_amount: Optional[float] = None
     processing_days: Optional[int] = None
     is_active: Optional[bool] = None

@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import Optional
-from sqlmodel import SQLModel, Field
+from typing import Optional, Any
+from sqlmodel import SQLModel, Field, Column
+from sqlalchemy.dialects.postgresql import JSON
 
 class DocumentApplication(SQLModel, table=True):
     __tablename__ = "document_applications"
@@ -15,6 +16,7 @@ class DocumentApplication(SQLModel, table=True):
     
     status: str = Field(default="SUBMITTED", max_length=50)
     remarks: Optional[str] = Field(default=None)
+    form_data: dict[str, Any] = Field(default={}, sa_column=Column(JSON))
     
     submitted_at: Optional[datetime] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)

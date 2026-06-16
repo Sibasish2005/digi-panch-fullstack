@@ -5,7 +5,7 @@ from app.core.config import setting
 
 logger = logging.getLogger(__name__)
 
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-3.5-flash"
 MAX_RETRIES = 3
 BASE_RETRY_DELAY = 2  # seconds
 

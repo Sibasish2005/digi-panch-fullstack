@@ -15,6 +15,9 @@ class DocumentType(SQLModel, table=True):
     # Store dynamic lists of required files (e.g., [{"name": "Aadhar", "type": "pdf"}])
     required_documents: List[dict[str, Any]] = Field(default=[], sa_column=Column(JSON))
     
+    # Store dynamic form fields (e.g., [{"name": "Full Name", "type": "text"}])
+    form_fields: List[dict[str, Any]] = Field(default=[], sa_column=Column(JSON))
+    
     fee_amount: float = Field(default=0.0)
     processing_days: int = Field(default=7)
     

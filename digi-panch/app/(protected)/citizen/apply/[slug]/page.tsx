@@ -20,6 +20,7 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [uploadedProofs, setUploadedProofs] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [remarks, setRemarks] = useState('');
 
   useEffect(() => {
@@ -64,7 +65,8 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
         body: JSON.stringify({
           document_type_id: docType.id,
           remarks,
-          proofs
+          proofs,
+          form_data: formData
         })
       });
 
@@ -78,7 +80,10 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
   };
 
   const requiredList = docType.required_documents || [];
+  const formFields = docType.form_fields || [];
+  
   const allUploaded = requiredList.every((req: any) => uploadedProofs[req.name]);
+  const allFieldsFilled = formFields.every((field: any) => formData[field.name] && formData[field.name].trim() !== '');
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -114,7 +119,27 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
               </div>
             ))}
 
-            <div className="space-y-2 pt-4">
+            {docType.form_fields && docType.form_fields.length > 0 && (
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="text-lg font-semibold">Application Details</h3>
+                {docType.form_fields.map((field: any, idx: number) => (
+                  <div key={idx} className="space-y-2">
+                    <label className="text-sm font-medium leading-none">
+                      {field.name} <span className="text-red-500">*</span>
+                    </label>
+                    <Input 
+                      type={field.type}
+                      required
+                      value={formData[field.name] || ''}
+                      onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
+                      placeholder={`Enter ${field.name}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-2 pt-4 border-t">
               <label className="text-sm font-medium leading-none">Additional Remarks (Optional)</label>
               <Input 
                 value={remarks} 
@@ -127,7 +152,7 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
             <Button 
               type="submit" 
               className="w-full" 
-              disabled={submitting || (!allUploaded && requiredList.length > 0)}
+              disabled={submitting || (!allUploaded && requiredList.length > 0) || !allFieldsFilled}
             >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {submitting ? 'Submitting...' : 'Submit Application'}

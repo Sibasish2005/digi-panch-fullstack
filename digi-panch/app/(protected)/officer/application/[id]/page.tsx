@@ -142,6 +142,28 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
 
       <Card>
         <CardHeader>
+          <CardTitle>Submitted Application Form Data</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {appData.form_data && Object.keys(appData.form_data).length > 0 ? (
+            <div className="grid sm:grid-cols-2 gap-4">
+              {Object.entries(appData.form_data).map(([key, value]) => (
+                <div key={key} className="space-y-1 p-3 border rounded-md bg-slate-50">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">{key}</p>
+                  <p className="font-medium text-sm">{String(value)}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 border border-dashed rounded-md bg-amber-50 text-amber-600 text-sm font-medium">
+              Data Lost / No Form Data Provided
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Officer Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

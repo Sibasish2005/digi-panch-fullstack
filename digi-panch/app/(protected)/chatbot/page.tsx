@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { fetchAPI } from '@/lib/api-client';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Send, Bot, User } from 'lucide-react';
+import { Loader2, Send, Bot, User, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ChatbotPage() {
   const { getToken } = useAuth();
+  const { user } = useUser();
   
   const [sessions, setSessions] = useState<any[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -104,6 +105,26 @@ export default function ChatbotPage() {
     }
   };
 
+  const clearChat = async () => {
+    try {
+      setSending(true);
+      const token = await getToken();
+      const newSession = await fetchAPI('/chat/sessions', {
+        method: 'POST',
+        token,
+        body: JSON.stringify({ title: 'New Conversation' })
+      });
+      setSessions(prev => [newSession, ...prev]);
+      setActiveSessionId(newSession.id);
+      setMessages([]);
+    } catch (error) {
+      console.error(error);
+      alert('Failed to clear chat.');
+    } finally {
+      setSending(false);
+    }
+  };
+
   if (loadingHistory) {
     return (
       <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
@@ -112,14 +133,31 @@ export default function ChatbotPage() {
     );
   }
 
+  const role = user?.publicMetadata?.role as string;
+  if (role === 'ADMIN' || role === 'OFFICER') {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <div className="text-center p-8 bg-white rounded-xl shadow-sm border border-slate-200">
+          <Bot className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-slate-800">Access Restricted</h2>
+          <p className="text-slate-500 mt-2">The AI Assistant is currently only available for Citizens.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
       <Card className="flex-1 flex flex-col overflow-hidden">
-        <CardHeader className="bg-slate-50 border-b">
+        <CardHeader className="bg-slate-50 border-b flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="flex items-center gap-2">
             <Bot className="h-6 w-6 text-blue-600" />
             DigiPanch AI Assistant
           </CardTitle>
+          <Button variant="outline" size="sm" onClick={clearChat} disabled={sending} className="text-gray-500 hover:text-red-600">
+            <Trash2 className="h-4 w-4 mr-2" />
+            Clear Chat
+          </Button>
         </CardHeader>
         
         <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
