@@ -71,3 +71,23 @@ def update_grievance_status(session: Session, grievance_id: UUID, officer_id: UU
     )
     
     return grievance
+
+def delete_grievance(session: Session, grievance_id: UUID, current_user):
+    repo = GrievanceRepository(session)
+    grievance = repo.get_by_id(grievance_id)
+    if not grievance:
+        raise HTTPException(status_code=404, detail="Grievance not found")
+        
+    repo.delete(grievance_id)
+    
+    # Log the action in the audit trail!
+    log_action(
+        session=session,
+        actor_id=current_user.id,
+        action="DELETED_GRIEVANCE",
+        resource_type="grievances",
+        resource_id=grievance_id,
+        meta={"ticket_number": grievance.ticket_number, "subject": grievance.subject}
+    )
+    
+    return {"message": "Grievance deleted successfully"}

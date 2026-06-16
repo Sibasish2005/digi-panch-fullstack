@@ -1,18 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { fetchAPI } from '@/lib/api-client';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function GrievancesPage() {
   const { getToken } = useAuth();
+  const { user, isLoaded } = useUser();
+  const role = (user?.publicMetadata?.role as string) || "CITIZEN";
+
   const [grievances, setGrievances] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -54,6 +59,27 @@ export default function GrievancesPage() {
       setSubmitting(false);
     }
   };
+
+  if (isLoaded && user && role !== "CITIZEN" && role !== "USER") {
+    return (
+      <div className="flex-grow flex items-center justify-center p-6 h-[80vh]">
+        <Card className="max-w-md w-full shadow-lg border-red-100 bg-red-50/30">
+          <CardContent className="flex flex-col items-center text-center pt-10 pb-10">
+            <AlertCircle className="h-16 w-16 text-red-500 mb-6" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h2>
+            <p className="text-slate-600 mb-8">
+              This Grievances portal is strictly reserved for Citizens. As an {role.toLowerCase()}, please use your dedicated dashboard.
+            </p>
+            <Link href="/">
+              <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11">
+                Return to Home
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -117,12 +143,21 @@ export default function GrievancesPage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Category</label>
-                  <Input 
+                  <Select 
                     required 
                     value={formData.category} 
-                    onChange={e => setFormData({...formData, category: e.target.value})} 
-                    placeholder="E.g. Infrastructure, Water"
-                  />
+                    onValueChange={val => setFormData({...formData, category: val})} 
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Infrastructure and maintenance">Infrastructure and maintenance</SelectItem>
+                      <SelectItem value="Social welfare and benefit schemes">Social welfare and benefit schemes</SelectItem>
+                      <SelectItem value="Public utility services">Public utility services</SelectItem>
+                      <SelectItem value="Administrative corruption or inaction">Administrative corruption or inaction</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Description</label>

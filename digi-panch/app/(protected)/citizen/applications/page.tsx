@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { fetchAPI } from '@/lib/api-client';
+import Link from 'next/link';
 import { 
   Table, 
   TableBody, 
@@ -13,12 +14,16 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { RazorpayCheckout } from '@/components/RazorpayCheckout';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ApplicationsTrackingPage() {
   const { getToken } = useAuth();
+  const { user, isLoaded } = useUser();
+  const role = (user?.publicMetadata?.role as string) || "CITIZEN";
+  
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,6 +53,27 @@ export default function ApplicationsTrackingPage() {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (isLoaded && user && role !== "CITIZEN" && role !== "USER") {
+    return (
+      <div className="flex-grow flex items-center justify-center p-6 h-[80vh]">
+        <Card className="max-w-md w-full shadow-lg border-red-100 bg-red-50/30">
+          <CardContent className="flex flex-col items-center text-center pt-10 pb-10">
+            <AlertCircle className="h-16 w-16 text-red-500 mb-6" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h2>
+            <p className="text-slate-600 mb-8">
+              This Applications page is strictly reserved for Citizens. As an {role.toLowerCase()}, please use your dedicated dashboard.
+            </p>
+            <Link href="/">
+              <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11">
+                Return to Home
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

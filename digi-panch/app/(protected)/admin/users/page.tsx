@@ -3,18 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { fetchAPI } from '@/lib/api-client';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, MoreHorizontal, Shield, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +45,10 @@ export default function UserManagementPage() {
   const [newRole, setNewRole] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Search and Filter State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState('ALL');
+
   useEffect(() => {
     loadUsers();
   }, [getToken]);
@@ -70,7 +76,7 @@ export default function UserManagementPage() {
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) return;
-    
+
     setIsSubmitting(true);
     try {
       const token = await getToken();
@@ -91,7 +97,7 @@ export default function UserManagementPage() {
 
   const handleDeleteClick = async (user: any) => {
     if (!confirm(`Are you sure you want to delete user ${user.full_name}?`)) return;
-    
+
     try {
       const token = await getToken();
       await fetchAPI(`/admin/users/${user.id}`, {
@@ -106,12 +112,26 @@ export default function UserManagementPage() {
   };
 
   const getRoleColor = (role: string) => {
-    switch(role?.toUpperCase()) {
+    switch (role?.toUpperCase()) {
       case 'ADMIN': return 'bg-purple-100 text-purple-800';
       case 'OFFICER': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800'; // CITIZEN
     }
   };
+
+  const filteredUsers = users.filter((user) => {
+    const searchLower = searchQuery.toLowerCase();
+    const nameMatch = user.full_name?.toLowerCase().includes(searchLower);
+    const emailMatch = user.email?.toLowerCase().includes(searchLower);
+    const matchesSearch = nameMatch || emailMatch;
+
+    // Normalize user role
+    const actualRole = user.role || 'CITIZEN';
+    const normalizedUserRole = actualRole === 'USER' ? 'CITIZEN' : actualRole;
+    const matchesRole = roleFilter === 'ALL' || normalizedUserRole === roleFilter;
+
+    return matchesSearch && matchesRole;
+  });
 
   if (loading && users.length === 0) {
     return (
@@ -130,7 +150,27 @@ export default function UserManagementPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-      
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Input
+          placeholder="Search users by name or email..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+        <Select value={roleFilter} onValueChange={setRoleFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by Role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Roles</SelectItem>
+            <SelectItem value="CITIZEN">Citizen</SelectItem>
+            <SelectItem value="OFFICER">Officer</SelectItem>
+            <SelectItem value="ADMIN">Admin</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Dialog open={isUpdateDialogOpen} onOpenChange={setIsUpdateDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -142,7 +182,7 @@ export default function UserManagementPage() {
           <form onSubmit={handleUpdateSubmit} className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="role-select" className="text-sm font-medium">Role</label>
-              <select 
+              <select
                 id="role-select"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm"
                 value={newRole}
@@ -180,14 +220,14 @@ export default function UserManagementPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.length === 0 && !loading && (
+            {filteredUsers.length === 0 && !loading && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  No users found.
+                  No users found matching your filters.
                 </TableCell>
               </TableRow>
             )}
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium font-mono text-xs text-muted-foreground">{user.id.split('-')[0]}...</TableCell>
                 <TableCell>{user.full_name || 'Unknown'}</TableCell>
@@ -215,7 +255,7 @@ export default function UserManagementPage() {
                         <Shield className="mr-2 h-4 w-4" />
                         Update Role
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => handleDeleteClick(user)}
                         className="text-red-600 focus:text-red-600 focus:bg-red-50"
                       >

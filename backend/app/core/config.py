@@ -11,6 +11,7 @@ class Settings(BaseSettings): # Standard convention is plural
     CLERK_SECRET_KEY: str
     CLERK_JWT_ISSUER: str
     GEMINI_API_KEY: str
+    DEEPSEEK_API_KEY: str = ""
 
     IMAGEKIT_PUBLIC_KEY: str
     IMAGEKIT_PRIVATE_KEY: str

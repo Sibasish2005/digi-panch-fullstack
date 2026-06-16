@@ -7,6 +7,11 @@ class UserBase(BaseModel):
     email: EmailStr
     full_name: str
     phone: Optional[str] = None
+    age: Optional[int] = None
+    address: Optional[str] = None
+    pin: Optional[str] = None
+    panchayat: Optional[str] = None
+    police_station: Optional[str] = None
     avatar_url: Optional[str] = None
     role: str = "USER"
 
@@ -16,6 +21,11 @@ class UserCreate(UserBase):
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     phone: Optional[str] = None
+    age: Optional[int] = None
+    address: Optional[str] = None
+    pin: Optional[str] = None
+    panchayat: Optional[str] = None
+    police_station: Optional[str] = None
     avatar_url: Optional[str] = None
     role: Optional[str] = None
     is_active: Optional[bool] = None

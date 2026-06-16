@@ -8,6 +8,7 @@ import Footer from "@/app/components/landing-page/footer/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
 import { 
   Bot, 
   FileText, 
@@ -20,6 +21,9 @@ import {
 } from "lucide-react";
 
 export default function ServicesPage() {
+  const { user, isLoaded } = useUser();
+  const role = (user?.publicMetadata?.role as string) || "CITIZEN";
+
   const servicesList = [
     {
       id: "ai-assistant",
@@ -46,6 +50,31 @@ export default function ServicesPage() {
       link: "/citizen/grievances"
     }
   ];
+
+  if (isLoaded && user && role !== "CITIZEN" && role !== "USER") {
+    return (
+      <main className="min-h-screen flex flex-col bg-slate-50">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center p-6">
+          <Card className="max-w-md w-full shadow-lg border-red-100 bg-red-50/30">
+            <CardContent className="flex flex-col items-center text-center pt-10 pb-10">
+              <AlertCircle className="h-16 w-16 text-red-500 mb-6" />
+              <h2 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h2>
+              <p className="text-slate-600 mb-8">
+                The DigiPanch Services portal is strictly reserved for Citizens. As an {role.toLowerCase()}, please use your dedicated dashboard.
+              </p>
+              <Link href="/">
+                <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11">
+                  Return to Home
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen flex flex-col bg-slate-50">

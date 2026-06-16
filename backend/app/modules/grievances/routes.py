@@ -6,7 +6,7 @@ from uuid import UUID
 from app.db.session import get_session
 from app.api.deps import get_current_user
 from app.modules.users.models import User
-from app.modules.roles.guards import require_officer
+from app.modules.roles.guards import require_officer, require_admin
 from app.modules.grievances import service
 from app.modules.grievances.schemas import GrievanceCreate, GrievanceUpdate, GrievanceResponse
 
@@ -49,3 +49,13 @@ def resolve_grievance(
 ):
     """Officer workflow to update status and add resolution notes."""
     return service.update_grievance_status(session, id, officer.id, data)
+
+# ADMIN ONLY ROUTE
+@router.delete("/{id}", status_code=200)
+def delete_grievance(
+    id: UUID,
+    session: Session = Depends(get_session),
+    admin: User = Depends(require_admin)
+):
+    """Admin workflow to delete a grievance entirely."""
+    return service.delete_grievance(session, id, admin)

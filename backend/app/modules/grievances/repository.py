@@ -25,3 +25,11 @@ class GrievanceRepository:
             
         stmt = stmt.order_by(Grievance.created_at.desc()).offset(skip).limit(limit)
         return self.session.execute(stmt).scalars().all()
+
+    def delete(self, grievance_id: UUID) -> bool:
+        grievance = self.get_by_id(grievance_id)
+        if grievance:
+            self.session.delete(grievance)
+            self.session.commit()
+            return True
+        return False

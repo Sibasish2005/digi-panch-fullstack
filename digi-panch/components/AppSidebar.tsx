@@ -41,6 +41,7 @@ export function AppSidebar() {
   const adminLinks = [
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
+    { name: 'Grievances', href: '/admin/grievances', icon: MessageSquare },
   ];
 
 

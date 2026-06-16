@@ -27,7 +27,7 @@ async def generate_chat_response(history: list, context_text: str = None) -> str
             "parts": [{"text": msg.message}]
         })
         
-    system_instruction_text = "You are DigiPanch AI, a helpful, precise e-governance assistant for Panchayat services. Be polite and concise."
+    system_instruction_text = "You are DigiPanch AI, a helpful, precise e-governance assistant for Panchayat services. Be polite and concise. Always greet the user by their name if it is provided in the context."
     
     if context_text:
         system_instruction_text += f"\n\nUse the following verified context documents to answer the user's latest question. If the context does not contain the answer, politely say you don't know based on official documents.\n\nCONTEXT:\n{context_text}"
@@ -61,23 +61,23 @@ async def generate_chat_response(history: list, context_text: str = None) -> str
                     await asyncio.sleep(delay)
                     continue
                 
-                # Final failure — return user-facing message
+                # Final failure — raise exception so service can fallback
                 if status_code == 400:
                     logger.error("Hint: This often means an invalid API key or malformed request.")
-                    return "I'm sorry, I encountered a configuration issue. Please contact the administrator."
+                    raise Exception("Gemini Configuration Issue")
                 elif status_code == 403:
                     logger.error("Hint: API key may be invalid, disabled, or lacking permissions.")
-                    return "I'm sorry, the AI service is not properly configured. Please contact the administrator."
+                    raise Exception("Gemini Permission Issue")
                 elif status_code == 429:
                     logger.error("Hint: API rate limit or quota exceeded after all retries.")
-                    return "I'm currently handling too many requests. Please try again in a moment."
+                    raise Exception("Gemini Rate Limit Exceeded")
                 else:
-                    return "I'm sorry, I am experiencing issues at the moment. Please try again later."
+                    raise Exception(f"Gemini HTTP {status_code} Error")
             except httpx.ConnectError as e:
                 logger.error(f"Cannot connect to Gemini API: {str(e)}")
-                return "I'm unable to reach the AI service. Please check your network connection."
+                raise Exception("Gemini Connection Error")
             except Exception as e:
                 logger.error(f"Exception calling Gemini: {str(e)}", exc_info=True)
-                return "I couldn't process that request right now."
+                raise e
     
-    return "I couldn't process that request right now."
+    raise Exception("Gemini failed after all retries.")
