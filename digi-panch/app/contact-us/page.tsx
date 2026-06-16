@@ -172,67 +172,66 @@ export default function ContactPage() {
                 <Separator className="my-6" />
 
                 {/* Form */}
-                <form className="space-y-5">
+                <form action="https://formsubmit.co/sibasishchakraborty000@gmail.com" method="POST" className="space-y-5">
+                  <input type="hidden" name="_next" value="https://digi-panch-fullstack.vercel.app/contact-us" />
+                  <input type="hidden" name="_captcha" value="false" />
 
                   {/* Name */}
                   <div>
-
                     <label className="mb-2 block text-sm font-medium text-slate-700">
                       Full Name
                     </label>
-
                     <Input
+                      name="name"
                       placeholder="Enter your name"
                       className="rounded-xl"
+                      required
                     />
-
                   </div>
 
                   {/* Email */}
                   <div>
-
                     <label className="mb-2 block text-sm font-medium text-slate-700">
                       Email Address
                     </label>
-
                     <Input
                       type="email"
+                      name="email"
                       placeholder="Enter your email"
                       className="rounded-xl"
+                      required
                     />
-
                   </div>
 
                   {/* Subject */}
                   <div>
-
                     <label className="mb-2 block text-sm font-medium text-slate-700">
                       Subject
                     </label>
-
                     <Input
+                      name="subject"
                       placeholder="Enter subject"
                       className="rounded-xl"
+                      required
                     />
-
                   </div>
 
                   {/* Message */}
                   <div>
-
                     <label className="mb-2 block text-sm font-medium text-slate-700">
                       Message
                     </label>
-
                     <Textarea
+                      name="message"
                       placeholder="Write your message..."
                       className="min-h-[140px] rounded-xl"
+                      required
                     />
-
                   </div>
 
                   {/* Submit */}
                   <Button
+                    type="submit"
                     className="w-full rounded-xl bg-blue-600 hover:bg-blue-700"
                   >
                     Send Message
