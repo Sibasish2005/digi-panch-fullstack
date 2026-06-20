@@ -18,6 +18,7 @@ from app.modules.payments.models import Payment
 from app.modules.chat.models import ChatSession, ChatMessage
 from app.modules.rag.models import KnowledgeDocument, KnowledgeChunk
 from app.modules.notifications.models import Notification
+from app.modules.amenities.models import Amenity, AmenityBooking
 
 from app.core.exceptions import add_exception_handlers
 from app.init_db import init_db

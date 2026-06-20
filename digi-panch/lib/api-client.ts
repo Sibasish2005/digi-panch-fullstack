@@ -55,10 +55,18 @@ export async function fetchAPI<T = any>(
 
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
-  const response = await fetch(url, {
-    headers,
-    ...restOptions,
-  });
+  console.log(`[fetchAPI] Attempting fetch to: ${url}`);
+
+  let response;
+  try {
+    response = await fetch(url, {
+      headers,
+      ...restOptions,
+    });
+  } catch (err) {
+    console.error(`[fetchAPI] Network Error hitting ${url}:`, err);
+    throw err;
+  }
 
   if (!response.ok) {
     let errorData;

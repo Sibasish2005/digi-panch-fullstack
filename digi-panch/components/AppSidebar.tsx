@@ -12,7 +12,8 @@ import {
   Activity, 
   LogOut,
   Bot,
-  Settings
+  Settings,
+  CalendarDays
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,18 +30,22 @@ export function AppSidebar() {
   const citizenLinks = [
     { name: 'Dashboard', href: '/citizen', icon: Home },
     { name: 'Apply for Document', href: '/citizen/apply', icon: FileText },
+    { name: 'Book Amenity', href: '/citizen/book', icon: CalendarDays },
+    { name: 'My Bookings', href: '/citizen/my-bookings', icon: ListTodo },
     { name: 'My Applications', href: '/citizen/applications', icon: ListTodo },
     { name: 'Grievances', href: '/citizen/grievances', icon: MessageSquare },
   ];
 
   const officerLinks = [
     { name: 'Pending Queue', href: '/officer', icon: ListTodo },
+    { name: 'Booking Requests', href: '/officer/bookings', icon: CalendarDays },
     { name: 'Grievances', href: '/officer/grievances', icon: MessageSquare },
   ];
 
   const adminLinks = [
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
+    { name: 'Amenities', href: '/admin/amenities', icon: CalendarDays },
     { name: 'Grievances', href: '/admin/grievances', icon: MessageSquare },
   ];
 

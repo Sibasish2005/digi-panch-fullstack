@@ -11,6 +11,8 @@ from app.modules.payments.webhooks import router as webhooks_router
 from app.modules.chat.routes import router as chat_router
 from app.modules.dashboard.routes import router as dashboard_router
 from app.modules.rag.routes import router as rag_router
+from app.modules.amenities.routes import router as amenities_router
+from app.modules.amenities.test_router import router as test_router
 
 api_router = APIRouter()
 
@@ -27,3 +29,5 @@ api_router.include_router(webhooks_router)
 api_router.include_router(chat_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(rag_router)
+api_router.include_router(amenities_router, prefix="/amenities", tags=["Amenities"])
+api_router.include_router(test_router, prefix="/test")

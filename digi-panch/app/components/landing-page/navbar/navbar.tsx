@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, Home, FileText, MessageSquare, ListTodo, Users, Activity, LogOut } from "lucide-react";
+import { Menu, X, User, Home, FileText, MessageSquare, ListTodo, Users, Activity, LogOut, CalendarDays } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Show, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
@@ -18,18 +18,22 @@ export default function Navbar() {
   const citizenLinks = [
     { name: 'Dashboard', href: '/citizen', icon: Home },
     { name: 'Apply for Document', href: '/citizen/apply', icon: FileText },
+    { name: 'Book Amenity', href: '/citizen/book', icon: CalendarDays },
+    { name: 'My Bookings', href: '/citizen/my-bookings', icon: ListTodo },
     { name: 'My Applications', href: '/citizen/applications', icon: ListTodo },
     { name: 'Grievances', href: '/citizen/grievances', icon: MessageSquare },
   ];
 
   const officerLinks = [
     { name: 'Pending Queue', href: '/officer', icon: ListTodo },
+    { name: 'Booking Requests', href: '/officer/bookings', icon: CalendarDays },
     { name: 'Grievances', href: '/officer/grievances', icon: MessageSquare },
   ];
 
   const adminLinks = [
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
+    { name: 'Amenities', href: '/admin/amenities', icon: CalendarDays },
     { name: 'Grievances', href: '/admin/grievances', icon: MessageSquare },
   ];
 
