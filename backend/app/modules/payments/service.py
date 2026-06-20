@@ -13,6 +13,7 @@ def create_payment_order(session: Session, user_id: UUID, data: PaymentCreateReq
     local_data = {
         "user_id": user_id,
         "application_id": data.application_id,
+        "booking_id": data.booking_id,
         "payment_type": data.payment_type,
         "amount": data.amount,
         "currency": "INR",
@@ -72,6 +73,15 @@ def verify_payment(session: Session, data: PaymentVerifyRequest):
             app.status = "SUBMITTED"
             app_repo.session.add(app)
             app_repo.session.commit()
+            
+    # Update the associated amenity booking status to PENDING
+    if payment.booking_id:
+        from app.modules.amenities.models import AmenityBooking
+        booking = session.get(AmenityBooking, payment.booking_id)
+        if booking and booking.status == "PENDING_PAYMENT":
+            booking.status = "PENDING"
+            session.add(booking)
+            session.commit()
     
     return payment
 

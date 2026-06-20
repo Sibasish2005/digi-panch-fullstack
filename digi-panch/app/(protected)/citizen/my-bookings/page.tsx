@@ -96,6 +96,7 @@ export default function CitizenBookingsPage() {
               <TableHead>Booking ID</TableHead>
               <TableHead>Amenity</TableHead>
               <TableHead>Date Requested</TableHead>
+              <TableHead>Applicant</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Remarks</TableHead>
             </TableRow>
@@ -103,7 +104,7 @@ export default function CitizenBookingsPage() {
           <TableBody>
             {bookings.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No bookings found. You haven't booked any amenities yet.
                 </TableCell>
               </TableRow>
@@ -112,7 +113,18 @@ export default function CitizenBookingsPage() {
               <TableRow key={booking.id}>
                 <TableCell className="font-medium text-sm">{booking.booking_number}</TableCell>
                 <TableCell>{booking.amenity?.name}</TableCell>
-                <TableCell>{new Date(booking.booking_date).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {new Date(booking.booking_date).toLocaleDateString()}
+                  {booking.end_date && ` - ${new Date(booking.end_date).toLocaleDateString()}`}
+                </TableCell>
+                <TableCell className="text-sm">
+                  {booking.applicant_name ? (
+                    <div>
+                      <div className="font-medium">{booking.applicant_name}</div>
+                      <div className="text-xs text-gray-500">{booking.contact_number}</div>
+                    </div>
+                  ) : '-'}
+                </TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(booking.status)} variant="outline">
                     {booking.status}

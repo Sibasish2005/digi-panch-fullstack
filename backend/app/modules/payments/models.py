@@ -9,8 +9,9 @@ class Payment(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     user_id: uuid.UUID = Field(foreign_key="users.id", index=True)
     application_id: Optional[uuid.UUID] = Field(default=None, foreign_key="document_applications.id", index=True)
+    booking_id: Optional[uuid.UUID] = Field(default=None, foreign_key="amenity_bookings.id", index=True)
     
-    payment_type: str = Field(max_length=50) # CERTIFICATE_FEE, UTILITY_BILL, OTHER
+    payment_type: str = Field(max_length=50) # CERTIFICATE_FEE, UTILITY_BILL, AMENITY_BOOKING, OTHER
     amount: float
     currency: str = Field(default="INR", max_length=10)
     

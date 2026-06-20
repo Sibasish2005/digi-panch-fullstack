@@ -8,6 +8,7 @@ class AmenityBase(BaseModel):
     description: Optional[str] = None
     form_fields: List[dict[str, Any]] = []
     fee_amount: float = 0.0
+    allow_multi_day: bool = False
     is_active: bool = True
 
 class AmenityCreate(AmenityBase):
@@ -18,6 +19,7 @@ class AmenityUpdate(BaseModel):
     description: Optional[str] = None
     form_fields: Optional[List[dict[str, Any]]] = None
     fee_amount: Optional[float] = None
+    allow_multi_day: Optional[bool] = None
     is_active: Optional[bool] = None
 
 class AmenityRead(AmenityBase):
@@ -31,6 +33,10 @@ class AmenityRead(AmenityBase):
 
 class AmenityBookingBase(BaseModel):
     booking_date: date
+    end_date: Optional[date] = None
+    applicant_name: Optional[str] = None
+    contact_number: Optional[str] = None
+    identity_proof: Optional[str] = None
     form_data: dict[str, Any] = {}
 
 class AmenityBookingCreate(AmenityBookingBase):

@@ -27,8 +27,8 @@ export default function OfficerQueuePage() {
     async function loadApplications() {
       try {
         const token = await getToken();
-        // Fetch only SUBMITTED (pending) tasks for officers
-        const data = await fetchAPI('/officer/applications?status=SUBMITTED', { token });
+        // Fetch SUBMITTED (pending review) and APPROVED (pending document upload)
+        const data = await fetchAPI('/officer/applications?status=SUBMITTED,APPROVED', { token });
         setApplications(data);
       } catch (e) {
         console.error(e);

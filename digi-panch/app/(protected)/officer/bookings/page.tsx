@@ -1,4 +1,4 @@
-'use client';
+'use client'; 
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Eye } from 'lucide-react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { 
   Dialog, 
@@ -36,6 +36,7 @@ export default function OfficerBookingsPage() {
   const [actionType, setActionType] = useState<'APPROVE' | 'REJECT' | null>(null);
   const [remarks, setRemarks] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [detailsBooking, setDetailsBooking] = useState<any>(null);
 
   useEffect(() => {
     loadBookings();
@@ -126,10 +127,13 @@ export default function OfficerBookingsPage() {
               <TableRow key={booking.id}>
                 <TableCell className="font-medium text-sm">{booking.booking_number}</TableCell>
                 <TableCell>{booking.amenity?.name}</TableCell>
-                <TableCell className="font-medium">{new Date(booking.booking_date).toLocaleDateString()}</TableCell>
+                <TableCell className="font-medium">
+                  {new Date(booking.booking_date).toLocaleDateString()}
+                  {booking.end_date && ` - ${new Date(booking.end_date).toLocaleDateString()}`}
+                </TableCell>
                 <TableCell>
                   <div className="text-xs text-gray-600 max-w-xs truncate">
-                    {Object.entries(booking.form_data || {}).map(([k, v]) => `${k}: ${v}`).join(', ')}
+                    {booking.applicant_name ? `${booking.applicant_name} (${booking.contact_number})` : 'N/A'}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -140,6 +144,15 @@ export default function OfficerBookingsPage() {
                 <TableCell className="text-right">
                   {booking.status === 'PENDING' ? (
                     <div className="flex justify-end gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        onClick={() => setDetailsBooking(booking)}
+                      >
+                        <Eye className="h-3.5 w-3.5 mr-1" />
+                        Details
+                      </Button>
                       <Button 
                         variant="outline" 
                         size="sm" 
@@ -201,6 +214,53 @@ export default function OfficerBookingsPage() {
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirm {actionType === 'APPROVE' ? 'Approval' : 'Rejection'}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Details Dialog */}
+      <Dialog open={!!detailsBooking} onOpenChange={(open) => !open && setDetailsBooking(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Booking Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {detailsBooking && (
+              <>
+                <div className="space-y-1 pb-3 border-b border-gray-100">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase">Applicant Info</h4>
+                  <p className="text-sm"><span className="font-medium">Name:</span> {detailsBooking.applicant_name || 'N/A'}</p>
+                  <p className="text-sm"><span className="font-medium">Contact:</span> {detailsBooking.contact_number || 'N/A'}</p>
+                  <p className="text-sm"><span className="font-medium">ID Proof:</span> {detailsBooking.identity_proof || 'N/A'}</p>
+                </div>
+                
+                <div className="space-y-1 pb-3 border-b border-gray-100">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase">Booking Info</h4>
+                  <p className="text-sm"><span className="font-medium">Amenity:</span> {detailsBooking.amenity?.name}</p>
+                  <p className="text-sm"><span className="font-medium">Booking ID:</span> {detailsBooking.booking_number}</p>
+                  <p className="text-sm"><span className="font-medium">Dates:</span> {new Date(detailsBooking.booking_date).toLocaleDateString()} {detailsBooking.end_date && `- ${new Date(detailsBooking.end_date).toLocaleDateString()}`}</p>
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase">Form Responses</h4>
+                  {Object.entries(detailsBooking.form_data || {}).length > 0 ? (
+                    <ul className="text-sm space-y-1 mt-1 bg-gray-50 p-2 rounded-md border border-gray-100">
+                      {Object.entries(detailsBooking.form_data).map(([key, value]) => (
+                        <li key={key} className="flex flex-col mb-1">
+                          <span className="font-medium text-gray-700">{key}:</span>
+                          <span className="text-gray-600 pl-2">{String(value)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-400 italic">No additional form data provided.</p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDetailsBooking(null)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

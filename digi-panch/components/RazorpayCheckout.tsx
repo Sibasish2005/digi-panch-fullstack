@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Loader2, CreditCard } from 'lucide-react';
 
 export function RazorpayCheckout({ 
-  applicationId, 
+  referenceId, 
+  referenceType = 'APPLICATION_FEE',
   amount, 
   onSuccess 
 }: { 
-  applicationId: string; 
+  referenceId: string; 
+  referenceType?: 'APPLICATION_FEE' | 'AMENITY_BOOKING';
   amount: number; 
   onSuccess: () => void; 
 }) {
@@ -32,10 +34,17 @@ export function RazorpayCheckout({
     setLoading(true);
     try {
       const token = await getToken();
+      const payload: any = { amount, payment_type: referenceType };
+      if (referenceType === 'AMENITY_BOOKING') {
+        payload.booking_id = referenceId;
+      } else {
+        payload.application_id = referenceId;
+      }
+
       const order = await fetchAPI('/payments/create-order', {
         method: 'POST',
         token,
-        body: JSON.stringify({ application_id: applicationId, amount, payment_type: 'APPLICATION_FEE' })
+        body: JSON.stringify(payload)
       });
 
       const options = {

@@ -55,6 +55,7 @@ def create_amenity(db: Session, data: AmenityCreate) -> Amenity:
         description=data.description,
         form_fields=data.form_fields,
         fee_amount=data.fee_amount,
+        allow_multi_day=data.allow_multi_day,
         is_active=data.is_active
     )
     db.add(amenity)
@@ -98,13 +99,27 @@ def create_amenity_booking(db: Session, amenity_id: uuid.UUID, user_id: uuid.UUI
     # Optional: logic to assign an officer automatically
     # For now, it stays unassigned or assigned randomly.
     
+    # Calculate total fee
+    total_fee = amenity.fee_amount
+    if amenity.allow_multi_day and data.booking_date and data.end_date:
+        if data.end_date >= data.booking_date:
+            diff = data.end_date - data.booking_date
+            diff_days = diff.days + 1
+            total_fee = amenity.fee_amount * diff_days
+
+    initial_status = "PENDING_PAYMENT" if total_fee > 0 else "PENDING"
+    
     booking = AmenityBooking(
         booking_number=booking_number,
         user_id=user_id,
         amenity_id=amenity_id,
         booking_date=data.booking_date,
+        end_date=data.end_date,
+        applicant_name=data.applicant_name,
+        contact_number=data.contact_number,
+        identity_proof=data.identity_proof,
         form_data=data.form_data,
-        status="PENDING"
+        status=initial_status
     )
     
     db.add(booking)

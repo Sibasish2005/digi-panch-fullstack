@@ -5,6 +5,7 @@ from datetime import datetime
 
 class PaymentCreateRequest(BaseModel):
     application_id: Optional[UUID] = None
+    booking_id: Optional[UUID] = None
     payment_type: str
     amount: float # Amount in rupees
 
@@ -24,6 +25,7 @@ class PaymentResponse(BaseModel):
     id: UUID
     user_id: UUID
     application_id: Optional[UUID]
+    booking_id: Optional[UUID]
     payment_type: str
     amount: float
     currency: str

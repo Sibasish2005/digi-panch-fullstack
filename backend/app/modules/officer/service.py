@@ -16,7 +16,8 @@ from app.modules.documents.models import DocumentType
 def get_all_applications(session: Session, status_filter: str = None, skip: int = 0, limit: int = 100):
     stmt = select(DocumentApplication, User, DocumentType).join(User, DocumentApplication.user_id == User.id).join(DocumentType, DocumentApplication.document_type_id == DocumentType.id)
     if status_filter:
-        stmt = stmt.where(DocumentApplication.status == status_filter)
+        statuses = [s.strip() for s in status_filter.split(',')]
+        stmt = stmt.where(DocumentApplication.status.in_(statuses))
     stmt = stmt.offset(skip).limit(limit)
     
     results = session.execute(stmt).all()

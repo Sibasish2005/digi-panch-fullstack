@@ -43,6 +43,7 @@ export default function AmenitiesPage() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [fee, setFee] = useState(0);
+  const [allowMultiDay, setAllowMultiDay] = useState(false);
   const [formFields, setFormFields] = useState<{name: string, type: string, options?: string[]}[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,6 +69,7 @@ export default function AmenitiesPage() {
     setName('');
     setDescription('');
     setFee(0);
+    setAllowMultiDay(false);
     setFormFields([]);
   };
 
@@ -81,6 +83,7 @@ export default function AmenitiesPage() {
     setName(amenity.name);
     setDescription(amenity.description || '');
     setFee(amenity.fee_amount);
+    setAllowMultiDay(amenity.allow_multi_day || false);
     setFormFields(amenity.form_fields || []);
     setIsDialogOpen(true);
   };
@@ -159,6 +162,7 @@ export default function AmenitiesPage() {
         name,
         description,
         fee_amount: fee,
+        allow_multi_day: allowMultiDay,
         form_fields: formFields
       };
 
@@ -234,6 +238,17 @@ export default function AmenitiesPage() {
                     onChange={(e) => setFee(parseFloat(e.target.value))} 
                     required 
                   />
+                </div>
+                <div className="space-y-2 flex flex-col justify-end">
+                  <label className="flex items-center gap-2 cursor-pointer pt-6">
+                    <input 
+                      type="checkbox" 
+                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      checked={allowMultiDay}
+                      onChange={(e) => setAllowMultiDay(e.target.checked)}
+                    />
+                    <span className="text-sm font-medium">Allow Multi-Day Bookings</span>
+                  </label>
                 </div>
               </div>
 
@@ -352,7 +367,12 @@ export default function AmenitiesPage() {
                       </p>
                     )}
                   </TableCell>
-                  <TableCell>₹{amenity.fee_amount}</TableCell>
+                  <TableCell>
+                    ₹{amenity.fee_amount}
+                    {amenity.allow_multi_day && (
+                      <Badge variant="outline" className="ml-2 text-xs">Multi-Day</Badge>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={amenity.is_active ? "default" : "destructive"}>
                       {amenity.is_active ? "Active" : "Inactive"}

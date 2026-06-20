@@ -127,7 +127,7 @@ export default function ApplicationsTrackingPage() {
                 <TableCell className="text-right">
                   {app.status === 'PENDING_PAYMENT' && (
                     <RazorpayCheckout 
-                      applicationId={app.id} 
+                      referenceId={app.id}  
                       amount={app.document_type?.fee_amount || 100} 
                       onSuccess={loadApplications} 
                     />

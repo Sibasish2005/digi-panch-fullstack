@@ -16,6 +16,7 @@ class Amenity(SQLModel, table=True):
     form_fields: List[dict[str, Any]] = Field(default=[], sa_column=Column(JSON))
     
     fee_amount: float = Field(default=0.0)
+    allow_multi_day: bool = Field(default=False)
     
     is_active: bool = Field(default=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -33,6 +34,12 @@ class AmenityBooking(SQLModel, table=True):
     
     # Specific Booking Date (requested by user)
     booking_date: date = Field(...)
+    end_date: Optional[date] = Field(default=None)
+    
+    # Applicant details
+    applicant_name: Optional[str] = Field(default=None, max_length=255)
+    contact_number: Optional[str] = Field(default=None, max_length=50)
+    identity_proof: Optional[str] = Field(default=None, max_length=255)
     
     status: str = Field(default="PENDING", max_length=50) # PENDING, APPROVED, REJECTED
     remarks: Optional[str] = Field(default=None)

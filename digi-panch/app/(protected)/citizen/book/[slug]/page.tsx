@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { fetchAPI } from '@/lib/api-client';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
   const { getToken } = useAuth();
   const unwrappedParams = use(params);
   const slug = unwrappedParams.slug;
+  const { user } = useUser();
   
   const [amenity, setAmenity] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -30,10 +31,27 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
   
   // Specific required field
   const [bookingDate, setBookingDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  
+  // Applicant details
+  const [applicantName, setApplicantName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [identityProof, setIdentityProof] = useState('');
   
   // Dynamic fields
   const [formData, setFormData] = useState<Record<string, any>>({});
   
+  useEffect(() => {
+    if (user) {
+      if (!applicantName && user.fullName) {
+        setApplicantName(user.fullName);
+      }
+      if (!contactNumber && user.primaryPhoneNumber?.phoneNumber) {
+        setContactNumber(user.primaryPhoneNumber.phoneNumber);
+      }
+    }
+  }, [user]);
+
   useEffect(() => {
     async function loadAmenity() {
       try {
@@ -58,17 +76,26 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
     try {
       const token = await getToken();
       
-      await fetchAPI(`/amenities/${slug}/book`, {
+      const booking = await fetchAPI(`/amenities/${slug}/book`, {
         method: 'POST',
         token,
         body: JSON.stringify({
           booking_date: bookingDate,
+          end_date: amenity.allow_multi_day && endDate ? endDate : undefined,
+          applicant_name: applicantName,
+          contact_number: contactNumber,
+          identity_proof: identityProof,
           form_data: formData
         })
       });
 
-      toast.success('Booking request submitted successfully!');
-      router.push('/citizen/book');
+      if (booking.status === 'PENDING_PAYMENT') {
+        toast.success('Booking created! Please complete payment.');
+        router.push(`/citizen/book/pay/${booking.id}?fee=${totalFee}`);
+      } else {
+        toast.success('Booking request submitted successfully!');
+        router.push('/citizen/my-bookings');
+      }
     } catch (error: any) {
       console.error(error);
       toast.error(error.message || 'Failed to submit booking request.');
@@ -79,7 +106,21 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
 
   const formFields = amenity.form_fields || [];
   const allFieldsFilled = formFields.every((field: any) => formData[field.name] && formData[field.name].trim() !== '');
-  const isFormValid = bookingDate && allFieldsFilled;
+  const basicDetailsFilled = applicantName.trim() && contactNumber.trim() && identityProof.trim();
+  const dateValid = bookingDate && (!amenity.allow_multi_day || endDate);
+  const isFormValid = dateValid && basicDetailsFilled && allFieldsFilled;
+
+  // Calculate fee
+  let totalFee = amenity.fee_amount;
+  if (amenity.allow_multi_day && bookingDate && endDate) {
+    const start = new Date(bookingDate);
+    const end = new Date(endDate);
+    if (end >= start) {
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Inclusive of start day
+      totalFee = amenity.fee_amount * diffDays;
+    }
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -96,24 +137,99 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
               <h4 className="font-medium text-blue-900 mb-2">Amenity Information</h4>
               <p className="text-sm text-blue-800">{amenity.description}</p>
               <div className="mt-2 text-sm font-semibold text-blue-900">
-                Booking Fee: ₹{amenity.fee_amount}
+                Base Fee: ₹{amenity.fee_amount} {amenity.allow_multi_day && '/ day'}
               </div>
+              {amenity.allow_multi_day && bookingDate && endDate && new Date(endDate) >= new Date(bookingDate) && (
+                <div className="mt-1 text-sm font-bold text-emerald-700">
+                  Total Calculated Fee: ₹{totalFee}
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
+              <h3 className="font-semibold text-lg border-b pb-2">Applicant Details</h3>
+              
               <div className="flex flex-col gap-2 w-full md:w-[65%]">
                 <label className="text-sm font-medium leading-none">
-                  Select Booking Date <span className="text-red-500">*</span>
+                  Applicant Name <span className="text-red-500">*</span>
                 </label>
                 <Input 
-                  type="date"
                   required
-                  value={bookingDate}
-                  onChange={(e) => setBookingDate(e.target.value)}
+                  value={applicantName}
+                  onChange={(e) => setApplicantName(e.target.value)}
+                  placeholder="Enter full name"
                   className="w-full bg-white"
-                  min={new Date().toISOString().split('T')[0]}
                 />
               </div>
+
+              <div className="flex flex-col gap-2 w-full md:w-[65%]">
+                <label className="text-sm font-medium leading-none">
+                  Contact Number <span className="text-red-500">*</span>
+                </label>
+                <Input 
+                  required
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  placeholder="Enter 10-digit mobile number"
+                  className="w-full bg-white"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 w-full md:w-[65%]">
+                <label className="text-sm font-medium leading-none">
+                  Identity Proof Number (Aadhaar/Voter ID) <span className="text-red-500">*</span>
+                </label>
+                <Input 
+                  required
+                  value={identityProof}
+                  onChange={(e) => setIdentityProof(e.target.value)}
+                  placeholder="Enter ID proof number"
+                  className="w-full bg-white"
+                />
+              </div>
+
+              <h3 className="font-semibold text-lg border-b pb-2 pt-4">Booking Timeline</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-[80%]">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium leading-none">
+                    {amenity.allow_multi_day ? 'Start Date' : 'Select Booking Date'} <span className="text-red-500">*</span>
+                  </label>
+                  <Input 
+                    type="date"
+                    required
+                    value={bookingDate}
+                    onChange={(e) => {
+                      setBookingDate(e.target.value);
+                      if (endDate && new Date(e.target.value) > new Date(endDate)) {
+                        setEndDate(e.target.value);
+                      }
+                    }}
+                    className="w-full bg-white"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+
+                {amenity.allow_multi_day && (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium leading-none">
+                      End Date <span className="text-red-500">*</span>
+                    </label>
+                    <Input 
+                      type="date"
+                      required
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full bg-white"
+                      min={bookingDate || new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {formFields.length > 0 && (
+                <h3 className="font-semibold text-lg border-b pb-2 pt-4">Additional Details</h3>
+              )}
 
               {formFields.map((field: any, idx: number) => (
                 <div key={idx} className="flex flex-col gap-2 w-full md:w-[65%]">
