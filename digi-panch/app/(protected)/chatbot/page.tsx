@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Send, Bot, User, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 
 export default function ChatbotPage() {
   const { getToken } = useAuth();
@@ -99,7 +100,7 @@ export default function ChatbotPage() {
       scrollToBottom();
     } catch (error) {
       console.error(error);
-      alert('Failed to send message.');
+      toast.error('Failed to send message.');
     } finally {
       setSending(false);
     }
@@ -119,7 +120,7 @@ export default function ChatbotPage() {
       setMessages([]);
     } catch (error) {
       console.error(error);
-      alert('Failed to clear chat.');
+      toast.error('Failed to clear chat.');
     } finally {
       setSending(false);
     }

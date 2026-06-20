@@ -16,6 +16,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 export default function AmenityBookingPage({ params }: { params: Promise<{ slug: string }> }) {
   const router = useRouter();
@@ -66,11 +67,11 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
         })
       });
 
-      alert('Booking request submitted successfully!');
+      toast.success('Booking request submitted successfully!');
       router.push('/citizen/book');
     } catch (error: any) {
       console.error(error);
-      alert(error.message || 'Failed to submit booking request.');
+      toast.error(error.message || 'Failed to submit booking request.');
     } finally {
       setSubmitting(false);
     }

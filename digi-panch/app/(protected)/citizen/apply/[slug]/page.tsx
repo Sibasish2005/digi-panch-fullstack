@@ -17,6 +17,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 export default function ApplicationFormPage({ params }: { params: Promise<{ slug: string }> }) {
   const router = useRouter();
@@ -78,10 +79,11 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
         })
       });
 
+      toast.success('Application submitted successfully!');
       router.push('/citizen/applications');
     } catch (error) {
       console.error(error);
-      alert('Failed to submit application.');
+      toast.error('Failed to submit application.');
     } finally {
       setSubmitting(false);
     }

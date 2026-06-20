@@ -34,6 +34,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 export default function UserManagementPage() {
   const { getToken } = useAuth();
@@ -45,6 +47,7 @@ export default function UserManagementPage() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [newRole, setNewRole] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState<{isOpen: boolean, user: any | null}>({isOpen: false, user: null});
 
   // Search and Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,8 +77,7 @@ export default function UserManagementPage() {
     setIsUpdateDialogOpen(true);
   };
 
-  const handleUpdateSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdateRole = async () => {
     if (!selectedUser) return;
 
     setIsSubmitting(true);
@@ -87,17 +89,23 @@ export default function UserManagementPage() {
         body: JSON.stringify({ role: newRole })
       });
       setIsUpdateDialogOpen(false);
+      toast.success("User role updated successfully");
       loadUsers();
     } catch (error) {
       console.error("Failed to update user:", error);
-      alert("Failed to update user.");
+      toast.error("Failed to update user.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDeleteClick = async (user: any) => {
-    if (!confirm(`Are you sure you want to delete user ${user.full_name}?`)) return;
+  const handleDeleteClick = (user: any) => {
+    setConfirmDialog({ isOpen: true, user });
+  };
+
+  const executeDeleteUser = async () => {
+    if (!confirmDialog.user) return;
+    const user = confirmDialog.user;
 
     try {
       const token = await getToken();
@@ -105,10 +113,12 @@ export default function UserManagementPage() {
         method: 'DELETE',
         token,
       });
+      toast.success("User deleted successfully");
+      setConfirmDialog({ ...confirmDialog, isOpen: false });
       loadUsers();
     } catch (error) {
       console.error("Failed to delete user:", error);
-      alert("Failed to delete user.");
+      toast.error("Failed to delete user.");
     }
   };
 
@@ -168,7 +178,7 @@ export default function UserManagementPage() {
               Change the role for {selectedUser?.full_name}.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleUpdateSubmit} className="space-y-4 py-4">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="role-select" className="text-sm font-medium">Role</label>
               <select
@@ -184,15 +194,12 @@ export default function UserManagementPage() {
               </select>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsUpdateDialogOpen(false)} disabled={isSubmitting}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Update Role
+              <Button type="button" variant="outline" onClick={() => setIsUpdateDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleUpdateRole} disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Update Role"}
               </Button>
             </DialogFooter>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -259,6 +266,16 @@ export default function UserManagementPage() {
           </TableBody>
         </Table>
       </div>
+
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={executeDeleteUser}
+        title="Confirm User Deletion"
+        description={`Are you sure you want to delete user ${confirmDialog.user?.full_name}? This action cannot be undone.`}
+        confirmText="Delete User"
+        isDestructive={true}
+      />
     </div>
   );
 }

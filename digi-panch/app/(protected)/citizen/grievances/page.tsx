@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { toast } from 'sonner';
 
 export default function GrievancesPage() {
   const { getToken } = useAuth();
@@ -52,10 +53,11 @@ export default function GrievancesPage() {
         body: JSON.stringify(formData)
       });
       setFormData({ subject: '', category: '', description: '' });
+      toast.success('Grievance submitted successfully.');
       await loadGrievances();
     } catch (e) {
       console.error(e);
-      alert('Failed to submit grievance');
+      toast.error('Failed to submit grievance');
     } finally {
       setSubmitting(false);
     }

@@ -27,6 +27,8 @@ import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { ImageKitUploader } from '@/components/ImageKitUploader';
 import Image from 'next/image';
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 export default function AdminNewsPage() {
   const { getToken } = useAuth();
@@ -34,6 +36,12 @@ export default function AdminNewsPage() {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    action: string;
+    news: any | null;
+  }>({ isOpen: false, action: '', news: null });
 
   // Form State
   const [title, setTitle] = useState('');
@@ -84,9 +92,14 @@ export default function AdminNewsPage() {
     setIsDialogOpen(true);
   };
 
-  const handleToggleStatus = async (news: any) => {
+  const handleToggleStatus = (news: any) => {
     const action = news.is_active ? "deactivate" : "activate";
-    if (!confirm(`Are you sure you want to ${action} this news item?`)) return;
+    setConfirmDialog({ isOpen: true, action, news });
+  };
+
+  const executeToggleStatus = async () => {
+    if (!confirmDialog.news) return;
+    const { action, news } = confirmDialog;
     
     try {
       const token = await getToken();
@@ -95,17 +108,19 @@ export default function AdminNewsPage() {
         token,
         body: JSON.stringify({ is_active: !news.is_active })
       });
+      toast.success(`News item successfully ${action}d.`);
+      setConfirmDialog({ ...confirmDialog, isOpen: false });
       loadNewsItems();
     } catch (error) {
       console.error(`Failed to ${action} news item:`, error);
-      alert(`Failed to ${action} news item.`);
+      toast.error(`Failed to ${action} news item.`);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!imageUrl) {
-      alert("Please upload an image thumbnail.");
+      toast.error("Please upload an image thumbnail.");
       return;
     }
     
@@ -136,12 +151,13 @@ export default function AdminNewsPage() {
         });
       }
 
+      toast.success(editingId ? "News item updated successfully" : "News item created successfully");
       setIsDialogOpen(false);
       resetForm();
       loadNewsItems();
     } catch (error) {
       console.error("Failed to save news item:", error);
-      alert("Failed to save news item.");
+      toast.error("Failed to save news item.");
     } finally {
       setIsSubmitting(false);
     }
@@ -310,6 +326,16 @@ export default function AdminNewsPage() {
           </TableBody>
         </Table>
       </div>
+
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={executeToggleStatus}
+        title={`Confirm ${confirmDialog.action === 'activate' ? 'Activation' : 'Deactivation'}`}
+        description={`Are you sure you want to ${confirmDialog.action} the news item "${confirmDialog.news?.title}"?`}
+        confirmText="Yes, I'm sure"
+        isDestructive={confirmDialog.action === 'deactivate'}
+      />
     </div>
   );
 }

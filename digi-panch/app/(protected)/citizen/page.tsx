@@ -17,6 +17,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function CitizenDashboard() {
   const { getToken } = useAuth();
@@ -63,10 +65,11 @@ export default function CitizenDashboard() {
     try {
       const token = await getToken();
       await fetchAPI(`/applications/${id}`, { method: 'DELETE', token });
+      toast.success('Certificate deleted successfully.');
       await loadSummary();
     } catch (e) {
       console.error('Failed to delete application', e);
-      alert('Failed to delete the certificate.');
+      toast.error('Failed to delete the certificate.');
     } finally {
       setDeleteLoading(null);
       setDeleteConfirmId(null);

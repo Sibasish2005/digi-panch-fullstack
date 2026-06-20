@@ -16,12 +16,19 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 export default function AdminGrievancesPage() {
   const { getToken } = useAuth();
   const [grievances, setGrievances] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    grievanceId: string | null;
+  }>({ isOpen: false, grievanceId: null });
 
   const loadGrievances = async () => {
     try {
@@ -39,9 +46,14 @@ export default function AdminGrievancesPage() {
     loadGrievances();
   }, [getToken]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to completely delete this grievance? This action cannot be undone.")) return;
-    
+  const handleDelete = (id: string) => {
+    setConfirmDialog({ isOpen: true, grievanceId: id });
+  };
+
+  const executeDeleteGrievance = async () => {
+    if (!confirmDialog.grievanceId) return;
+    const id = confirmDialog.grievanceId;
+
     setDeletingId(id);
     try {
       const token = await getToken();
@@ -49,11 +61,13 @@ export default function AdminGrievancesPage() {
         method: 'DELETE',
         token
       });
+      toast.success("Grievance deleted successfully.");
+      setConfirmDialog({ isOpen: false, grievanceId: null });
       // Refresh list
       await loadGrievances();
     } catch (e) {
       console.error(e);
-      alert("Failed to delete grievance. Please check permissions.");
+      toast.error("Failed to delete grievance. Please check permissions.");
     } finally {
       setDeletingId(null);
     }
@@ -136,6 +150,16 @@ export default function AdminGrievancesPage() {
           </TableBody>
         </Table>
       </div>
+
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={executeDeleteGrievance}
+        title="Confirm Grievance Deletion"
+        description="Are you sure you want to completely delete this grievance? This action cannot be undone."
+        confirmText="Delete Grievance"
+        isDestructive={true}
+      />
     </div>
   );
 }

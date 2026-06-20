@@ -23,7 +23,8 @@ import {
 } from '@/components/ui/dialog';
 import { Loader2, Plus, Trash2, Pencil, Ban, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
 export default function AmenitiesPage() {
   const { getToken } = useAuth();
@@ -31,6 +32,12 @@ export default function AmenitiesPage() {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    action: string;
+    amenity: any | null;
+  }>({ isOpen: false, action: '', amenity: null });
 
   // Form State
   const [name, setName] = useState('');
@@ -78,9 +85,14 @@ export default function AmenitiesPage() {
     setIsDialogOpen(true);
   };
 
-  const handleToggleStatus = async (amenity: any) => {
+  const handleToggleStatus = (amenity: any) => {
     const action = amenity.is_active ? "deactivate" : "activate";
-    if (!confirm(`Are you sure you want to ${action} this amenity?`)) return;
+    setConfirmDialog({ isOpen: true, action, amenity });
+  };
+
+  const executeToggleStatus = async () => {
+    if (!confirmDialog.amenity) return;
+    const { action, amenity } = confirmDialog;
     
     try {
       const token = await getToken();
@@ -89,10 +101,12 @@ export default function AmenitiesPage() {
         token,
         body: JSON.stringify({ is_active: !amenity.is_active })
       });
+      toast.success(`Amenity successfully ${action}d.`);
+      setConfirmDialog({ ...confirmDialog, isOpen: false });
       loadAmenities();
     } catch (error) {
       console.error(`Failed to ${action} amenity:`, error);
-      alert(`Failed to ${action} amenity.`);
+      toast.error(`Failed to ${action} amenity.`);
     }
   };
 
@@ -162,12 +176,13 @@ export default function AmenitiesPage() {
         });
       }
       
+      toast.success(editingId ? "Amenity updated successfully" : "Amenity created successfully");
       setIsDialogOpen(false);
       resetForm();
       loadAmenities();
     } catch (error: any) {
       console.error("Failed to save amenity:", error);
-      alert(error.message || "Failed to save amenity. Check console for details.");
+      toast.error(error.message || "Failed to save amenity. Check console for details.");
     } finally {
       setIsSubmitting(false);
     }
@@ -305,7 +320,7 @@ export default function AmenitiesPage() {
 
       <div className="rounded-md border bg-white overflow-hidden">
         {loading && amenities.length === 0 ? (
-          <LoadingSpinner message="Loading amenities..." />
+          <div className="p-8 text-center text-muted-foreground">Loading amenities...</div>
         ) : (
           <Table>
             <TableHeader>
@@ -371,6 +386,16 @@ export default function AmenitiesPage() {
           </Table>
         )}
       </div>
+
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={executeToggleStatus}
+        title={`Confirm ${confirmDialog.action === 'activate' ? 'Activation' : 'Deactivation'}`}
+        description={`Are you sure you want to ${confirmDialog.action} the amenity "${confirmDialog.amenity?.name}"?`}
+        confirmText="Yes, I'm sure"
+        isDestructive={confirmDialog.action === 'deactivate'}
+      />
     </div>
   );
 }

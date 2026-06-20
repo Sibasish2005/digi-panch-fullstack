@@ -23,6 +23,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 export default function OfficerBookingsPage() {
   const { getToken } = useAuth();
@@ -85,10 +86,11 @@ export default function OfficerBookingsPage() {
       });
       
       setIsDialogOpen(false);
+      toast.success(`Booking ${actionType === 'APPROVE' ? 'approved' : 'rejected'} successfully.`);
       loadBookings();
     } catch (e: any) {
       console.error(e);
-      alert(e.message || 'Failed to update booking status.');
+      toast.error(e.message || 'Failed to update booking status.');
     } finally {
       setIsSubmitting(false);
     }

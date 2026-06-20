@@ -22,9 +22,12 @@ import {
   DialogTitle, 
   DialogTrigger 
 } from '@/components/ui/dialog';
-import { Loader2, Plus, Trash2, Pencil, Ban, CheckCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Trash2, Plus, GripVertical, AlertCircle, Loader2, Pencil, Ban, CheckCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { toast } from 'sonner';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { Badge } from '@/components/ui/badge';
 
 export default function DocumentTypesPage() {
   const { getToken } = useAuth();
@@ -32,6 +35,12 @@ export default function DocumentTypesPage() {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    action: string;
+    docType: any | null;
+  }>({ isOpen: false, action: '', docType: null });
 
   // Form State
   const [name, setName] = useState('');
@@ -85,9 +94,14 @@ export default function DocumentTypesPage() {
     setIsDialogOpen(true);
   };
 
-  const handleToggleStatus = async (docType: any) => {
+  const handleToggleStatus = (docType: any) => {
     const action = docType.is_active ? "deactivate" : "activate";
-    if (!confirm(`Are you sure you want to ${action} this document type?`)) return;
+    setConfirmDialog({ isOpen: true, action, docType });
+  };
+
+  const executeToggleStatus = async () => {
+    if (!confirmDialog.docType) return;
+    const { action, docType } = confirmDialog;
     
     try {
       const token = await getToken();
@@ -96,10 +110,12 @@ export default function DocumentTypesPage() {
         token,
         body: JSON.stringify({ is_active: !docType.is_active })
       });
+      toast.success(`Document type successfully ${action}d.`);
+      setConfirmDialog({ ...confirmDialog, isOpen: false });
       loadDocTypes();
     } catch (error) {
       console.error(`Failed to ${action} document type:`, error);
-      alert(`Failed to ${action} document type.`);
+      toast.error(`Failed to ${action} document type.`);
     }
   };
 
@@ -188,12 +204,13 @@ export default function DocumentTypesPage() {
         });
       }
       
+      toast.success(editingId ? "Document type updated successfully" : "Document type created successfully");
       setIsDialogOpen(false);
       resetForm();
       loadDocTypes();
     } catch (error) {
       console.error("Failed to save document type:", error);
-      alert("Failed to save document type. Check console for details.");
+      toast.error("Failed to save document type. Check console for details.");
     } finally {
       setIsSubmitting(false);
     }
@@ -458,6 +475,16 @@ export default function DocumentTypesPage() {
           </TableBody>
         </Table>
       </div>
+
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={executeToggleStatus}
+        title={`Confirm ${confirmDialog.action === 'activate' ? 'Activation' : 'Deactivation'}`}
+        description={`Are you sure you want to ${confirmDialog.action} the document type "${confirmDialog.docType?.name}"?`}
+        confirmText="Yes, I'm sure"
+        isDestructive={confirmDialog.action === 'deactivate'}
+      />
     </div>
   );
 }
