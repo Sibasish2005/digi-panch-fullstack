@@ -14,6 +14,7 @@ from app.modules.payments.models import Payment
 from app.modules.chat.models import ChatSession, ChatMessage
 from app.modules.rag.models import KnowledgeDocument, KnowledgeChunk
 from app.modules.notifications.models import Notification
+from app.modules.news.models import NewsItem
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

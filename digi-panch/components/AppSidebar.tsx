@@ -44,6 +44,7 @@ export function AppSidebar() {
     { name: 'User Management', href: '/admin/users', icon: Users },
     { name: 'Document Types', href: '/admin/document-types', icon: FileText },
     { name: 'Amenities', href: '/admin/amenities', icon: CalendarDays },
+    { name: 'News & Updates', href: '/admin/news', icon: FileText },
     { name: 'Grievances', href: '/admin/grievances', icon: MessageSquare },
   ];
 

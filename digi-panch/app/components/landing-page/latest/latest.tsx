@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { fetchAPI } from "@/lib/api-client";
 
 import {
   Card,
@@ -41,6 +43,22 @@ const newsData = [
 ];
 
 export default function LatestNews() {
+  const [newsList, setNewsList] = useState<any[]>(newsData);
+
+  useEffect(() => {
+    async function loadNews() {
+      try {
+        const data = await fetchAPI('/news?active_only=true&limit=3');
+        if (data && data.length > 0) {
+          setNewsList(data);
+        }
+      } catch (e) {
+        console.error("Failed to load news from backend, falling back to static data", e);
+      }
+    }
+    loadNews();
+  }, []);
+
   return (
     <section className="w-full bg-white py-20 px-6">
 
@@ -72,7 +90,7 @@ export default function LatestNews() {
         {/* News Grid */}
         <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 
-          {newsData.map((news, index) => (
+          {newsList.map((news, index) => (
 
             <motion.div
               key={news.id}
@@ -90,7 +108,7 @@ export default function LatestNews() {
                 <div className="relative h-56 w-full overflow-hidden">
 
                   <Image
-                    src={news.image}
+                    src={news.image_url || news.image}
                     alt={news.title}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-500"
@@ -108,7 +126,7 @@ export default function LatestNews() {
                     </Badge>
 
                     <span className="text-sm text-gray-500">
-                      {news.date}
+                      {news.published_date || news.date}
                     </span>
 
                   </div>

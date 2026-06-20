@@ -12,6 +12,7 @@ from app.modules.chat.routes import router as chat_router
 from app.modules.dashboard.routes import router as dashboard_router
 from app.modules.rag.routes import router as rag_router
 from app.modules.amenities.routes import router as amenities_router
+from app.modules.news.routes import router as news_router
 from app.modules.amenities.test_router import router as test_router
 
 api_router = APIRouter()
@@ -26,8 +27,9 @@ api_router.include_router(admin_router)
 api_router.include_router(grievances_router)
 api_router.include_router(payments_router)
 api_router.include_router(webhooks_router)
-api_router.include_router(chat_router)
+api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
 api_router.include_router(dashboard_router)
-api_router.include_router(rag_router)
-api_router.include_router(amenities_router, prefix="/amenities", tags=["Amenities"])
+api_router.include_router(rag_router, prefix="/rag", tags=["rag"])
+api_router.include_router(amenities_router, prefix="/amenities", tags=["amenities"])
+api_router.include_router(news_router, prefix="/news", tags=["news"])
 api_router.include_router(test_router, prefix="/test")
