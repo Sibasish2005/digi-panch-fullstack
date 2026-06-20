@@ -17,10 +17,8 @@ export default function Navbar() {
 
   const citizenLinks = [
     { name: 'Dashboard', href: '/citizen', icon: Home },
-    { name: 'Apply for Document', href: '/citizen/apply', icon: FileText },
-    { name: 'Book Amenity', href: '/citizen/book', icon: CalendarDays },
-    { name: 'My Bookings', href: '/citizen/my-bookings', icon: ListTodo },
-    { name: 'My Applications', href: '/citizen/applications', icon: ListTodo },
+    { name: 'Applications', href: '/citizen/applications', icon: FileText },
+    { name: 'Bookings', href: '/citizen/my-bookings', icon: CalendarDays },
     { name: 'Grievances', href: '/citizen/grievances', icon: MessageSquare },
   ];
 

@@ -15,7 +15,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, PlusCircle } from 'lucide-react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function CitizenBookingsPage() {
@@ -78,11 +78,14 @@ export default function CitizenBookingsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Bookings</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
           <p className="text-muted-foreground">Track your amenity booking requests.</p>
         </div>
         <Link href="/citizen/book">
-          <Button>Book New Amenity</Button>
+          <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md rounded-full px-6 gap-2 transition-all hover:shadow-lg">
+            <PlusCircle className="w-5 h-5" />
+            Book New Amenity
+          </Button>
         </Link>
       </div>
       

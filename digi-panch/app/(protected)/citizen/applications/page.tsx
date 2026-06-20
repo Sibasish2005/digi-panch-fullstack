@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { RazorpayCheckout } from '@/components/RazorpayCheckout';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, PlusCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
@@ -80,7 +80,18 @@ export default function ApplicationsTrackingPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">My Applications</h1>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Applications</h1>
+          <p className="text-muted-foreground">Track your document requests and statuses.</p>
+        </div>
+        <Link href="/citizen/apply">
+          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md rounded-full px-6 gap-2 transition-all hover:shadow-lg">
+            <PlusCircle className="w-5 h-5" />
+            Apply for Document
+          </Button>
+        </Link>
+      </div>
       
       <div className="rounded-md border bg-white">
         <Table>
