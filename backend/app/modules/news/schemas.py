@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class NewsItemBase(BaseModel):
     title: str
     description: str
+    content: Optional[str] = None
     image_url: str
     category: str
     published_date: str
@@ -17,6 +18,7 @@ class NewsItemCreate(NewsItemBase):
 class NewsItemUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
+    content: Optional[str] = None
     image_url: Optional[str] = None
     category: Optional[str] = None
     published_date: Optional[str] = None

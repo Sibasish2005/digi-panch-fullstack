@@ -11,6 +11,7 @@ class NewsItem(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     title: str = Field(sa_column=Column(String, index=True, nullable=False))
     description: str = Field(sa_column=Column(Text, nullable=False))
+    content: Optional[str] = Field(sa_column=Column(Text, nullable=True))
     image_url: str = Field(sa_column=Column(String, nullable=False))
     category: str = Field(sa_column=Column(String, index=True, nullable=False))
     published_date: str = Field(sa_column=Column(String, nullable=False))

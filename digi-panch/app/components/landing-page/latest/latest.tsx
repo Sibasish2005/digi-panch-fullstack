@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { fetchAPI } from "@/lib/api-client";
+import Link from "next/link";
 
 import {
   Card,
@@ -12,44 +13,15 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 
-const newsData = [
-  {
-    id: 1,
-    title: "New AI-Based Grievance System Introduced",
-    description:
-      "Citizens can now submit and track complaints digitally through the DigiPanch platform.",
-    image: "/images/news/news1.png",
-    category: "Technology",
-    date: "May 6, 2026",
-  },
-  {
-    id: 2,
-    title: "Digital Land Record Access for Villagers",
-    description:
-      "Panchayat residents can securely access land and certificate records online.",
-    image: "/images/news/news2.png",
-    category: "Governance",
-    date: "May 4, 2026",
-  },
-  {
-    id: 3,
-    title: "Smart Village Development Initiative",
-    description:
-      "New smart infrastructure projects launched under the rural digitization mission.",
-    image: "/images/news/news3.png",
-    category: "Development",
-    date: "May 1, 2026",
-  },
-];
-
 export default function LatestNews() {
-  const [newsList, setNewsList] = useState<any[]>(newsData);
+  const [newsList, setNewsList] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadNews() {
       try {
-        const data = await fetchAPI('/news?active_only=true&limit=3');
-        if (data && data.length > 0) {
+        // Fetch up to 10 latest news items for the horizontal scroll
+        const data = await fetchAPI('/news?active_only=true&limit=10');
+        if (data) {
           setNewsList(data);
         }
       } catch (e) {
@@ -87,8 +59,8 @@ export default function LatestNews() {
           </p>
         </motion.div>
 
-        {/* News Grid */}
-        <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {/* News Horizontal Scroll */}
+        <div className="mt-14 flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
 
           {newsList.map((news, index) => (
 
@@ -101,8 +73,9 @@ export default function LatestNews() {
                 delay: index * 0.15,
               }}
               viewport={{ once: true }}
+              className="min-w-[300px] md:min-w-[350px] lg:min-w-[400px] flex-shrink-0 snap-start"
             >
-              <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl">
+              <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
 
                 {/* Image */}
                 <div className="relative h-56 w-full overflow-hidden">
@@ -137,14 +110,14 @@ export default function LatestNews() {
                   </h3>
 
                   {/* Description */}
-                  <p className="mt-3 text-gray-600 text-sm leading-relaxed">
+                  <p className="mt-3 text-gray-600 text-sm leading-relaxed flex-grow">
                     {news.description}
                   </p>
 
                   {/* Read More */}
-                  <button className="mt-5 text-blue-600 font-medium hover:text-blue-700 transition">
+                  <Link href={`/news/${news.id}`} className="mt-5 inline-block text-blue-600 font-medium hover:text-blue-800 transition-colors">
                     Read More →
-                  </button>
+                  </Link>
 
                 </CardContent>
               </Card>

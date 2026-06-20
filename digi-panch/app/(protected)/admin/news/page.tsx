@@ -46,6 +46,7 @@ export default function AdminNewsPage() {
   // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [content, setContent] = useState('');
   const [category, setCategory] = useState('News');
   const [publishedDate, setPublishedDate] = useState(new Date().toISOString().split('T')[0]);
   const [imageUrl, setImageUrl] = useState('');
@@ -72,6 +73,7 @@ export default function AdminNewsPage() {
     setEditingId(null);
     setTitle('');
     setDescription('');
+    setContent('');
     setCategory('News');
     setPublishedDate(new Date().toISOString().split('T')[0]);
     setImageUrl('');
@@ -86,6 +88,7 @@ export default function AdminNewsPage() {
     setEditingId(news.id);
     setTitle(news.title);
     setDescription(news.description);
+    setContent(news.content || '');
     setCategory(news.category);
     setPublishedDate(news.published_date);
     setImageUrl(news.image_url);
@@ -131,6 +134,7 @@ export default function AdminNewsPage() {
       const payload = {
         title,
         description,
+        content,
         category,
         published_date: publishedDate,
         image_url: imageUrl,
@@ -210,13 +214,23 @@ export default function AdminNewsPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Description</label>
+                <label className="text-sm font-medium">Description (Short Summary)</label>
                 <Textarea 
                   required 
                   value={description} 
                   onChange={e => setDescription(e.target.value)} 
-                  rows={3}
+                  rows={2}
                   placeholder="Short description for the card."
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Full Content (Read More)</label>
+                <Textarea 
+                  value={content} 
+                  onChange={e => setContent(e.target.value)} 
+                  rows={5}
+                  placeholder="Full news article details..."
                 />
               </div>
 
