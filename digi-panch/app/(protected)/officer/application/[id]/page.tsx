@@ -12,6 +12,7 @@ import { Loader2, CheckCircle, XCircle, FilePlus } from 'lucide-react';
 import { ImageKitUploader } from '@/components/ImageKitUploader';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function ApplicationReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -79,21 +80,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
     }
   };
 
-  if (loading) {
-    return (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex justify-between items-center mb-6">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-8 w-24" />
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-64 w-full" />
-        </div>
-        <Skeleton className="h-48 w-full" />
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading application details..." />;
 
   if (!appData && !loading) return <div>Application not found.</div>;
 

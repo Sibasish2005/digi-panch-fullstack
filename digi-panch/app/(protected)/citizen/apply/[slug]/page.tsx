@@ -9,6 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ImageKitUploader } from '@/components/ImageKitUploader';
 import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 
 export default function ApplicationFormPage({ params }: { params: Promise<{ slug: string }> }) {
   const router = useRouter();
@@ -39,7 +47,7 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
     loadDocType();
   }, [slug, getToken]);
 
-  if (loading) return <div>Loading form...</div>;
+  if (loading) return <LoadingSpinner message="Loading form..." />;
   if (!docType) return <div>Document type not found.</div>;
 
   const handleUploadSuccess = (reqName: string, url: string) => {
@@ -100,7 +108,7 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
             )}
             
             {requiredList.map((req: any, index: number) => (
-              <div key={index} className="space-y-2 border-b pb-4 last:border-0">
+              <div key={index} className="flex flex-col gap-2 border-b pb-4 last:border-0">
                 <label className="text-sm font-medium leading-none">
                   {req.name} {req.is_mandatory && <span className="text-red-500">*</span>}
                 </label>
@@ -123,17 +131,37 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
               <div className="space-y-4 pt-4 border-t">
                 <h3 className="text-lg font-semibold">Application Details</h3>
                 {docType.form_fields.map((field: any, idx: number) => (
-                  <div key={idx} className="space-y-2">
+                  <div key={idx} className="flex flex-col gap-2 w-full md:w-[65%]">
                     <label className="text-sm font-medium leading-none">
                       {field.name} <span className="text-red-500">*</span>
                     </label>
-                    <Input 
-                      type={field.type}
-                      required
-                      value={formData[field.name] || ''}
-                      onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
-                      placeholder={`Enter ${field.name}`}
-                    />
+                    {field.type === 'radio' ? (
+                      <Select 
+                        value={formData[field.name] || ''} 
+                        onValueChange={(val) => setFormData({...formData, [field.name]: val})}
+                        required
+                      >
+                        <SelectTrigger className="w-full bg-white">
+                          <SelectValue placeholder={`Select ${field.name}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {field.options?.map((opt: string, optIdx: number) => (
+                            <SelectItem key={optIdx} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input 
+                        type={field.type}
+                        required
+                        value={formData[field.name] || ''}
+                        onChange={(e) => setFormData({...formData, [field.name]: e.target.value})}
+                        placeholder={`Enter ${field.name}`}
+                        className="w-full"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
@@ -145,6 +173,7 @@ export default function ApplicationFormPage({ params }: { params: Promise<{ slug
                 value={remarks} 
                 onChange={(e) => setRemarks(e.target.value)} 
                 placeholder="Any details you want to add..."
+                className="w-full md:w-1/2"
               />
             </div>
           </CardContent>

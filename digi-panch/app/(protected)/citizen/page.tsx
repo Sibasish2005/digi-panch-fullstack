@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function CitizenDashboard() {
   const { getToken } = useAuth();
@@ -72,21 +73,7 @@ export default function CitizenDashboard() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-10 w-64" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="rounded-xl border bg-white p-6 shadow-sm">
-              <Skeleton className="h-4 w-24 mb-4" />
-              <Skeleton className="h-8 w-12" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading dashboard..." />;
 
   return (
     <div className="space-y-6">

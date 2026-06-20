@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function GrievancesPage() {
   const { getToken } = useAuth();
@@ -81,42 +82,7 @@ export default function GrievancesPage() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="max-w-5xl mx-auto space-y-8">
-        <Skeleton className="h-10 w-64" />
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="md:col-span-1">
-            <Card>
-              <CardHeader>
-                <Skeleton className="h-6 w-48" />
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-24 w-full" />
-              </CardContent>
-            </Card>
-          </div>
-          <div className="md:col-span-2 space-y-4">
-            <Skeleton className="h-6 w-32 mb-4" />
-            {[1, 2].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2 mt-2" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-4 w-full mt-2" />
-                  <Skeleton className="h-4 w-5/6 mt-2" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading grievances..." />;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -132,7 +98,7 @@ export default function GrievancesPage() {
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium">Subject</label>
                   <Input 
                     required 
@@ -141,7 +107,7 @@ export default function GrievancesPage() {
                     placeholder="E.g. Broken Streetlight"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium">Category</label>
                   <Select 
                     required 
@@ -159,7 +125,7 @@ export default function GrievancesPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium">Description</label>
                   <Textarea 
                     required 

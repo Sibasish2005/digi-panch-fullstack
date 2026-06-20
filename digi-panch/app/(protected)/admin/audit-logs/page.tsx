@@ -12,6 +12,7 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function AuditLogsPage() {
   const { getToken } = useAuth();
@@ -34,9 +35,7 @@ export default function AuditLogsPage() {
     loadLogs();
   }, [getToken]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center p-12"><Loader2 className="h-8 w-8 animate-spin text-gray-500" /></div>;
-  }
+  if (loading) return <LoadingSpinner message="Loading audit logs..." />;
 
   return (
     <div className="space-y-6">

@@ -22,9 +22,9 @@ import {
   DialogTitle, 
   DialogTrigger 
 } from '@/components/ui/dialog';
-import { Loader2, Plus, Trash2, Pencil } from 'lucide-react';
+import { Loader2, Plus, Trash2, Pencil, Ban, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function DocumentTypesPage() {
   const { getToken } = useAuth();
@@ -39,7 +39,7 @@ export default function DocumentTypesPage() {
   const [fee, setFee] = useState(0);
   const [processingDays, setProcessingDays] = useState(7);
   const [requiredDocs, setRequiredDocs] = useState<{name: string, type: string}[]>([]);
-  const [formFields, setFormFields] = useState<{name: string, type: string}[]>([]);
+  const [formFields, setFormFields] = useState<{name: string, type: string, options?: string[]}[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -85,19 +85,21 @@ export default function DocumentTypesPage() {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteClick = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this document type?")) return;
+  const handleToggleStatus = async (docType: any) => {
+    const action = docType.is_active ? "deactivate" : "activate";
+    if (!confirm(`Are you sure you want to ${action} this document type?`)) return;
     
     try {
       const token = await getToken();
-      await fetchAPI(`/admin/document-types/${id}`, {
-        method: 'DELETE',
+      await fetchAPI(`/admin/document-types/${docType.id}`, {
+        method: 'PATCH',
         token,
+        body: JSON.stringify({ is_active: !docType.is_active })
       });
       loadDocTypes();
     } catch (error) {
-      console.error("Failed to delete document type:", error);
-      alert("Failed to delete document type.");
+      console.error(`Failed to ${action} document type:`, error);
+      alert(`Failed to ${action} document type.`);
     }
   };
 
@@ -122,6 +124,32 @@ export default function DocumentTypesPage() {
   const handleUpdateFormField = (index: number, field: string, value: string) => {
     const updated = [...formFields];
     updated[index] = { ...updated[index], [field]: value };
+    // If changing away from radio, maybe clear options, but it's fine to leave them.
+    setFormFields(updated);
+  };
+
+  const handleAddOption = (fieldIndex: number) => {
+    const updated = [...formFields];
+    if (!updated[fieldIndex].options) {
+      updated[fieldIndex].options = [];
+    }
+    updated[fieldIndex].options!.push('');
+    setFormFields(updated);
+  };
+
+  const handleUpdateOption = (fieldIndex: number, optionIndex: number, value: string) => {
+    const updated = [...formFields];
+    if (updated[fieldIndex].options) {
+      updated[fieldIndex].options![optionIndex] = value;
+    }
+    setFormFields(updated);
+  };
+
+  const handleRemoveOption = (fieldIndex: number, optionIndex: number) => {
+    const updated = [...formFields];
+    if (updated[fieldIndex].options) {
+      updated[fieldIndex].options!.splice(optionIndex, 1);
+    }
     setFormFields(updated);
   };
 
@@ -171,22 +199,7 @@ export default function DocumentTypesPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-10 w-32" />
-        </div>
-        <div className="rounded-md border bg-white p-4">
-          <Skeleton className="h-12 w-full mb-4" />
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-16 w-full mb-2" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading document types..." />;
 
   return (
     <div className="space-y-6">
@@ -296,28 +309,59 @@ export default function DocumentTypesPage() {
               )}
               
               {formFields.map((field, idx) => (
-                <div key={idx} className="flex gap-3 items-center">
-                  <Input 
-                    placeholder="Field Name (e.g. Full Name)" 
-                    value={field.name} 
-                    onChange={(e) => handleUpdateFormField(idx, 'name', e.target.value)} 
-                    required
-                    className="flex-1"
-                  />
-                  <select 
-                    className="flex h-9 w-32 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"
-                    value={field.type}
-                    onChange={(e) => handleUpdateFormField(idx, 'type', e.target.value)}
-                    aria-label="Field Type"
-                    title="Field Type"
-                  >
-                    <option value="text">Text</option>
-                    <option value="number">Number</option>
-                    <option value="date">Date</option>
-                  </select>
-                  <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveFormField(idx)} className="text-red-500 hover:text-red-700">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                <div key={idx} className="space-y-2 border p-3 rounded-md bg-gray-50/50">
+                  <div className="flex gap-3 items-center">
+                    <Input 
+                      placeholder="Field Name (e.g. Gender)" 
+                      value={field.name} 
+                      onChange={(e) => handleUpdateFormField(idx, 'name', e.target.value)} 
+                      required
+                      className="flex-1 bg-white"
+                    />
+                    <select 
+                      className="flex h-9 w-32 rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors"
+                      value={field.type}
+                      onChange={(e) => handleUpdateFormField(idx, 'type', e.target.value)}
+                      aria-label="Field Type"
+                      title="Field Type"
+                    >
+                      <option value="text">Text</option>
+                      <option value="number">Number</option>
+                      <option value="date">Date</option>
+                      <option value="radio">Radio</option>
+                    </select>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveFormField(idx)} className="text-red-500 hover:text-red-700">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {field.type === 'radio' && (
+                    <div className="pl-1 pt-2 space-y-2 border-t mt-2 pb-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Radio Options</span>
+                        <Button type="button" variant="outline" size="sm" onClick={() => handleAddOption(idx)} className="h-7 text-xs bg-white">
+                          <Plus className="h-3 w-3 mr-1" /> Add Option
+                        </Button>
+                      </div>
+                      {(!field.options || field.options.length === 0) && (
+                        <div className="text-xs text-gray-400 italic">No options added yet. Click "Add Option".</div>
+                      )}
+                      {field.options?.map((opt, optIdx) => (
+                        <div key={optIdx} className="flex gap-2 items-center pl-2">
+                          <div className="h-3.5 w-3.5 rounded-full border border-gray-300 flex-shrink-0 bg-white" />
+                          <Input 
+                            placeholder={`Option ${optIdx + 1}`}
+                            value={opt} 
+                            onChange={(e) => handleUpdateOption(idx, optIdx, e.target.value)} 
+                            required
+                            className="bg-white text-sm h-8 flex-1"
+                          />
+                          <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveOption(idx, optIdx)} className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -359,7 +403,14 @@ export default function DocumentTypesPage() {
               <TableRow key={type.id}>
                 <TableCell className="font-medium">
                   {type.name}
-                  {type.description && <p className="text-xs text-muted-foreground font-normal">{type.description}</p>}
+                  {type.description && (
+                    <p 
+                      className="text-xs text-muted-foreground font-normal max-w-md line-clamp-2 mt-1" 
+                      title={type.description}
+                    >
+                      {type.description}
+                    </p>
+                  )}
                 </TableCell>
                 <TableCell>₹{type.fee_amount}</TableCell>
                 <TableCell>{type.processing_days} Days</TableCell>
@@ -394,11 +445,11 @@ export default function DocumentTypesPage() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="h-8 px-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-                      onClick={() => handleDeleteClick(type.id)}
+                      className={`h-8 px-2.5 ${type.is_active ? 'text-amber-600 hover:text-amber-700 hover:bg-amber-50 border-amber-200' : 'text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200'}`}
+                      onClick={() => handleToggleStatus(type)}
                     >
-                      <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                      Delete
+                      {type.is_active ? <Ban className="h-3.5 w-3.5 mr-1.5" /> : <CheckCircle className="h-3.5 w-3.5 mr-1.5" />}
+                      {type.is_active ? 'Deactivate' : 'Activate'}
                     </Button>
                   </div>
                 </TableCell>

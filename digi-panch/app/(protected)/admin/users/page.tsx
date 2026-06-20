@@ -16,6 +16,7 @@ import { Loader2, MoreHorizontal, Shield, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   DropdownMenu,
@@ -133,19 +134,7 @@ export default function UserManagementPage() {
     return matchesSearch && matchesRole;
   });
 
-  if (loading && users.length === 0) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-10 w-64" />
-        <div className="rounded-md border bg-white p-4">
-          <Skeleton className="h-12 w-full mb-4" />
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-16 w-full mb-2" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading && users.length === 0) return <LoadingSpinner message="Loading users..." />;
 
   return (
     <div className="space-y-6">

@@ -18,6 +18,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { RazorpayCheckout } from '@/components/RazorpayCheckout';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export default function ApplicationsTrackingPage() {
   const { getToken } = useAuth();
@@ -75,19 +76,7 @@ export default function ApplicationsTrackingPage() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-10 w-64" />
-        <div className="rounded-md border bg-white p-4">
-          <Skeleton className="h-12 w-full mb-4" />
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-16 w-full mb-2" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner message="Loading applications..." />;
 
   return (
     <div className="space-y-6">
