@@ -148,7 +148,7 @@ export default function UserManagementPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+      <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">User Management</h1>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <Input
@@ -203,7 +203,7 @@ export default function UserManagementPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

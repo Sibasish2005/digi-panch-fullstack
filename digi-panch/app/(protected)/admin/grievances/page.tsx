@@ -94,10 +94,10 @@ export default function AdminGrievancesPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Manage Grievances</h1>
+        <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Manage Grievances</h1>
       </div>
       
-      <div className="rounded-md border bg-white overflow-hidden">
+      <div className="rounded-sm border border-slate-200 bg-white overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

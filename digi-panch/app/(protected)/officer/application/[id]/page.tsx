@@ -87,7 +87,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Review Application</h1>
+        <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Review Application</h1>
         <Badge variant="outline" className="text-lg py-1 px-3 bg-white">
           {appData.status}
         </Badge>

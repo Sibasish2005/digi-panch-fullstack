@@ -221,7 +221,7 @@ export default function DocumentTypesPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Document Types</h1>
+        <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Document Types</h1>
         <Button onClick={handleCreateNewClick}><Plus className="mr-2 h-4 w-4" /> Create New</Button>
       </div>
 
@@ -396,7 +396,7 @@ export default function DocumentTypesPage() {
         </DialogContent>
       </Dialog>
       
-      <div className="rounded-md border bg-white">
+      <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

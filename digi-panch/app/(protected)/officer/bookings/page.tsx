@@ -102,9 +102,9 @@ export default function OfficerBookingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Amenity Bookings</h1>
+      <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Amenity Bookings</h1>
       
-      <div className="rounded-md border bg-white">
+      <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50">

@@ -39,10 +39,10 @@ export default function AuditLogsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">System Audit Logs</h1>
+      <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">System Audit Logs</h1>
       <p className="text-muted-foreground">Chronological feed of all sensitive system events.</p>
       
-      <div className="rounded-md border bg-white">
+      <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

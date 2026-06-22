@@ -98,7 +98,7 @@ export default function GrievanceReviewPage({ params }: { params: Promise<{ id: 
       </Link>
 
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Review Grievance: {grievance.ticket_number}</h1>
+        <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Review Grievance: {grievance.ticket_number}</h1>
         <Badge variant="outline" className="text-sm px-3 py-1 bg-yellow-100 text-yellow-800">
           {grievance.status}
         </Badge>

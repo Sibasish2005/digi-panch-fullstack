@@ -173,7 +173,7 @@ export default function AdminNewsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">News & Announcements</h1>
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">News & Announcements</h1>
           <p className="text-muted-foreground">Manage dynamic news content for the landing page.</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -278,7 +278,7 @@ export default function AdminNewsPage() {
         </Dialog>
       </div>
 
-      <div className="rounded-md border bg-white overflow-hidden shadow-sm">
+      <div className="rounded-sm border border-slate-200 bg-white overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50">
