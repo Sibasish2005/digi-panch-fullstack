@@ -79,18 +79,18 @@ export default function CitizenBookingsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Bookings</h1>
           <p className="text-muted-foreground">Track your amenity booking requests.</p>
         </div>
         <Link href="/citizen/book">
-          <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md rounded-full px-6 gap-2 transition-all hover:shadow-lg">
+          <Button className="bg-[#0f2a5e] hover:bg-[#0a1e46] text-white shadow-sm rounded-[4px] px-6 gap-2 transition-all">
             <PlusCircle className="w-5 h-5" />
             Book New Amenity
           </Button>
         </Link>
       </div>
       
-      <div className="rounded-md border bg-white">
+      <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

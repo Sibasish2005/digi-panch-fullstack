@@ -32,8 +32,8 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border overflow-hidden">
+    <div className="bg-[#fdfdfc] min-h-screen py-10 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-sm border overflow-hidden">
         
         {/* Header Image */}
         <div className="relative w-full h-64 md:h-96">
@@ -49,11 +49,11 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
         {/* Content */}
         <div className="p-6 md:p-10">
           <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <Link href="/" className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center transition-colors">
+            <Link href="/" className="text-sm font-medium text-[#0f2a5e] hover:text-[#0a1e46] flex items-center transition-colors">
               <ChevronLeft className="h-4 w-4 mr-1" /> Back to Home
             </Link>
             <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-slate-100 text-slate-700">
+              <Badge variant="secondary" className="rounded-sm bg-slate-100 text-[#0f2a5e]">
                 {newsItem.category}
               </Badge>
               <span className="text-sm text-gray-500 font-medium">
@@ -62,7 +62,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight font-inter mb-6">
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl md:text-5xl font-black text-[#0f2a5e] leading-tight mb-6">
             {newsItem.title}
           </h1>
 

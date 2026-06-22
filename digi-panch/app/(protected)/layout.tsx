@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bot } from "lucide-react";
+import { FloatingAssistantButton } from "@/app/components/FloatingAssistantButton";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 
@@ -15,22 +15,14 @@ export default async function ProtectedLayout({
   const showChatbot = role === "USER" || role === "CITIZEN";
 
   return (
-    <div className="flex h-screen bg-gray-50 pt-20 relative"> 
+    <div className="flex h-screen bg-[#fdfdfc] pt-20 relative"> 
       {/* The global Navbar handles navigation. */}
       <main className="flex-1 overflow-y-auto px-2 py-4 sm:p-4 md:p-8 w-full">
         {children}
       </main>
       
       {/* Floating AI Assistant Button */}
-      {showChatbot && (
-        <Link 
-          href="/chatbot" 
-          className="fixed bottom-8 right-8 z-50 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-medium"
-        >
-          <Bot className="h-5 w-5" />
-          AI Assistant
-        </Link>
-      )}
+      {showChatbot && <FloatingAssistantButton />}
     </div>
   );
 }

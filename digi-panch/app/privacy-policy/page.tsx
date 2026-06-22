@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen w-full bg-slate-50 px-6 py-20">
+    <main className="min-h-screen w-full bg-[#fdfdfc] px-6 py-20">
 
       <div className="mx-auto max-w-4xl">
 
@@ -24,14 +24,14 @@ export default function PrivacyPolicyPage() {
 
             <Button
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] border-[#0f2a5e] text-[#0f2a5e] hover:bg-[#0f2a5e]/5"
             >
               ← Back to Homepage
             </Button>
 
           </Link>
 
-          <h1 className="mt-8 text-4xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-4xl font-black text-[#0f2a5e]">
             Privacy Policy
           </h1>
 
@@ -44,14 +44,14 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Policy Card */}
-        <Card className="rounded-3xl border-none shadow-sm">
+        <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
 
           <CardContent className="space-y-10 p-8 md:p-10">
 
             {/* Section 1 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Information Collection
               </h2>
 
@@ -70,7 +70,7 @@ export default function PrivacyPolicyPage() {
             {/* Section 2 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Use of Information
               </h2>
 
@@ -88,7 +88,7 @@ export default function PrivacyPolicyPage() {
             {/* Section 3 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Data Security
               </h2>
 
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
             {/* Section 4 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Third-Party Services
               </h2>
 
@@ -123,7 +123,7 @@ export default function PrivacyPolicyPage() {
             {/* Section 5 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Policy Updates
               </h2>
 
@@ -140,7 +140,7 @@ export default function PrivacyPolicyPage() {
             {/* Section 6 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Contact
               </h2>
 

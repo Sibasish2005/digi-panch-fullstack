@@ -113,7 +113,7 @@ export default function ProfilePage() {
       <div className="mx-auto max-w-3xl">
         {/* Heading */}
         <div className="mb-6 sm:mb-10 px-4 sm:px-0">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl sm:text-4xl font-black text-[#0f2a5e]">
             My Profile
           </h1>
           <p className="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600">
@@ -122,7 +122,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Card */}
-        <Card className="rounded-2xl sm:rounded-3xl border-none shadow-sm mb-6">
+        <Card className="rounded-sm border border-slate-200 shadow-sm mb-6 bg-white">
           <CardContent className="p-4 sm:p-8">
             <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-center sm:gap-6">
               <div className="relative h-24 w-24 overflow-hidden rounded-full border bg-slate-100 flex-shrink-0">
@@ -136,7 +136,7 @@ export default function ProfilePage() {
               
               <div className="mt-5 sm:mt-0 flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                  <h2 className="text-2xl font-semibold text-slate-900">
+                  <h2 className="text-2xl font-bold text-[#0f2a5e]">
                     {dbUser?.full_name || user?.fullName || "User"}
                   </h2>
                   <Badge variant={role === 'ADMIN' ? 'destructive' : role === 'OFFICER' ? 'default' : 'secondary'} className="w-fit mx-auto sm:mx-0">
@@ -155,7 +155,7 @@ export default function ProfilePage() {
               <div className="mt-6 sm:mt-0">
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant={hasExtraDetails ? "outline" : "default"} className="rounded-xl">
+                    <Button variant={hasExtraDetails ? "outline" : "default"} className={hasExtraDetails ? "rounded-[4px]" : "rounded-[4px] bg-[#0f2a5e] hover:bg-[#0a1e46] text-white"}>
                       {hasExtraDetails ? (
                         <><Edit3 className="mr-2 h-4 w-4" /> Update Details</>
                       ) : (
@@ -163,46 +163,46 @@ export default function ProfilePage() {
                       )}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="w-[calc(100vw-32px)] max-w-[500px] rounded-3xl">
+                  <DialogContent className="w-[calc(100vw-32px)] max-w-[500px] rounded-sm border border-slate-200">
                     <DialogHeader>
-                      <DialogTitle>{hasExtraDetails ? "Update Profile Details" : "Add Profile Details"}</DialogTitle>
+                      <DialogTitle className="text-xl font-bold text-[#0f2a5e]">{hasExtraDetails ? "Update Profile Details" : "Add Profile Details"}</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleUpdate} className="space-y-4 py-2 sm:py-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div className="space-y-1.5 sm:col-span-2">
-                          <Label htmlFor="full_name">Full Name</Label>
-                          <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} required className="rounded-xl" />
+                          <Label htmlFor="full_name" className="text-[#0f2a5e] font-semibold">Full Name</Label>
+                          <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} required className="rounded-[4px]" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label htmlFor="age">Age</Label>
-                          <Input id="age" type="number" value={formData.age} onChange={(e) => setFormData({...formData, age: e.target.value})} className="rounded-xl" />
+                          <Label htmlFor="age" className="text-[#0f2a5e] font-semibold">Age</Label>
+                          <Input id="age" type="number" value={formData.age} onChange={(e) => setFormData({...formData, age: e.target.value})} className="rounded-[4px]" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label htmlFor="phone">Mobile No</Label>
-                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '')})} className="rounded-xl" pattern="[0-9]{10}" title="Please enter exactly 10 digits" maxLength={10} />
+                          <Label htmlFor="phone" className="text-[#0f2a5e] font-semibold">Mobile No</Label>
+                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '')})} className="rounded-[4px]" pattern="[0-9]{10}" title="Please enter exactly 10 digits" maxLength={10} />
                         </div>
                         <div className="space-y-1.5">
-                          <Label htmlFor="pin">PIN Code</Label>
-                          <Input id="pin" value={formData.pin} onChange={(e) => setFormData({...formData, pin: e.target.value})} className="rounded-xl" />
+                          <Label htmlFor="pin" className="text-[#0f2a5e] font-semibold">PIN Code</Label>
+                          <Input id="pin" value={formData.pin} onChange={(e) => setFormData({...formData, pin: e.target.value})} className="rounded-[4px]" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label htmlFor="panchayat">Panchayat</Label>
-                          <Input id="panchayat" value={formData.panchayat} onChange={(e) => setFormData({...formData, panchayat: e.target.value})} className="rounded-xl" />
+                          <Label htmlFor="panchayat" className="text-[#0f2a5e] font-semibold">Panchayat</Label>
+                          <Input id="panchayat" value={formData.panchayat} onChange={(e) => setFormData({...formData, panchayat: e.target.value})} className="rounded-[4px]" />
                         </div>
                         <div className="space-y-1.5 sm:col-span-2">
-                          <Label htmlFor="police_station">Police Station</Label>
-                          <Input id="police_station" value={formData.police_station} onChange={(e) => setFormData({...formData, police_station: e.target.value})} className="rounded-xl" />
+                          <Label htmlFor="police_station" className="text-[#0f2a5e] font-semibold">Police Station</Label>
+                          <Input id="police_station" value={formData.police_station} onChange={(e) => setFormData({...formData, police_station: e.target.value})} className="rounded-[4px]" />
                         </div>
                         <div className="space-y-1.5 sm:col-span-2">
-                          <Label htmlFor="address">Address</Label>
-                          <Input id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="rounded-xl" />
+                          <Label htmlFor="address" className="text-[#0f2a5e] font-semibold">Address</Label>
+                          <Input id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="rounded-[4px]" />
                         </div>
                       </div>
                       <DialogFooter className="mt-6">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSubmitting} className="rounded-xl">
+                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSubmitting} className="rounded-[4px]">
                           Cancel
                         </Button>
-                        <Button type="submit" disabled={isSubmitting} className="rounded-xl">
+                        <Button type="submit" disabled={isSubmitting} className="rounded-[4px] bg-[#0f2a5e] hover:bg-[#0a1e46] text-white">
                           {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Save"}
                         </Button>
                       </DialogFooter>
@@ -217,12 +217,12 @@ export default function ProfilePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
               </div>
             ) : hasExtraDetails ? (
-              <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-slate-50/50 p-4 sm:p-6 rounded-2xl border border-slate-100">
+              <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-slate-50/50 p-4 sm:p-6 rounded-sm border border-slate-200">
                 {dbUser.phone && (
                   <div className="flex items-start gap-3">
                     <Phone className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Mobile Number</p>
+                      <p className="text-sm font-bold text-[#0f2a5e]">Mobile Number</p>
                       <p className="text-sm text-slate-600 break-all">{dbUser.phone}</p>
                     </div>
                   </div>
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                       {dbUser.age}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Age</p>
+                      <p className="text-sm font-bold text-[#0f2a5e]">Age</p>
                       <p className="text-sm text-slate-600">{dbUser.age} years old</p>
                     </div>
                   </div>
@@ -242,7 +242,7 @@ export default function ProfilePage() {
                   <div className="flex items-start gap-3 col-span-1 sm:col-span-2">
                     <MapPin className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Address</p>
+                      <p className="text-sm font-bold text-[#0f2a5e]">Address</p>
                       <p className="text-sm text-slate-600 break-words">{dbUser.address}{dbUser.pin ? `, PIN: ${dbUser.pin}` : ""}</p>
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                   <div className="flex items-start gap-3">
                     <Map className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Panchayat</p>
+                      <p className="text-sm font-bold text-[#0f2a5e]">Panchayat</p>
                       <p className="text-sm text-slate-600 break-words">{dbUser.panchayat}</p>
                     </div>
                   </div>
@@ -260,7 +260,7 @@ export default function ProfilePage() {
                   <div className="flex items-start gap-3">
                     <Building className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Police Station</p>
+                      <p className="text-sm font-bold text-[#0f2a5e]">Police Station</p>
                       <p className="text-sm text-slate-600 break-words">{dbUser.police_station}</p>
                     </div>
                   </div>
@@ -274,7 +274,7 @@ export default function ProfilePage() {
 
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 className="text-lg font-bold text-[#0f2a5e]">
                   Logout
                 </h3>
                 <p className="mt-1 text-sm text-slate-500">
@@ -283,7 +283,7 @@ export default function ProfilePage() {
               </div>
               <Button
                 variant="destructive"
-                className="rounded-xl"
+                className="rounded-[4px]"
                 onClick={() => signOut()}
               >
                 <LogOut className="mr-2 h-4 w-4" />

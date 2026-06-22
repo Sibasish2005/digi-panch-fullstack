@@ -29,42 +29,42 @@ export default function ServicesPage() {
       id: "ai-assistant",
       title: "Panchayat Assistant (AI)",
       description: "Get instant AI-driven assistance for certificates, schemes, land records, and citizen services 24/7.",
-      icon: <Bot className="h-6 w-6 text-blue-600" />,
-      colorClass: "bg-blue-100",
+      icon: <Bot className="h-6 w-6 text-[#0f2a5e]" />,
+      colorClass: "bg-slate-100",
       link: "/chatbot"
     },
     {
       id: "documents",
       title: "Digital Certificates",
       description: "Apply for income, caste, birth, and residential certificates securely through our online portal.",
-      icon: <FileText className="h-6 w-6 text-indigo-600" />,
-      colorClass: "bg-indigo-100",
+      icon: <FileText className="h-6 w-6 text-[#0f2a5e]" />,
+      colorClass: "bg-slate-100",
       link: "/citizen/applications"
     },
     {
       id: "grievances",
       title: "Grievance System",
       description: "Submit issues regarding infrastructure, sanitation, or administration and track them in real-time.",
-      icon: <AlertCircle className="h-6 w-6 text-red-600" />,
-      colorClass: "bg-red-100",
+      icon: <AlertCircle className="h-6 w-6 text-[#0f2a5e]" />,
+      colorClass: "bg-slate-100",
       link: "/citizen/grievances"
     }
   ];
 
   if (isLoaded && user && role !== "CITIZEN" && role !== "USER") {
     return (
-      <main className="min-h-screen flex flex-col bg-slate-50">
+      <main className="min-h-screen flex flex-col bg-[#fdfdfc]">
         <Navbar />
         <div className="flex-grow flex items-center justify-center p-6">
           <Card className="max-w-md w-full shadow-lg border-red-100 bg-red-50/30">
             <CardContent className="flex flex-col items-center text-center pt-10 pb-10">
               <AlertCircle className="h-16 w-16 text-red-500 mb-6" />
-              <h2 className="text-3xl font-bold text-slate-900 mb-3">Access Denied</h2>
+              <h2 className="text-3xl font-bold text-[#0f2a5e] mb-3">Access Denied</h2>
               <p className="text-slate-600 mb-8">
                 The DigiPanch Services portal is strictly reserved for Citizens. As an {role.toLowerCase()}, please use your dedicated dashboard.
               </p>
               <Link href="/">
-                <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11">
+                <Button className="w-full bg-[#0f2a5e] hover:bg-[#0a1e46] text-white rounded-[4px] h-11">
                   Return to Home
                 </Button>
               </Link>
@@ -77,17 +77,15 @@ export default function ServicesPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-slate-50">
+    <main className="min-h-screen flex flex-col bg-[#fdfdfc]">
       <Navbar />
 
       <div className="flex-grow pb-24">
         {/* HEADER SECTION */}
-        <section className="relative overflow-hidden bg-slate-900 px-6 py-24 text-white">
-          <div className="absolute top-0 left-0 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-cyan-400/20 blur-3xl"></div>
+        <section className="relative overflow-hidden bg-[#0f2a5e] px-6 py-24 text-white">
 
           <div className="relative mx-auto max-w-4xl text-center">
-            <Badge className="border border-white/10 bg-white/10 px-4 py-2 text-cyan-200">
+            <Badge variant="outline" className="border border-[#c8a96e] bg-transparent text-[#c8a96e] uppercase tracking-widest rounded-none font-semibold px-4 py-2">
               Our Services
             </Badge>
 
@@ -95,10 +93,11 @@ export default function ServicesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mt-6 text-4xl md:text-5xl font-bold leading-tight"
+              style={{ fontFamily: "var(--font-noto-serif)" }}
+              className="mt-6 text-4xl md:text-5xl font-black leading-tight text-white"
             >
               Comprehensive Services for <br className="hidden md:block" />
-              <span className="text-cyan-400">Rural Citizens</span>
+              Rural Citizens
             </motion.h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
@@ -119,12 +118,12 @@ export default function ServicesPage() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="h-full border border-slate-200 shadow-sm hover:shadow-md transition-all rounded-3xl overflow-hidden flex flex-col">
+                  <Card className="h-full border border-slate-200 shadow-sm hover:shadow-md transition-all rounded-sm bg-white overflow-hidden flex flex-col">
                     <CardHeader className="pb-4">
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${service.colorClass}`}>
+                      <div className={`w-14 h-14 rounded-sm flex items-center justify-center mb-4 ${service.colorClass}`}>
                         {service.icon}
                       </div>
-                      <CardTitle className="text-xl font-bold text-slate-900">
+                      <CardTitle className="text-xl font-bold text-[#0f2a5e]">
                         {service.title}
                       </CardTitle>
                     </CardHeader>
@@ -134,7 +133,7 @@ export default function ServicesPage() {
                       </p>
                       
                       <Link href={service.link}>
-                        <Button variant="outline" className="w-full justify-between group">
+                        <Button variant="outline" className="w-full justify-between group rounded-[4px] border-[#0f2a5e] text-[#0f2a5e] hover:bg-[#0f2a5e]/5">
                           Access Service
                           <span className="text-muted-foreground group-hover:translate-x-1 transition-transform">→</span>
                         </Button>

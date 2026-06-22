@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen w-full bg-slate-50 px-6 py-20">
+    <main className="min-h-screen w-full bg-[#fdfdfc] px-6 py-20">
 
       <div className="mx-auto max-w-4xl">
 
@@ -24,14 +24,14 @@ export default function TermsPage() {
 
             <Button
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] border-[#0f2a5e] text-[#0f2a5e] hover:bg-[#0f2a5e]/5"
             >
               ← Back to Homepage
             </Button>
 
           </Link>
 
-          <h1 className="mt-8 text-4xl font-bold text-slate-900">
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-4xl font-black text-[#0f2a5e]">
             Terms & Conditions
           </h1>
 
@@ -44,14 +44,14 @@ export default function TermsPage() {
         </div>
 
         {/* Main Card */}
-        <Card className="rounded-3xl border-none shadow-sm">
+        <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
 
           <CardContent className="space-y-10 p-8 md:p-10">
 
             {/* Section 1 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Acceptance of Terms
               </h2>
 
@@ -69,7 +69,7 @@ export default function TermsPage() {
             {/* Section 2 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Platform Usage
               </h2>
 
@@ -86,7 +86,7 @@ export default function TermsPage() {
             {/* Section 3 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Digital Services
               </h2>
 
@@ -104,7 +104,7 @@ export default function TermsPage() {
             {/* Section 4 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 User Responsibilities
               </h2>
 
@@ -121,7 +121,7 @@ export default function TermsPage() {
             {/* Section 5 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Payments & Transactions
               </h2>
 
@@ -139,7 +139,7 @@ export default function TermsPage() {
             {/* Section 6 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Service Availability
               </h2>
 
@@ -157,7 +157,7 @@ export default function TermsPage() {
             {/* Section 7 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Privacy & Data
               </h2>
 
@@ -174,7 +174,7 @@ export default function TermsPage() {
             {/* Section 8 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Policy Changes
               </h2>
 
@@ -191,7 +191,7 @@ export default function TermsPage() {
             {/* Section 9 */}
             <div>
 
-              <h2 className="text-2xl font-semibold text-slate-900">
+              <h2 className="text-2xl font-bold text-[#0f2a5e]">
                 Contact Information
               </h2>
 

@@ -25,7 +25,7 @@ import {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen w-full bg-slate-50 px-6 py-20">
+    <main className="min-h-screen w-full bg-[#fdfdfc] px-6 py-20">
 
       <div className="mx-auto max-w-6xl">
 
@@ -41,14 +41,14 @@ export default function ContactPage() {
 
             <Button
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] border-[#0f2a5e] text-[#0f2a5e] hover:bg-[#0f2a5e]/5"
             >
               ← Back to Homepage
             </Button>
 
           </Link>
 
-          <h1 className="mt-8 text-4xl font-bold text-slate-900 md:text-5xl">
+          <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-4xl font-black text-[#0f2a5e] md:text-5xl">
             Contact Us
           </h1>
 
@@ -73,76 +73,55 @@ export default function ContactPage() {
           >
 
             {/* Email */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="flex items-start gap-5 p-6">
-
-                <div className="rounded-2xl bg-blue-100 p-4">
-                  <Mail className="h-6 w-6 text-blue-600" />
+                <div className="rounded-sm bg-slate-100 p-4">
+                  <Mail className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
                 <div>
-
-                  <h3 className="text-xl font-semibold text-slate-900">
+                  <h3 className="text-xl font-bold text-[#0f2a5e]">
                     Email Support
                   </h3>
-
                   <p className="mt-2 text-slate-600">
                     support@digipanch.com
                   </p>
-
                 </div>
-
               </CardContent>
             </Card>
 
             {/* Phone */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="flex items-start gap-5 p-6">
-
-                <div className="rounded-2xl bg-green-100 p-4">
-                  <Phone className="h-6 w-6 text-green-600" />
+                <div className="rounded-sm bg-slate-100 p-4">
+                  <Phone className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
                 <div>
-
-                  <h3 className="text-xl font-semibold text-slate-900">
+                  <h3 className="text-xl font-bold text-[#0f2a5e]">
                     Phone
                   </h3>
-
                   <p className="mt-2 text-slate-600">
                     +91 98633 79440
                   </p>
-
                 </div>
-
               </CardContent>
             </Card>
 
             {/* Address */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="flex items-start gap-5 p-6">
-
-                <div className="rounded-2xl bg-red-100 p-4">
-                  <MapPin className="h-6 w-6 text-red-600" />
+                <div className="rounded-sm bg-slate-100 p-4">
+                  <MapPin className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
                 <div>
-
-                  <h3 className="text-xl font-semibold text-slate-900">
+                  <h3 className="text-xl font-bold text-[#0f2a5e]">
                     Office Address
                   </h3>
-
                   <p className="mt-2 leading-relaxed text-slate-600">
                     DigiPanch Governance Office
                     <br />
                     Rural Digital Administration Center
                   </p>
-
                 </div>
-
               </CardContent>
             </Card>
 
@@ -156,11 +135,11 @@ export default function ContactPage() {
             viewport={{ once: true }}
           >
 
-            <Card className="rounded-3xl border-none shadow-sm">
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
 
               <CardContent className="p-8">
 
-                <h2 className="text-2xl font-bold text-slate-900">
+                <h2 className="text-2xl font-bold text-[#0f2a5e]">
                   Send a Message
                 </h2>
 
@@ -184,7 +163,7 @@ export default function ContactPage() {
                     <Input
                       name="name"
                       placeholder="Enter your name"
-                      className="rounded-xl"
+                      className="rounded-[4px] border-slate-300"
                       required
                     />
                   </div>
@@ -198,7 +177,7 @@ export default function ContactPage() {
                       type="email"
                       name="email"
                       placeholder="Enter your email"
-                      className="rounded-xl"
+                      className="rounded-[4px] border-slate-300"
                       required
                     />
                   </div>
@@ -211,7 +190,7 @@ export default function ContactPage() {
                     <Input
                       name="subject"
                       placeholder="Enter subject"
-                      className="rounded-xl"
+                      className="rounded-[4px] border-slate-300"
                       required
                     />
                   </div>
@@ -224,7 +203,7 @@ export default function ContactPage() {
                     <Textarea
                       name="message"
                       placeholder="Write your message..."
-                      className="min-h-[140px] rounded-xl"
+                      className="min-h-[140px] rounded-[4px] border-slate-300"
                       required
                     />
                   </div>
@@ -232,7 +211,7 @@ export default function ContactPage() {
                   {/* Submit */}
                   <Button
                     type="submit"
-                    className="w-full rounded-xl bg-blue-600 hover:bg-blue-700"
+                    className="w-full rounded-[4px] bg-[#0f2a5e] hover:bg-[#0a1e46] text-white"
                   >
                     Send Message
                   </Button>

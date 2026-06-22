@@ -80,59 +80,59 @@ export default function CitizenDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Citizen Dashboard</h1>
+      <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Citizen Dashboard</h1>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Apps</CardTitle>
-            <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{summary.total_applications}</div>
-          </CardContent>
-        </Card>
+      <Card className="rounded-sm border border-slate-200 shadow-sm bg-white overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+          
+          {/* Total Apps */}
+          <div className="p-6">
+            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <span className="text-sm font-bold text-[#0f2a5e]">Total Apps</span>
+              <LayoutDashboard className="h-4 w-4 text-[#0f2a5e]" />
+            </div>
+            <div className="text-2xl font-bold text-[#0f2a5e]">{summary.total_applications}</div>
+          </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Apps</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{summary.pending_applications}</div>
+          {/* Pending Apps */}
+          <div className="p-6">
+            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <span className="text-sm font-bold text-[#0f2a5e]">Pending Apps</span>
+              <FileText className="h-4 w-4 text-[#0f2a5e]" />
+            </div>
+            <div className="text-2xl font-bold text-[#0f2a5e]">{summary.pending_applications}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              <Link href="/citizen/applications" className="text-blue-600 hover:underline">Track status</Link>
+              <Link href="/citizen/applications" className="text-[#0f2a5e] font-semibold hover:underline">Track status</Link>
             </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Approved Apps</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{summary.approved_applications}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Grievances</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{summary.pending_grievances}</div>
+          </div>
+          
+          {/* Approved Apps */}
+          <div className="p-6">
+            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <span className="text-sm font-bold text-[#0f2a5e]">Approved Apps</span>
+              <Activity className="h-4 w-4 text-[#0f2a5e]" />
+            </div>
+            <div className="text-2xl font-bold text-[#0f2a5e]">{summary.approved_applications}</div>
+          </div>
+          
+          {/* Pending Grievances */}
+          <div className="p-6">
+            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <span className="text-sm font-bold text-[#0f2a5e]">Pending Grievances</span>
+              <MessageSquare className="h-4 w-4 text-[#0f2a5e]" />
+            </div>
+            <div className="text-2xl font-bold text-[#0f2a5e]">{summary.pending_grievances}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              <Link href="/citizen/grievances" className="text-blue-600 hover:underline">View all</Link>
+              <Link href="/citizen/grievances" className="text-[#0f2a5e] font-semibold hover:underline">View all</Link>
             </p>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+
+        </div>
+      </Card>
 
       {issuedDocs.length > 0 && (
         <div className="space-y-4 pt-6">
-          <h2 className="text-xl font-bold tracking-tight">Your Issued Documents</h2>
+          <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-xl font-black text-[#0f2a5e] tracking-tight">Your Issued Documents</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {issuedDocs.map((doc) => (
               <Card key={doc.id} className="overflow-hidden border-green-200">
@@ -147,7 +147,7 @@ export default function CitizenDashboard() {
                   </div>
                   {doc.final_document?.pdf_url && (
                     <div className="flex gap-2">
-                      <Button className="flex-1 bg-green-600 hover:bg-green-700" asChild>
+                      <Button className="flex-1 bg-[#0f2a5e] hover:bg-[#0a1e46] text-white" asChild>
                         <a href={doc.final_document.pdf_url} target="_blank" rel="noopener noreferrer">
                           Download
                         </a>
@@ -169,9 +169,9 @@ export default function CitizenDashboard() {
         </div>
       )}
       <Dialog open={!!deleteConfirmId} onOpenChange={(open) => { if (!open) setDeleteConfirmId(null); }}>
-        <DialogContent className="w-[calc(100vw-32px)] max-w-[440px] rounded-3xl p-6">
+        <DialogContent className="w-[calc(100vw-32px)] max-w-[440px] rounded-sm p-6 border border-slate-200">
           <DialogHeader className="space-y-3">
-            <DialogTitle className="text-xl font-bold text-slate-900">
+            <DialogTitle className="text-xl font-bold text-[#0f2a5e]">
               Delete Certificate?
             </DialogTitle>
             <DialogDescription className="text-sm text-slate-500 leading-relaxed">
@@ -182,7 +182,7 @@ export default function CitizenDashboard() {
             <Button
               variant="outline"
               onClick={() => setDeleteConfirmId(null)}
-              className="rounded-xl flex-1 h-11"
+              className="rounded-[4px] flex-1 h-11"
             >
               Cancel
             </Button>
@@ -192,7 +192,7 @@ export default function CitizenDashboard() {
                 if (deleteConfirmId) handleDelete(deleteConfirmId);
               }}
               disabled={deleteLoading === deleteConfirmId}
-              className="rounded-xl flex-1 h-11 bg-red-600 hover:bg-red-700 text-white font-medium"
+              className="rounded-[4px] flex-1 h-11 bg-red-600 hover:bg-red-700 text-white font-medium"
             >
               {deleteLoading === deleteConfirmId ? (
                 <>

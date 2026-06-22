@@ -26,19 +26,15 @@ import {
 
 export default function AboutPage() {
   return (
-    <main className="w-full bg-slate-50">
+    <main className="w-full bg-[#fdfdfc]">
 
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-slate-950 px-6 py-28 text-white">
-
-        {/* Background Blur */}
-        <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"></div>
+      <section className="relative overflow-hidden bg-[#0f2a5e] px-6 py-28 text-white">
 
         <div className="relative mx-auto max-w-6xl text-center">
 
           {/* Badge */}
-          <Badge className="border border-white/10 bg-white/10 px-4 py-2 text-cyan-200 hover:bg-white/10">
+          <Badge variant="outline" className="border-[#c8a96e] px-4 py-2 text-[#c8a96e] font-semibold uppercase tracking-widest rounded-none bg-transparent hover:bg-transparent">
             About DigiPanch
           </Badge>
 
@@ -47,12 +43,10 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="mt-8 text-4xl font-bold leading-tight md:text-6xl"
+            style={{ fontFamily: "var(--font-noto-serif)" }}
+            className="mt-8 text-4xl font-black leading-tight md:text-6xl text-white"
           >
-            Building Smarter Digital
-            <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
-              {" "}Governance
-            </span>
+            Building Smarter Digital Governance
           </motion.h1>
 
           {/* Description */}
@@ -67,8 +61,7 @@ export default function AboutPage() {
           <Link href="/">
 
             <Button
-              variant="secondary"
-              className="mt-8 rounded-xl"
+              className="mt-8 rounded-[4px] bg-transparent border border-white/55 text-white hover:bg-white/10 transition-colors"
             >
               ← Back to Homepage
             </Button>
@@ -91,11 +84,11 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
 
-            <Badge variant="secondary">
+            <Badge variant="outline" className="border-[#c8a96e] text-[#c8a96e] uppercase tracking-widest rounded-none bg-transparent font-semibold">
               Our Vision
             </Badge>
 
-            <h2 className="mt-6 text-4xl font-bold text-slate-900">
+            <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-6 text-4xl font-black text-[#0f2a5e]">
               Simplifying Rural Administration
             </h2>
 
@@ -123,7 +116,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
 
-            <div className="overflow-hidden rounded-[32px] shadow-xl">
+            <div className="overflow-hidden rounded-sm border border-slate-200 shadow-sm p-1 bg-white">
 
               <Image
                 src="/images/about/about-main.jpg"
@@ -147,11 +140,11 @@ export default function AboutPage() {
 
           <div className="text-center">
 
-            <Badge variant="secondary">
+            <Badge variant="outline" className="border-[#c8a96e] text-[#c8a96e] uppercase tracking-widest rounded-none bg-transparent font-semibold">
               Platform Features
             </Badge>
 
-            <h2 className="mt-5 text-4xl font-bold text-slate-900">
+            <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-5 text-4xl font-black text-[#0f2a5e]">
               Core Digital Services
             </h2>
 
@@ -167,132 +160,100 @@ export default function AboutPage() {
           <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
             {/* Card 1 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="p-7">
-
-                <div className="w-fit rounded-2xl bg-blue-100 p-4">
-                  <Bot className="h-6 w-6 text-blue-600" />
+                <div className="w-fit rounded-sm bg-slate-100 p-4">
+                  <Bot className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                   AI Assistance
                 </h3>
-
                 <p className="mt-4 leading-relaxed text-slate-600">
                   AI-powered support system for citizen
                   queries, guidance, and governance services.
                 </p>
-
               </CardContent>
             </Card>
 
             {/* Card 2 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="p-7">
-
-                <div className="w-fit rounded-2xl bg-green-100 p-4">
-                  <FileText className="h-6 w-6 text-green-600" />
+                <div className="w-fit rounded-sm bg-slate-100 p-4">
+                  <FileText className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                   Digital Applications
                 </h3>
-
                 <p className="mt-4 leading-relaxed text-slate-600">
                   Online application systems for certificates,
                   approvals, and Panchayat documentation.
                 </p>
-
               </CardContent>
             </Card>
 
             {/* Card 3 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="p-7">
-
-                <div className="w-fit rounded-2xl bg-red-100 p-4">
-                  <ShieldCheck className="h-6 w-6 text-red-600" />
+                <div className="w-fit rounded-sm bg-slate-100 p-4">
+                  <ShieldCheck className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                   Grievance System
                 </h3>
-
                 <p className="mt-4 leading-relaxed text-slate-600">
                   Transparent complaint submission and
                   tracking infrastructure for citizens.
                 </p>
-
               </CardContent>
             </Card>
 
             {/* Card 4 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="p-7">
-
-                <div className="w-fit rounded-2xl bg-yellow-100 p-4">
-                  <Landmark className="h-6 w-6 text-yellow-700" />
+                <div className="w-fit rounded-sm bg-slate-100 p-4">
+                  <Landmark className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                   Online Payments
                 </h3>
-
                 <p className="mt-4 leading-relaxed text-slate-600">
                   Secure payment systems for water bills,
                   taxes, and governance-related services.
                 </p>
-
               </CardContent>
             </Card>
 
             {/* Card 5 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="p-7">
-
-                <div className="w-fit rounded-2xl bg-cyan-100 p-4">
-                  <Users className="h-6 w-6 text-cyan-700" />
+                <div className="w-fit rounded-sm bg-slate-100 p-4">
+                  <Users className="h-6 w-6 text-[#0f2a5e]" />
                 </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                   Citizen Services
                 </h3>
-
                 <p className="mt-4 leading-relaxed text-slate-600">
                   Digital systems designed to improve
                   accessibility and user experience.
                 </p>
-
               </CardContent>
             </Card>
 
             {/* Card 6 */}
-            <Card className="rounded-3xl border-none shadow-sm">
-
+            <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
               <CardContent className="flex h-full flex-col justify-between p-7">
-
                 <div>
-
-                  <div className="w-fit rounded-2xl bg-slate-100 p-4">
-                    <ArrowRight className="h-6 w-6 text-slate-700" />
+                  <div className="w-fit rounded-sm bg-slate-100 p-4">
+                    <ArrowRight className="h-6 w-6 text-[#0f2a5e]" />
                   </div>
-
-                  <h3 className="mt-6 text-2xl font-semibold text-slate-900">
+                  <h3 className="mt-6 text-2xl font-bold text-[#0f2a5e]">
                     Future Expansion
                   </h3>
-
                   <p className="mt-4 leading-relaxed text-slate-600">
                     Expanding digital infrastructure for
                     modern governance and rural development.
                   </p>
-
                 </div>
-
               </CardContent>
             </Card>
 
@@ -306,15 +267,15 @@ export default function AboutPage() {
 
         <div className="mx-auto max-w-6xl">
 
-          <Card className="overflow-hidden rounded-[32px] border-none bg-slate-950 text-white shadow-2xl">
+          <Card className="overflow-hidden rounded-sm border-none bg-[#0f2a5e] text-white shadow-2xl">
 
             <CardContent className="px-8 py-16 text-center md:px-16">
 
-              <Badge className="border border-white/10 bg-white/10 text-cyan-200 hover:bg-white/10">
+              <Badge variant="outline" className="border-[#c8a96e] bg-transparent text-[#c8a96e] hover:bg-transparent uppercase tracking-widest font-semibold rounded-none">
                 Digital Governance
               </Badge>
 
-              <h2 className="mt-6 text-4xl font-bold">
+              <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-6 text-4xl font-black text-white">
                 Empowering Smarter Panchayat Systems
               </h2>
 

@@ -88,7 +88,7 @@ export default function GrievancesPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold tracking-tight">Grievance Portal</h1>
+      <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl font-black text-[#0f2a5e] tracking-tight">Grievance Portal</h1>
       
       <div className="grid md:grid-cols-3 gap-8">
         
@@ -96,12 +96,12 @@ export default function GrievancesPage() {
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Submit New Grievance</CardTitle>
+              <CardTitle className="text-xl font-bold text-[#0f2a5e]">Submit New Grievance</CardTitle>
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">Subject</label>
+                  <label className="text-sm font-bold text-[#0f2a5e]">Subject</label>
                   <Input 
                     required 
                     value={formData.subject} 
@@ -110,7 +110,7 @@ export default function GrievancesPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">Category</label>
+                  <label className="text-sm font-bold text-[#0f2a5e]">Category</label>
                   <Select 
                     required 
                     value={formData.category} 
@@ -128,7 +128,7 @@ export default function GrievancesPage() {
                   </Select>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">Description</label>
+                  <label className="text-sm font-bold text-[#0f2a5e]">Description</label>
                   <Textarea 
                     required 
                     value={formData.description} 
@@ -139,7 +139,7 @@ export default function GrievancesPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="w-full" disabled={submitting}>
+                <Button type="submit" className="w-full bg-[#0f2a5e] hover:bg-[#0a1e46] text-white" disabled={submitting}>
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Submit Ticket
                 </Button>
@@ -150,10 +150,10 @@ export default function GrievancesPage() {
 
         {/* Existing Grievances */}
         <div className="md:col-span-2 space-y-4">
-          <h2 className="text-xl font-semibold">Your Tickets</h2>
+          <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-2xl font-black text-[#0f2a5e]">Your Tickets</h2>
           
           {grievances.length === 0 ? (
-            <div className="text-center p-8 border rounded-md bg-white text-muted-foreground">
+            <div className="text-center p-8 border rounded-sm bg-white text-muted-foreground">
               You haven't submitted any grievances yet.
             </div>
           ) : (
@@ -163,7 +163,7 @@ export default function GrievancesPage() {
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="text-lg">{ticket.subject}</CardTitle>
+                        <CardTitle className="text-lg font-bold text-[#0f2a5e]">{ticket.subject}</CardTitle>
                         <p className="text-sm text-muted-foreground">{ticket.category} • {new Date(ticket.created_at).toLocaleDateString()}</p>
                       </div>
                       <Badge variant={ticket.status === 'Resolved' ? 'default' : 'secondary'}>
@@ -174,7 +174,7 @@ export default function GrievancesPage() {
                   <CardContent>
                     <p className="text-sm text-gray-700">{ticket.description}</p>
                     {ticket.resolution_notes && (
-                      <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-md text-sm">
+                      <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-sm text-sm">
                         <span className="font-semibold text-blue-900">Official Reply:</span>
                         <p className="text-blue-800 mt-1">{ticket.resolution_notes}</p>
                       </div>
