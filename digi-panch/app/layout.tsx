@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DynaPuff, Supermercado_One, Inter } from "next/font/google";
+import { DynaPuff, Supermercado_One, Inter, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
 import Navbar from "./components/landing-page/navbar/navbar";
@@ -24,6 +24,12 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const notoSerif = Noto_Serif({
+  variable: "--font-noto-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
 export const metadata: Metadata = {
   title: "Digi Panch",
   description: "Modern Village Administration System",
@@ -38,7 +44,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="en"
-        className={`${inter.variable} h-full antialiased`}
+        className={`${inter.variable} ${notoSerif.variable} h-full antialiased`}
       >
         <body
           className={`min-h-full flex flex-col ${inter.className}`}
