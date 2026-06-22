@@ -66,7 +66,7 @@ export default function LatestNews() {
             100% { transform: translateX(-50%); }
           }
           .animate-marquee {
-            animation: marquee 30s linear infinite;
+            animation: marquee 80s linear infinite;
           }
         `}</style>
 
@@ -74,12 +74,8 @@ export default function LatestNews() {
         <div className="hidden md:block mt-14 overflow-hidden relative w-full group">
           <div className="flex w-max animate-marquee gap-8 pb-8 group-hover:[animation-play-state:paused]">
             {[...newsList, ...newsList, ...newsList, ...newsList].map((news, index) => (
-              <motion.div
+              <div
                 key={`${news.id}-${index}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.0, ease: "easeOut" }}
-                viewport={{ once: false, margin: "0px -100px" }}
                 className="w-[350px] lg:w-[400px] flex-shrink-0"
               >
                 <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
@@ -116,7 +112,7 @@ export default function LatestNews() {
                     </Link>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -124,16 +120,8 @@ export default function LatestNews() {
         {/* Mobile: Vertical Stack */}
         <div className="md:hidden mt-10 flex flex-col gap-6">
           {newsList.map((news, index) => (
-            <motion.div
+            <div
               key={news.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 1.0,
-                ease: "easeOut",
-                delay: index * 0.15,
-              }}
-              viewport={{ once: true }}
               className="w-full"
             >
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
@@ -170,7 +158,7 @@ export default function LatestNews() {
                   </Link>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
