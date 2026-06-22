@@ -169,9 +169,12 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
                 <Input 
                   required
                   value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
+                  onChange={(e) => setContactNumber(e.target.value.replace(/\D/g, ''))}
                   placeholder="Enter 10-digit mobile number"
                   className="w-full bg-white"
+                  pattern="[0-9]{10}"
+                  title="Please enter exactly 10 digits"
+                  maxLength={10}
                 />
               </div>
 
@@ -182,9 +185,12 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
                 <Input 
                   required
                   value={identityProof}
-                  onChange={(e) => setIdentityProof(e.target.value)}
-                  placeholder="Enter ID proof number"
+                  onChange={(e) => setIdentityProof(e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase())}
+                  placeholder="Enter 12-digit Aadhaar or 10-char Voter ID"
                   className="w-full bg-white"
+                  pattern="^(\d{12}|[A-Z]{3}\d{7})$"
+                  title="Please enter a valid 12-digit Aadhaar number or 10-character Voter ID (e.g., ABC1234567)"
+                  maxLength={12}
                 />
               </div>
 
@@ -267,7 +273,11 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
 
           </CardContent>
           <CardFooter className="bg-gray-50 flex justify-end p-4 border-t">
-            <Button type="submit" disabled={!isFormValid || submitting}>
+            <Button 
+              type="submit" 
+              disabled={!isFormValid || submitting}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {submitting ? 'Submitting...' : 'Submit Booking Request'}
             </Button>

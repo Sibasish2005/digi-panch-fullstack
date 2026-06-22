@@ -179,7 +179,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="space-y-1.5">
                           <Label htmlFor="phone">Mobile No</Label>
-                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="rounded-xl" />
+                          <Input id="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '')})} className="rounded-xl" pattern="[0-9]{10}" title="Please enter exactly 10 digits" maxLength={10} />
                         </div>
                         <div className="space-y-1.5">
                           <Label htmlFor="pin">PIN Code</Label>

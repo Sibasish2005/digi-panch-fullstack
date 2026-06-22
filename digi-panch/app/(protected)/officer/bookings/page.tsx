@@ -33,7 +33,7 @@ export default function OfficerBookingsPage() {
   // Modal state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
-  const [actionType, setActionType] = useState<'APPROVE' | 'REJECT' | null>(null);
+  const [actionType, setActionType] = useState<'APPROVE' | 'REJECT' | 'COMPLETE' | null>(null);
   const [remarks, setRemarks] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [detailsBooking, setDetailsBooking] = useState<any>(null);
@@ -59,12 +59,13 @@ export default function OfficerBookingsPage() {
     switch(status.toUpperCase()) {
       case 'APPROVED': return 'bg-green-100 text-green-800';
       case 'REJECTED': return 'bg-red-100 text-red-800';
+      case 'COMPLETED': return 'bg-purple-100 text-purple-800';
       case 'PENDING': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const handleActionClick = (booking: any, action: 'APPROVE' | 'REJECT') => {
+  const handleActionClick = (booking: any, action: 'APPROVE' | 'REJECT' | 'COMPLETE') => {
     setSelectedBooking(booking);
     setActionType(action);
     setRemarks('');
@@ -81,13 +82,13 @@ export default function OfficerBookingsPage() {
         method: 'PATCH',
         token,
         body: JSON.stringify({
-          status: actionType === 'APPROVE' ? 'APPROVED' : 'REJECTED',
+          status: actionType === 'APPROVE' ? 'APPROVED' : actionType === 'REJECT' ? 'REJECTED' : 'COMPLETED',
           remarks
         })
       });
       
       setIsDialogOpen(false);
-      toast.success(`Booking ${actionType === 'APPROVE' ? 'approved' : 'rejected'} successfully.`);
+      toast.success(`Booking ${actionType === 'APPROVE' ? 'approved' : actionType === 'REJECT' ? 'rejected' : 'completed'} successfully.`);
       loadBookings();
     } catch (e: any) {
       console.error(e);
@@ -172,6 +173,27 @@ export default function OfficerBookingsPage() {
                         Reject
                       </Button>
                     </div>
+                  ) : booking.status === 'APPROVED' ? (
+                    <div className="flex justify-end gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        onClick={() => setDetailsBooking(booking)}
+                      >
+                        <Eye className="h-3.5 w-3.5 mr-1" />
+                        Details
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-8 px-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                        onClick={() => handleActionClick(booking, 'COMPLETE')}
+                      >
+                        <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                        Mark Completed
+                      </Button>
+                    </div>
                   ) : (
                     <span className="text-xs text-gray-400">Processed</span>
                   )}
@@ -186,7 +208,7 @@ export default function OfficerBookingsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {actionType === 'APPROVE' ? 'Approve Booking' : 'Reject Booking'}
+              {actionType === 'APPROVE' ? 'Approve Booking' : actionType === 'REJECT' ? 'Reject Booking' : 'Complete Booking'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -207,12 +229,12 @@ export default function OfficerBookingsPage() {
               Cancel
             </Button>
             <Button 
-              variant={actionType === 'APPROVE' ? 'default' : 'destructive'} 
+              variant={actionType === 'APPROVE' ? 'default' : actionType === 'REJECT' ? 'destructive' : 'default'} 
               onClick={handleConfirmAction} 
               disabled={isSubmitting}
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Confirm {actionType === 'APPROVE' ? 'Approval' : 'Rejection'}
+              Confirm {actionType === 'APPROVE' ? 'Approval' : actionType === 'REJECT' ? 'Rejection' : 'Completion'}
             </Button>
           </DialogFooter>
         </DialogContent>

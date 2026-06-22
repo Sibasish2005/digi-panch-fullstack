@@ -59,11 +59,71 @@ export default function LatestNews() {
           </p>
         </motion.div>
 
-        {/* News Horizontal Scroll */}
-        <div className="mt-14 flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        {/* Custom CSS for Marquee */}
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee {
+            animation: marquee 30s linear infinite;
+          }
+        `}</style>
 
+        {/* Desktop: Infinite Marquee */}
+        <div className="hidden md:block mt-14 overflow-hidden relative w-full group">
+          <div className="flex w-max animate-marquee gap-8 pb-8 group-hover:[animation-play-state:paused]">
+            {[...newsList, ...newsList, ...newsList, ...newsList].map((news, index) => (
+              <motion.div
+                key={`${news.id}-${index}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                viewport={{ once: false, margin: "0px -100px" }}
+                className="w-[350px] lg:w-[400px] flex-shrink-0"
+              >
+                <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
+                  {/* Image */}
+                  <div className="relative h-56 w-full overflow-hidden">
+                    <Image
+                      src={news.image_url || news.image}
+                      alt={news.title}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <CardContent className="p-6 flex flex-col flex-grow">
+                    {/* Category + Date */}
+                    <div className="flex items-center justify-between mb-4">
+                      <Badge variant="secondary">
+                        {news.category}
+                      </Badge>
+                      <span className="text-sm text-gray-500">
+                        {news.published_date || news.date}
+                      </span>
+                    </div>
+                    {/* Title */}
+                    <h3 className="text-xl font-semibold text-gray-900 font-inter leading-snug">
+                      {news.title}
+                    </h3>
+                    {/* Description */}
+                    <p className="mt-3 text-gray-600 text-sm leading-relaxed flex-grow">
+                      {news.description}
+                    </p>
+                    {/* Read More */}
+                    <Link href={`/news/${news.id}`} className="mt-5 inline-block text-blue-600 font-medium hover:text-blue-800 transition-colors">
+                      Read More →
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile: Vertical Stack */}
+        <div className="md:hidden mt-10 flex flex-col gap-6">
           {newsList.map((news, index) => (
-
             <motion.div
               key={news.id}
               initial={{ opacity: 0, y: 40 }}
@@ -73,58 +133,44 @@ export default function LatestNews() {
                 delay: index * 0.15,
               }}
               viewport={{ once: true }}
-              className="min-w-[300px] md:min-w-[350px] lg:min-w-[400px] flex-shrink-0 snap-start"
+              className="w-full"
             >
               <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
-
                 {/* Image */}
                 <div className="relative h-56 w-full overflow-hidden">
-
                   <Image
                     src={news.image_url || news.image}
                     alt={news.title}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-500"
                   />
-
                 </div>
-
-                <CardContent className="p-6">
-
+                <CardContent className="p-6 flex flex-col flex-grow">
                   {/* Category + Date */}
                   <div className="flex items-center justify-between mb-4">
-
                     <Badge variant="secondary">
                       {news.category}
                     </Badge>
-
                     <span className="text-sm text-gray-500">
                       {news.published_date || news.date}
                     </span>
-
                   </div>
-
                   {/* Title */}
                   <h3 className="text-xl font-semibold text-gray-900 font-inter leading-snug">
                     {news.title}
                   </h3>
-
                   {/* Description */}
                   <p className="mt-3 text-gray-600 text-sm leading-relaxed flex-grow">
                     {news.description}
                   </p>
-
                   {/* Read More */}
                   <Link href={`/news/${news.id}`} className="mt-5 inline-block text-blue-600 font-medium hover:text-blue-800 transition-colors">
                     Read More →
                   </Link>
-
                 </CardContent>
               </Card>
             </motion.div>
-
           ))}
-
         </div>
       </div>
     </section>
