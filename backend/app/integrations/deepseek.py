@@ -39,7 +39,7 @@ async def generate_deepseek_response(history: list, context_text: str = None) ->
     }
     
     headers = {
-        "Authorization": f"Bearer {setting.DEEPSEEK_API_KEY}",
+        "Authorization": f"Bearer {setting.DEEPSEEK_API_KEY.strip()}",
         "Content-Type": "application/json"
     }
     

@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 
 class Settings(BaseSettings): # Standard convention is plural
     APP_NAME: str = "DigiPanch Backend"
@@ -19,6 +20,16 @@ class Settings(BaseSettings): # Standard convention is plural
 
     RAZORPAY_KEY_ID: str
     RAZORPAY_KEY_SECRET: str
+
+    @field_validator(
+        "GEMINI_API_KEY", "DEEPSEEK_API_KEY",
+        "CLERK_SECRET_KEY", "IMAGEKIT_PRIVATE_KEY",
+        "RAZORPAY_KEY_SECRET",
+        mode="before"
+    )
+    @classmethod
+    def strip_whitespace(cls, v):
+        return v.strip() if isinstance(v, str) else v
 
     model_config = SettingsConfigDict(
         env_file=".env",

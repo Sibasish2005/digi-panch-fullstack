@@ -9,6 +9,7 @@ from app.integrations.deepseek import generate_deepseek_response
 from app.modules.users.models import User
 from app.modules.applications.models import DocumentApplication
 from app.modules.grievances.models import Grievance
+from app.modules.documents.models import DocumentType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -88,6 +89,23 @@ async def send_message(session: Session, user_id: UUID, data: ChatMessageCreate)
         
     user_context += "--------------------------------------------------------\n\n"
 
+    # 4b. Fetch Document Types (services offered by Panchayat)
+    doc_types = session.exec(select(DocumentType).where(DocumentType.is_active == True)).all()
+    doc_types_context = ""
+    if doc_types:
+        doc_types_context = "--- PANCHAYAT SERVICES & DOCUMENT TYPES (Use this to answer questions about fees, processing time, or required documents) ---\n"
+        for dt in doc_types:
+            doc_types_context += f"\nService: {dt.name}\n"
+            if dt.description:
+                doc_types_context += f"  Description: {dt.description}\n"
+            doc_types_context += f"  Fee: ₹{dt.fee_amount}\n"
+            doc_types_context += f"  Processing Time: {dt.processing_days} day(s)\n"
+            if dt.required_documents:
+                req_docs = ", ".join([d.get('name', '') for d in dt.required_documents if d.get('name')])
+                if req_docs:
+                    doc_types_context += f"  Required Documents: {req_docs}\n"
+        doc_types_context += "--------------------------------------------------------\n\n"
+
     # 5. RAG Retrieval - Embed the new message and search
     rag_repo = RAGRepository(session)
     try:
@@ -102,15 +120,15 @@ async def send_message(session: Session, user_id: UUID, data: ChatMessageCreate)
         print(f"RAG Retrieval failed: {e}")
         context_text = None
         
-    # Combine User Context with RAG Context
-    final_context = user_context + (context_text if context_text else "")
+    # Combine User Context + Document Types + RAG Context
+    final_context = user_context + doc_types_context + (context_text if context_text else "")
     
-    # 6. Generate the response from Gemini or DeepSeek fallback
+    # 6. Generate the response from DeepSeek (primary) or Gemini (fallback)
     try:
-        bot_reply_text = await generate_chat_response(history, context_text=final_context)
-    except Exception as e:
-        logger.warning(f"Gemini API failed: {e}. Falling back to DeepSeek.")
         bot_reply_text = await generate_deepseek_response(history, context_text=final_context)
+    except Exception as e:
+        logger.warning(f"DeepSeek API failed: {e}. Falling back to Gemini.")
+        bot_reply_text = await generate_chat_response(history, context_text=final_context)
     
     # 7. Save and return the bot's message
     bot_msg = repo.add_message(data.session_id, role="model", message=bot_reply_text)
