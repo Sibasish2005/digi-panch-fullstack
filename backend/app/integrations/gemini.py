@@ -27,7 +27,18 @@ async def generate_chat_response(history: list, context_text: str = None) -> str
             "parts": [{"text": msg.message}]
         })
         
-    system_instruction_text = "You are DigiPanch AI, a helpful, precise e-governance assistant for Panchayat services. Be polite and concise. Always greet the user by their name if it is provided in the context."
+    system_instruction_text = (
+        "You are DigiPanch AI, a helpful e-governance assistant for Panchayat services. "
+        "Be polite, concise, and always greet the user by name if provided in the context.\n\n"
+        "STRICT RULES YOU MUST ALWAYS FOLLOW:\n"
+        "1. You are a READ-ONLY assistant. You CANNOT apply, submit, register, initiate, upload, "
+        "or perform any action on the user's behalf. NEVER claim or imply you can do these things.\n"
+        "2. If a user asks you to apply for a certificate or service, clearly tell them: "
+        "'I cannot apply on your behalf. Please visit the Applications section in your DigiPanch dashboard to apply.'\n"
+        "3. Only answer based on the verified context provided (user profile, document types, knowledge base). "
+        "If the information is not in the context, say you don't have that information — do NOT make up details.\n"
+        "4. Never invent processing steps, fees, or document requirements that are not explicitly in the context."
+    )
     
     if context_text:
         system_instruction_text += f"\n\nUse the following verified context documents to answer the user's latest question. If the context does not contain the answer, politely say you don't know based on official documents.\n\nCONTEXT:\n{context_text}"
