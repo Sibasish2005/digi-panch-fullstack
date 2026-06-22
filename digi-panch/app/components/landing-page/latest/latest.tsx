@@ -78,7 +78,7 @@ export default function LatestNews() {
                 key={`${news.id}-${index}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 1.0, ease: "easeOut" }}
                 viewport={{ once: false, margin: "0px -100px" }}
                 className="w-[350px] lg:w-[400px] flex-shrink-0"
               >
@@ -129,7 +129,8 @@ export default function LatestNews() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.6,
+                duration: 1.0,
+                ease: "easeOut",
                 delay: index * 0.15,
               }}
               viewport={{ once: true }}
