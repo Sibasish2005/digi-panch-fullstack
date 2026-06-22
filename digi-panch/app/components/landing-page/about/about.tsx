@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function About() {
   return (
-    <section className="w-full bg-slate-50 py-20 px-6">
+    <section className="w-full bg-[#fdfdfc] py-20 px-6">
 
       <div className="max-w-5xl mx-auto">
 
@@ -19,15 +19,15 @@ export default function About() {
           viewport={{ once: true }}
         >
 
-          <Card className="rounded-3xl border border-slate-200 shadow-sm">
+          <Card className="rounded-sm border border-slate-200 shadow-sm bg-white">
 
             <CardContent className="p-8 md:p-12 text-center">
 
-              <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">
+              <p className="text-sm font-semibold text-[#c8a96e] uppercase tracking-widest">
                 About Us
               </p>
 
-              <h2 className="mt-4 text-3xl md:text-4xl font-bold text-slate-900 font-inter">
+              <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-4 text-3xl md:text-4xl font-black text-[#0f2a5e]">
                 Building Digital Governance for Rural India
               </h2>
 
@@ -42,7 +42,7 @@ export default function About() {
 
                 <Button
                   size="lg"
-                  className="mt-8 rounded-xl px-6"
+                  className="mt-8 rounded-[4px] px-8 bg-[#0f2a5e] hover:bg-[#0a1e46] text-white transition-colors"
                 >
                   Learn More
                 </Button>

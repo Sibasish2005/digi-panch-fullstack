@@ -32,7 +32,7 @@ export default function LatestNews() {
   }, []);
 
   return (
-    <section className="w-full bg-white py-20 px-6">
+    <section className="w-full bg-[#fdfdfc] py-20 px-6">
 
       <div className="max-w-7xl mx-auto">
 
@@ -44,11 +44,11 @@ export default function LatestNews() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <Badge className="mb-4 px-4 py-1 text-sm">
+          <Badge variant="outline" className="mb-4 px-4 py-1.5 text-xs font-semibold text-[#c8a96e] border-[#c8a96e] uppercase tracking-widest rounded-none">
             Latest Updates
           </Badge>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-inter text-gray-900">
+          <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0f2a5e]">
             News & Announcements
           </h2>
 
@@ -78,7 +78,7 @@ export default function LatestNews() {
                 key={`${news.id}-${index}`}
                 className="w-[350px] lg:w-[400px] flex-shrink-0"
               >
-                <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
+                <Card className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-sm h-full flex flex-col bg-white">
                   {/* Image */}
                   <div className="relative h-56 w-full overflow-hidden">
                     <Image
@@ -91,7 +91,7 @@ export default function LatestNews() {
                   <CardContent className="p-6 flex flex-col flex-grow">
                     {/* Category + Date */}
                     <div className="flex items-center justify-between mb-4">
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="rounded-sm bg-slate-100 text-[#0f2a5e]">
                         {news.category}
                       </Badge>
                       <span className="text-sm text-gray-500">
@@ -99,7 +99,7 @@ export default function LatestNews() {
                       </span>
                     </div>
                     {/* Title */}
-                    <h3 className="text-xl font-semibold text-gray-900 font-inter leading-snug">
+                    <h3 className="text-xl font-bold text-[#0f2a5e] font-inter leading-snug">
                       {news.title}
                     </h3>
                     {/* Description */}
@@ -107,7 +107,7 @@ export default function LatestNews() {
                       {news.description}
                     </p>
                     {/* Read More */}
-                    <Link href={`/news/${news.id}`} className="mt-5 inline-block text-blue-600 font-medium hover:text-blue-800 transition-colors">
+                    <Link href={`/news/${news.id}`} className="mt-5 inline-block text-[#0f2a5e] font-bold hover:text-[#0a1e46] transition-colors uppercase text-sm tracking-wide">
                       Read More →
                     </Link>
                   </CardContent>
@@ -124,7 +124,7 @@ export default function LatestNews() {
               key={news.id}
               className="w-full"
             >
-              <Card className="overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl h-full flex flex-col">
+              <Card className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-sm h-full flex flex-col bg-white">
                 {/* Image */}
                 <div className="relative h-56 w-full overflow-hidden">
                   <Image
@@ -137,7 +137,7 @@ export default function LatestNews() {
                 <CardContent className="p-6 flex flex-col flex-grow">
                   {/* Category + Date */}
                   <div className="flex items-center justify-between mb-4">
-                    <Badge variant="secondary">
+                    <Badge variant="secondary" className="rounded-sm bg-slate-100 text-[#0f2a5e]">
                       {news.category}
                     </Badge>
                     <span className="text-sm text-gray-500">
@@ -145,7 +145,7 @@ export default function LatestNews() {
                     </span>
                   </div>
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-gray-900 font-inter leading-snug">
+                  <h3 className="text-xl font-bold text-[#0f2a5e] font-inter leading-snug">
                     {news.title}
                   </h3>
                   {/* Description */}
@@ -153,7 +153,7 @@ export default function LatestNews() {
                     {news.description}
                   </p>
                   {/* Read More */}
-                  <Link href={`/news/${news.id}`} className="mt-5 inline-block text-blue-600 font-medium hover:text-blue-800 transition-colors">
+                  <Link href={`/news/${news.id}`} className="mt-5 inline-block text-[#0f2a5e] font-bold hover:text-[#0a1e46] transition-colors uppercase text-sm tracking-wide">
                     Read More →
                   </Link>
                 </CardContent>

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-slate-200 bg-white">
+    <footer className="w-full border-t border-slate-200 bg-[#fdfdfc]">
 
       <div className="mx-auto max-w-7xl px-6 py-12">
 
@@ -25,8 +25,8 @@ export default function Footer() {
           {/* Brand */}
           <div>
 
-            <h2 className="text-2xl font-bold text-slate-900">
-              Digi<span className="text-blue-600">Panch</span>
+            <h2 style={{ fontFamily: "var(--font-noto-serif)" }} className="text-2xl font-black text-slate-900 tracking-tight">
+              Digi<span className="text-[#0f2a5e]">Panch</span>
             </h2>
 
             <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-600">
@@ -42,28 +42,28 @@ export default function Footer() {
 
             <Link
               href="/"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               Home
             </Link>
 
             <Link
               href="/about-us"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               About
             </Link>
 
             <Link
               href="/services"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               Services
             </Link>
 
             <Link
               href="/contact-us"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               Contact
             </Link>
@@ -76,7 +76,7 @@ export default function Footer() {
             <Button
               size="icon"
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] hover:bg-[#0f2a5e] hover:text-white transition-colors"
             >
               <Mail className="h-4 w-4" />
             </Button>
@@ -84,7 +84,7 @@ export default function Footer() {
             <Button
               size="icon"
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] hover:bg-[#0f2a5e] hover:text-white transition-colors"
             >
               <Phone className="h-4 w-4" />
             </Button>
@@ -92,7 +92,7 @@ export default function Footer() {
             <Button
               size="icon"
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] hover:bg-[#0f2a5e] hover:text-white transition-colors"
             >
               <Globe className="h-4 w-4" />
             </Button>
@@ -100,7 +100,7 @@ export default function Footer() {
             <Button
               size="icon"
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[4px] hover:bg-[#0f2a5e] hover:text-white transition-colors"
             >
               <MapPin className="h-4 w-4" />
             </Button>
@@ -123,14 +123,14 @@ export default function Footer() {
 
             <Link
               href="/privacy-policy"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               Privacy Policy
             </Link>
 
             <Link
               href="/terms"
-              className="transition hover:text-blue-600"
+              className="transition hover:text-[#0f2a5e]"
             >
               Terms
             </Link>

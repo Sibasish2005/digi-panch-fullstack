@@ -62,7 +62,7 @@ export default function Navbar() {
                   href={link.href} 
                   className={cn(
                     "text-[15px] xl:text-base font-semibold transition hover:scale-105 inline-block",
-                    isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+                    isActive ? "text-[#0f2a5e]" : "text-slate-700 hover:text-[#0f2a5e]"
                   )}
                 >
                   {link.name}
@@ -83,7 +83,7 @@ export default function Navbar() {
                   href={link.href} 
                   className={cn(
                     "text-[13px] font-medium transition",
-                    isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+                    isActive ? "text-[#0f2a5e]" : "text-slate-700 hover:text-[#0f2a5e]"
                   )}
                 >
                   {link.name}
@@ -101,7 +101,7 @@ export default function Navbar() {
                   href={link.href} 
                   className={cn(
                     "text-[13px] font-medium transition flex items-center gap-1.5",
-                    isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+                    isActive ? "text-[#0f2a5e]" : "text-slate-700 hover:text-[#0f2a5e]"
                   )}
                 >
                   <link.icon className="h-3.5 w-3.5 hidden xl:block" />
@@ -116,15 +116,15 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b border-white/10 bg-white/80 backdrop-blur-xl shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b border-black/5 bg-[#fdfdfc]/85 backdrop-blur-xl shadow-sm">
       <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <div className="flex-1 flex items-center justify-start">
           <Link href="/">
-            <h1 className="cursor-pointer select-none text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-              Digi<span className="text-blue-600">Panch</span>
+            <h1 style={{ fontFamily: "var(--font-noto-serif)" }} className="cursor-pointer select-none text-2xl sm:text-3xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+              Digi<span className="text-[#0f2a5e]">Panch</span>
               <Show when="signed-in">
-                <span className="hidden sm:inline-block text-[10px] sm:text-xs text-white bg-blue-600 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold">
+                <span className="hidden sm:inline-block text-[10px] sm:text-xs text-white bg-[#0f2a5e] px-2 py-0.5 rounded-[4px] uppercase tracking-wider font-semibold">
                   {role}
                 </span>
               </Show>
@@ -141,7 +141,7 @@ export default function Navbar() {
         <div className="hidden lg:flex flex-1 items-center justify-end gap-4">
           <Show when="signed-out">
             <SignInButton mode="modal">
-              <Button className="rounded-xl bg-blue-600 px-6 hover:bg-blue-700 text-white font-medium shadow-md shadow-blue-500/20">
+              <Button className="rounded-[4px] bg-[#0f2a5e] px-6 hover:bg-[#0a1e46] text-white font-medium shadow-md shadow-[#0f2a5e]/20 transition-colors">
                 Get Started
               </Button>
             </SignInButton>
@@ -184,7 +184,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="border-t border-slate-200 bg-white lg:hidden overflow-hidden"
+            className="border-t border-slate-200 bg-[#fdfdfc] lg:hidden overflow-hidden"
           >
             <div className="flex flex-col gap-2 px-4 py-6 max-h-[calc(100vh-80px)] overflow-y-auto">
               {publicLinks.map(link => {
@@ -195,7 +195,7 @@ export default function Navbar() {
                     href={link.href}
                     className={cn(
                       "block px-4 py-3 text-[14px] font-medium rounded-lg transition-colors",
-                      isActive ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-blue-50 hover:text-blue-600"
+                      isActive ? "bg-[#0f2a5e]/5 text-[#0f2a5e]" : "text-slate-700 hover:bg-[#0f2a5e]/5 hover:text-[#0f2a5e]"
                     )}
                     onClick={() => setIsOpen(false)}
                   >
@@ -213,7 +213,7 @@ export default function Navbar() {
                       href={link.href}
                       className={cn(
                         "flex items-center gap-3 px-4 py-3 text-[14px] font-medium rounded-lg transition-colors",
-                        isActive ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        isActive ? "bg-[#0f2a5e]/5 text-[#0f2a5e]" : "text-slate-700 hover:bg-slate-50 hover:text-[#0f2a5e]"
                       )}
                       onClick={() => setIsOpen(false)}
                     >
@@ -227,7 +227,7 @@ export default function Navbar() {
               <Show when="signed-out">
                 <div className="mt-4 border-t border-slate-100 pt-4 px-2">
                   <SignInButton mode="modal">
-                    <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+                    <Button className="w-full rounded-[4px] bg-[#0f2a5e] hover:bg-[#0a1e46] text-white shadow-md">
                       Log-in / Register
                     </Button>
                   </SignInButton>
