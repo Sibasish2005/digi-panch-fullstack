@@ -32,7 +32,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="bg-[#fdfdfc] min-h-screen py-10 px-4 sm:px-6">
+    <div className="bg-[#fdfdfc] min-h-screen pt-24 pb-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto bg-white rounded-sm shadow-sm border overflow-hidden">
         
         {/* Header Image */}
