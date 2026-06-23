@@ -14,6 +14,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   Dialog, 
   DialogContent, 
@@ -22,13 +29,17 @@ import {
   DialogTitle, 
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Loader2, Plus, Trash2, Pencil, Ban, CheckCircle } from 'lucide-react';
+import { Loader2, Plus, Trash2, Pencil, Ban, CheckCircle, CalendarIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { ImageKitUploader } from '@/components/ImageKitUploader';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format, parse } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default function AdminNewsPage() {
   const { getToken } = useAuth();
@@ -42,12 +53,14 @@ export default function AdminNewsPage() {
     action: string;
     news: any | null;
   }>({ isOpen: false, action: '', news: null });
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('News');
+  const [category, setCategory] = useState('Government Notices');
   const [publishedDate, setPublishedDate] = useState(new Date().toISOString().split('T')[0]);
   const [imageUrl, setImageUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,7 +87,7 @@ export default function AdminNewsPage() {
     setTitle('');
     setDescription('');
     setContent('');
-    setCategory('News');
+    setCategory('Government Notices');
     setPublishedDate(new Date().toISOString().split('T')[0]);
     setImageUrl('');
   };
@@ -117,6 +130,30 @@ export default function AdminNewsPage() {
     } catch (error) {
       console.error(`Failed to ${action} news item:`, error);
       toast.error(`Failed to ${action} news item.`);
+    }
+  };
+
+  const handleDeleteClick = (news: any) => {
+    setConfirmDialog({ isOpen: true, action: 'delete', news });
+  };
+
+  const executeDelete = async () => {
+    if (!confirmDialog.news) return;
+    setDeleteLoading(true);
+    try {
+      const token = await getToken();
+      await fetchAPI(`/news/${confirmDialog.news.id}`, {
+        method: 'DELETE',
+        token,
+      });
+      toast.success('News item permanently deleted.');
+      setConfirmDialog({ ...confirmDialog, isOpen: false });
+      loadNewsItems();
+    } catch (error) {
+      console.error('Failed to delete news item:', error);
+      toast.error('Failed to delete news item.');
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -185,7 +222,7 @@ export default function AdminNewsPage() {
               <Plus className="mr-2 h-4 w-4" /> Add News Item
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] md:min-w-3xl overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit News Item' : 'Add New News Item'}</DialogTitle>
             </DialogHeader>
@@ -204,12 +241,25 @@ export default function AdminNewsPage() {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Category</label>
-                  <Input 
-                    required 
-                    value={category} 
-                    onChange={e => setCategory(e.target.value)} 
-                    placeholder="e.g. Development"
-                  />
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Government Notices">Government Notices</SelectItem>
+                      <SelectItem value="Schemes & Welfare">Schemes & Welfare</SelectItem>
+                      <SelectItem value="Citizen Services">Citizen Services</SelectItem>
+                      <SelectItem value="Infrastructure & Development">Infrastructure & Development</SelectItem>
+                      <SelectItem value="Health">Health</SelectItem>
+                      <SelectItem value="Education">Education</SelectItem>
+                      <SelectItem value="Agriculture">Agriculture</SelectItem>
+                      <SelectItem value="Employment">Employment</SelectItem>
+                      <SelectItem value="Tenders & Procurement">Tenders & Procurement</SelectItem>
+                      <SelectItem value="Community Events">Community Events</SelectItem>
+                      <SelectItem value="Emergency Alerts">Emergency Alerts</SelectItem>
+                      <SelectItem value="Technology Updates">Technology Updates</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -235,13 +285,40 @@ export default function AdminNewsPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Published Date (Display format)</label>
-                <Input 
-                  required 
-                  value={publishedDate} 
-                  onChange={e => setPublishedDate(e.target.value)} 
-                  placeholder="e.g. May 6, 2026 or YYYY-MM-DD"
-                />
+                <label className="text-sm font-medium">Published Date</label>
+                <Popover modal={true} open={calendarOpen} onOpenChange={setCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-10 bg-white",
+                        !publishedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {publishedDate
+                        ? format(parse(publishedDate, 'yyyy-MM-dd', new Date()), 'PPP')
+                        : "Pick a date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      captionLayout="dropdown"
+                      startMonth={new Date(2020, 0)}
+                      endMonth={new Date(2035, 11)}
+                      selected={publishedDate ? parse(publishedDate, 'yyyy-MM-dd', new Date()) : undefined}
+                      onSelect={(date) => {
+                        if (date) {
+                          setPublishedDate(format(date, 'yyyy-MM-dd'));
+                          setCalendarOpen(false);
+                        }
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
 
               <div className="space-y-2">
@@ -332,6 +409,15 @@ export default function AdminNewsPage() {
                       >
                         {news.is_active ? <Ban className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
                       </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleDeleteClick(news)}
+                        title="Delete permanently"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -344,11 +430,19 @@ export default function AdminNewsPage() {
       <ConfirmationDialog
         isOpen={confirmDialog.isOpen}
         onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
-        onConfirm={executeToggleStatus}
-        title={`Confirm ${confirmDialog.action === 'activate' ? 'Activation' : 'Deactivation'}`}
-        description={`Are you sure you want to ${confirmDialog.action} the news item "${confirmDialog.news?.title}"?`}
-        confirmText="Yes, I'm sure"
-        isDestructive={confirmDialog.action === 'deactivate'}
+        onConfirm={confirmDialog.action === 'delete' ? executeDelete : executeToggleStatus}
+        title={
+          confirmDialog.action === 'delete'
+            ? 'Permanently Delete News Item?'
+            : `Confirm ${confirmDialog.action === 'activate' ? 'Activation' : 'Deactivation'}`
+        }
+        description={
+          confirmDialog.action === 'delete'
+            ? `This will permanently delete "${confirmDialog.news?.title}" and its associated image from the database. This action cannot be undone.`
+            : `Are you sure you want to ${confirmDialog.action} the news item "${confirmDialog.news?.title}"?`
+        }
+        confirmText={confirmDialog.action === 'delete' ? 'Delete Permanently' : "Yes, I'm sure"}
+        isDestructive={confirmDialog.action === 'deactivate' || confirmDialog.action === 'delete'}
       />
     </div>
   );

@@ -7,7 +7,7 @@ import { fetchAPI } from '@/lib/api-client';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CalendarIcon } from 'lucide-react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { 
   Select, 
@@ -17,6 +17,10 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format, parse } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default function AmenityBookingPage({ params }: { params: Promise<{ slug: string }> }) {
   const router = useRouter();
@@ -40,6 +44,10 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
   
   // Dynamic fields
   const [formData, setFormData] = useState<Record<string, any>>({});
+
+  // Calendar popover states
+  const [startCalendarOpen, setStartCalendarOpen] = useState(false);
+  const [endCalendarOpen, setEndCalendarOpen] = useState(false);
   
   useEffect(() => {
     if (user) {
@@ -201,19 +209,44 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
                   <label className="text-sm font-medium leading-none">
                     {amenity.allow_multi_day ? 'Start Date' : 'Select Booking Date'} <span className="text-red-500">*</span>
                   </label>
-                  <Input 
-                    type="date"
-                    required
-                    value={bookingDate}
-                    onChange={(e) => {
-                      setBookingDate(e.target.value);
-                      if (endDate && new Date(e.target.value) > new Date(endDate)) {
-                        setEndDate(e.target.value);
-                      }
-                    }}
-                    className="w-full bg-white"
-                    min={new Date().toISOString().split('T')[0]}
-                  />
+                  <Popover modal={true} open={startCalendarOpen} onOpenChange={setStartCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal h-10 bg-white",
+                          !bookingDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {bookingDate
+                          ? format(parse(bookingDate, 'yyyy-MM-dd', new Date()), 'PPP')
+                          : "Pick a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        captionLayout="dropdown"
+                        startMonth={new Date(2020, 0)}
+                        endMonth={new Date(2035, 11)}
+                        selected={bookingDate ? parse(bookingDate, 'yyyy-MM-dd', new Date()) : undefined}
+                        onSelect={(date) => {
+                          if (date) {
+                            const val = format(date, 'yyyy-MM-dd');
+                            setBookingDate(val);
+                            if (endDate && new Date(val) > new Date(endDate)) {
+                              setEndDate(val);
+                            }
+                            setStartCalendarOpen(false);
+                          }
+                        }}
+                        disabled={(date) => date < new Date(new Date().toDateString())}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {amenity.allow_multi_day && (
@@ -221,14 +254,43 @@ export default function AmenityBookingPage({ params }: { params: Promise<{ slug:
                     <label className="text-sm font-medium leading-none">
                       End Date <span className="text-red-500">*</span>
                     </label>
-                    <Input 
-                      type="date"
-                      required
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full bg-white"
-                      min={bookingDate || new Date().toISOString().split('T')[0]}
-                    />
+                    <Popover modal={true} open={endCalendarOpen} onOpenChange={setEndCalendarOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal h-10 bg-white",
+                            !endDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {endDate
+                            ? format(parse(endDate, 'yyyy-MM-dd', new Date()), 'PPP')
+                            : "Pick end date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown"
+                          startMonth={new Date(2020, 0)}
+                          endMonth={new Date(2035, 11)}
+                          selected={endDate ? parse(endDate, 'yyyy-MM-dd', new Date()) : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              setEndDate(format(date, 'yyyy-MM-dd'));
+                              setEndCalendarOpen(false);
+                            }
+                          }}
+                          disabled={(date) => {
+                            const minDate = bookingDate ? parse(bookingDate, 'yyyy-MM-dd', new Date()) : new Date(new Date().toDateString());
+                            return date < minDate;
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 )}
               </div>
