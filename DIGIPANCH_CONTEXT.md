@@ -11,7 +11,7 @@
 | Type | Full-stack civic-tech e-governance platform |
 | Purpose | Digitize Panchayat services — certificates, grievances, payments, AI assistant |
 | Roles | User (citizen) · Officer · Admin |
-| Dev stage | Phase 10 — RAG (active) |
+| Dev stage | Final Polish / Maintenance |
 
 ---
 
@@ -151,34 +151,30 @@ User logs in (Clerk) → Frontend gets token → Sends to FastAPI
 
 ## CURRENT PROJECT STATE
 
-### Frontend (already done — source of truth)
+### Frontend (Completed)
 
-**Existing pages:**
+**Existing pages / Recently Built:**
 - `/` — landing page (Navbar, Hero, Services, About, Latest, Footer)
 - `/(protected)/dashboard` — dashboard UI (wired to fetch user data dynamically from backend)
 - `/(protected)/profile` — Clerk user profile
 - `/(protected)/chatbot` — chatbot UI (Gemini integrated)
+- **Citizen Portal**: `/citizen/applications`, `/citizen/apply`, `/citizen/book`, `/citizen/my-bookings`, `/citizen/grievances`
+- **Officer Portal**: Dashboard, `/officer/application`, `/officer/bookings`, `/officer/grievances`
+- **Admin Portal**: `/admin/amenities`, `/admin/audit-logs`, `/admin/document-types`, `/admin/grievances`, `/admin/news`, `/admin/users`
 
 **Recent UI Enhancements:**
-- **Skeleton Screen Integration**: Added `boneyard-js` skeleton screens to support smooth, flicker-free layouts during loading states on protected views (admin users/document-types, citizen dashboard/applications/grievances, officer dashboard/grievances).
+- **Skeleton Screen Integration**: Added `boneyard-js` skeleton screens to support smooth, flicker-free layouts during loading states on protected views.
 - **Navigation Cleanup**: Removed "Audit Logs" from navigation menus to simplify administrative routing.
 - **Layout Alignment**: Centered navigation links in the primary Header/Navbar and fixed the top layout overlapping in the Hero section of the homepage.
+- **Payments Integration**: `RazorpayCheckout.tsx` component is actively integrated.
+- **Storage Integration**: `ImageKitUploader.tsx` component is actively integrated.
 
 **Clerk already integrated:**
 - `ClerkProvider` wraps root layout
 - Auth on protected routes via Clerk middleware (`middleware.ts` configured)
 - `auth()` and `getToken()` imported from `@clerk/nextjs/server` in dashboard to authorize backend requests
 
-**Frontend gaps (to build later):**
-- Application submission forms
-- Proof upload UI
-- Grievance submission UI
-- Payment UI
-- Application tracking page
-- Officer dashboard
-- Admin dashboard
-
-### Backend (under development)
+### Backend (Completed)
 
 **Already completed (✅):**
 - FastAPI project structure, virtual environment, dependencies
@@ -194,10 +190,9 @@ User logs in (Clerk) → Frontend gets token → Sends to FastAPI
 - **Phase 6 — Admin Workflow & Audit** (fully complete)
 - **Phase 7 — Grievances** (fully complete)
 - **Phase 8 — Payments** (fully complete)
+- **Phase 10 — RAG** (fully complete)
 
-**Current phase: Phase 10 — RAG**
-
-**Immediate next task:** `app/modules/rag/models.py`
+**Current phase: Final Polish / Maintenance**
 
 ---
 
@@ -421,6 +416,23 @@ id, user_id, title, message, is_read, type, created_at
 id, actor_user_id, action, resource_type, resource_id, metadata_info, created_at
 ```
 
+### Amenity
+```
+id, name, slug, description, form_fields (JSON), fee_amount, allow_multi_day, is_active, created_at
+```
+
+### AmenityBooking
+```
+id, booking_number, user_id, amenity_id, assigned_officer_id, booking_date, end_date, applicant_name, contact_number, identity_proof
+status: PENDING | APPROVED | REJECTED
+remarks, form_data (JSON), created_at
+```
+
+### NewsItem
+```
+id, title, description, content, image_url, category, published_date, is_active, created_at
+```
+
 ---
 
 ## API SURFACE
@@ -439,6 +451,8 @@ Base: `/api/v1`
 | Uploads | `POST /uploads/sign` |
 | Chat | `POST /chat/sessions` · `GET /chat/messages` · `GET /chat/history` |
 | Dashboard | `GET /dashboard/summary` |
+| Amenities | `GET /amenities` · `GET /amenities/{slug}` · `POST /amenities` · `PATCH /amenities/{id}` · `POST /amenities/{slug}/book` · `GET /amenities/bookings/my` · `GET /amenities/bookings/all` · `PATCH /amenities/bookings/{id}/status` |
+| News | `GET /news` · `GET /news/{id}` · `POST /news` · `PATCH /news/{id}` · `DELETE /news/{id}` |
 
 ---
 

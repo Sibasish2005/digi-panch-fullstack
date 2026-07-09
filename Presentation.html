@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiPanch - Smart Panchayat System</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            900: '#134e4a',
+                        },
+                        dark: {
+                            900: '#020617',
+                            800: '#0f172a',
+                            700: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lenis & GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #2dd4bf, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow {
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
+        }
+
+        /* Slide structure */
+        section.slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 4rem;
+            width: 100%;
+        }
+
+        /* SVG Connections */
+        path.connection {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        /* Smooth scroll hiding native scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155; 
+        }
+        
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Global Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-dark-800">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-brand-400 to-blue-500 w-0"></div>
+    </div>
+
+    <!-- Background Layer (Fixed) -->
+    <div class="fixed inset-0 z-[-1] pointer-events-none">
+        <div class="absolute inset-0 bg-grid opacity-30"></div>
+        <!-- Blurs -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full blur-[120px] mix-blend-screen parallax-blob"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] mix-blend-screen parallax-blob-2"></div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 1: FRONT PAGE 
+         ============================================== -->
+    <section class="slide" id="slide-1" style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2072&q=80') center/cover no-repeat;">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-dark-900/80 via-dark-900/60 to-dark-900"></div>
+        
+        <div class="z-10 text-center glass-panel p-12 rounded-3xl max-w-4xl w-full mx-auto transform hover:scale-[1.02] transition-transform duration-500 hero-content">
+            <p class="text-brand-400 font-mono tracking-widest text-sm mb-4 uppercase">BCA Final Year Project 2026</p>
+            <h1 class="text-6xl md:text-7xl font-bold mb-6 font-mono tracking-tight">
+                <span class="text-white">Digi</span><span class="gradient-text">Panch</span>
+            </h1>
+            <h2 class="text-2xl text-slate-300 font-light mb-12">AI Powered Smart Panchayat Management System</h2>
+            
+            <div class="grid grid-cols-2 gap-8 text-left border-t border-slate-700/50 pt-8 mt-8">
+                <div>
+                    <h3 class="text-slate-400 text-sm font-mono mb-2">GROUP MEMBERS</h3>
+                    <ul class="text-slate-200 space-y-1">
+                        <li>Sharvesh Kumar Yadav</li>
+                        <li>Sibasish Chakraborti</li>
+                        <li>Pankaj Saha</li>
+                        <li>Aman Jamatiya</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-slate-400 text-sm font-mono mb-2">INSTITUTE & GUIDE</h3>
+                    <p class="text-slate-200">NIELIT Agartala</p>
+                    <p class="text-slate-400 text-sm mt-1">Guide: (Add placeholder)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 2: PROBLEM STATEMENT 
+         ============================================== -->
+    <section class="slide" id="slide-2">
+        <div class="max-w-5xl w-full">
+            <h2 class="text-4xl md:text-5xl font-mono font-bold mb-16 text-center">The <span class="text-red-400">Problem</span> Statement</h2>
+            
+            <div class="glass-panel rounded-3xl p-8 relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-500/5"></div>
+                
+                <h3 class="text-xl text-slate-300 mb-12 text-center">Current Manual Panchayat Workflow</h3>
+                
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10 problem-flow">
+                    
+                    <div class="flex flex-col items-center step">
+                        <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 mb-4 text-2xl">👤</div>
+                        <span class="text-slate-300 font-mono text-sm">Citizen</span>
+                    </div>
+
+                    <div class="text-red-400 animate-pulse hidden md:block step-arrow">➔</div>
+                    <div class="text-red-400 animate-pulse md:hidden step-arrow">⬇</div>
+
+                    <div class="flex flex-col items-center step">
+                        <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 mb-4 text-2xl">📄</div>
+                        <span class="text-slate-300 font-mono text-sm">Paper Forms</span>
+                    </div>
+
+                    <div class="text-red-400 animate-pulse hidden md:block step-arrow">➔</div>
+                    <div class="text-red-400 animate-pulse md:hidden step-arrow">⬇</div>
+
+                    <div class="flex flex-col items-center step">
+                        <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 mb-4 text-2xl">⏳</div>
+                        <span class="text-slate-300 font-mono text-sm text-center">Long<br>Verification</span>
+                    </div>
+
+                    <div class="text-red-400 animate-pulse hidden md:block step-arrow">➔</div>
+                    <div class="text-red-400 animate-pulse md:hidden step-arrow">⬇</div>
+
+                    <div class="flex flex-col items-center step">
+                        <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 mb-4 text-2xl">🗄️</div>
+                        <span class="text-slate-300 font-mono text-sm text-center">Manual<br>Records</span>
+                    </div>
+
+                    <div class="text-red-400 animate-pulse hidden md:block step-arrow">➔</div>
+                    <div class="text-red-400 animate-pulse md:hidden step-arrow">⬇</div>
+
+                    <div class="flex flex-col items-center step">
+                        <div class="w-16 h-16 rounded-full bg-red-900/50 flex items-center justify-center border border-red-500/50 mb-4 text-2xl glow">😩</div>
+                        <span class="text-red-400 font-mono text-sm font-bold">Delay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 3: PROJECT OVERVIEW (BENTO GRID)
+         ============================================== -->
+    <section class="slide" id="slide-3">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-4xl md:text-5xl font-mono font-bold mb-12 text-center">Interactive <span class="gradient-text">Dashboard</span> Overview</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[160px] bento-grid">
+                
+                <!-- Citizen Portal -->
+                <div class="glass-panel rounded-3xl p-6 md:col-span-2 md:row-span-2 group hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden bento-item">
+                    <div class="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent"></div>
+                    <h3 class="text-2xl font-bold mb-2">Citizen Portal</h3>
+                    <p class="text-slate-400">Applications, Bookings & Grievances.</p>
+                    <div class="absolute bottom-4 right-4 text-6xl opacity-20 group-hover:opacity-100 transition-opacity group-hover:scale-110 duration-500">🏠</div>
+                </div>
+
+                <!-- Officer Portal -->
+                <div class="glass-panel rounded-3xl p-6 md:col-span-1 md:row-span-1 group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <h3 class="text-xl font-bold mb-1 text-blue-400">Officer Portal</h3>
+                    <p class="text-slate-400 text-sm">Review & Approve</p>
+                </div>
+
+                <!-- Admin Portal -->
+                <div class="glass-panel rounded-3xl p-6 md:col-span-1 md:row-span-1 group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <h3 class="text-xl font-bold mb-1 text-purple-400">Admin Portal</h3>
+                    <p class="text-slate-400 text-sm">Roles & Audits</p>
+                </div>
+
+                <!-- AI Assistant -->
+                <div class="glass-panel rounded-3xl p-6 md:col-span-2 md:row-span-1 bg-gradient-to-r from-violet-900/40 to-transparent group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <div class="flex items-center gap-4 h-full">
+                        <div class="text-4xl">🤖</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-1 text-violet-300">AI Assistant</h3>
+                            <p class="text-slate-400 text-sm">Gemini RAG Chatbot</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Small modules -->
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-center items-center group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <div class="text-3xl mb-2">💳</div>
+                    <h3 class="font-bold text-sm">Payments</h3>
+                </div>
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-center items-center group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <div class="text-3xl mb-2">📰</div>
+                    <h3 class="font-bold text-sm">News</h3>
+                </div>
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-center items-center group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <div class="text-3xl mb-2">📄</div>
+                    <h3 class="font-bold text-sm">Documents</h3>
+                </div>
+                <div class="glass-panel rounded-3xl p-6 flex flex-col justify-center items-center group hover:-translate-y-2 transition-transform duration-300 bento-item">
+                    <div class="text-3xl mb-2">📊</div>
+                    <h3 class="font-bold text-sm">Dashboard</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 4: SYSTEM ARCHITECTURE
+         ============================================== -->
+    <section class="slide" id="slide-4">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-4xl md:text-5xl font-mono font-bold mb-16 text-center">System <span class="gradient-text">Architecture</span></h2>
+            
+            <div class="relative max-w-4xl mx-auto h-[600px] glass-panel rounded-3xl p-8 overflow-hidden arch-container">
+                <!-- SVG layer for connections -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" id="arch-svg">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#2dd4bf" />
+                            <stop offset="100%" stop-color="#3b82f6" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Paths will be drawn by JS based on element positions -->
+                </svg>
+
+                <div class="grid grid-cols-3 gap-8 h-full items-center relative z-10">
+                    <!-- Column 1: Client Layer -->
+                    <div class="flex flex-col gap-12 justify-center">
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-4 rounded-xl text-center glow relative" id="node-frontend">
+                            <span class="text-xs text-brand-400 font-mono block mb-1">Frontend</span>
+                            <span class="font-bold">Next.js (Vercel)</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: API Layer -->
+                    <div class="flex flex-col gap-8 justify-center items-center">
+                        <div class="arch-node bg-blue-900/30 border border-blue-500/50 p-4 rounded-xl text-center" id="node-clerk">
+                            <span class="font-bold text-sm">Clerk Auth</span>
+                        </div>
+                        
+                        <div class="arch-node bg-slate-800 border-2 border-brand-500 p-6 rounded-2xl text-center glow w-full" id="node-backend">
+                            <span class="text-xs text-brand-400 font-mono block mb-1">Backend Core</span>
+                            <span class="font-bold text-xl">FastAPI</span>
+                            <div class="text-xs text-slate-400 mt-2">Router / Modules</div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Column 3: Data & Integrations -->
+                    <div class="flex flex-col gap-6 justify-center">
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-3 rounded-xl text-center" id="node-pg">
+                            <span class="font-bold text-sm">PostgreSQL / Supabase</span>
+                        </div>
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-3 rounded-xl text-center" id="node-redis">
+                            <span class="font-bold text-sm">Redis (Upstash)</span>
+                        </div>
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-3 rounded-xl text-center border-purple-500/50 text-purple-300" id="node-gemini">
+                            <span class="font-bold text-sm">Gemini AI / pgvector</span>
+                        </div>
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-3 rounded-xl text-center" id="node-imagekit">
+                            <span class="font-bold text-sm">ImageKit</span>
+                        </div>
+                        <div class="arch-node bg-slate-900 border border-slate-700 p-3 rounded-xl text-center" id="node-razorpay">
+                            <span class="font-bold text-sm">Razorpay</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 5: BACKEND FOLDER ARCHITECTURE
+         ============================================== -->
+    <section class="slide" id="slide-5">
+        <div class="max-w-4xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-12">Modular <span class="gradient-text">Monolith</span> Structure</h2>
+            
+            <div class="glass-panel p-8 rounded-3xl overflow-hidden font-mono text-sm leading-relaxed folder-tree">
+                <div class="folder-line text-brand-400 font-bold mb-2">backend/</div>
+                <div class="folder-line pl-4 text-slate-300">├── app/</div>
+                <div class="folder-line pl-8 text-slate-400">├── main.py <span class="text-brand-500/50 text-xs ml-4"># FastAPI Instance</span></div>
+                
+                <div class="folder-line pl-8 text-blue-300 mt-2">├── api/ <span class="text-slate-500 text-xs ml-4"># Routers & Deps</span></div>
+                
+                <div class="folder-line pl-8 text-emerald-300 mt-2">├── core/ <span class="text-slate-500 text-xs ml-4"># Config & Security</span></div>
+                
+                <div class="folder-line pl-8 text-amber-300 mt-2">├── db/ <span class="text-slate-500 text-xs ml-4"># SQLModel Session</span></div>
+                
+                <div class="folder-line pl-8 text-purple-300 mt-2">├── integrations/</div>
+                <div class="folder-line pl-12 text-slate-400">├── clerk.py</div>
+                <div class="folder-line pl-12 text-slate-400">├── gemini.py</div>
+                <div class="folder-line pl-12 text-slate-400">└── razorpay.py</div>
+                
+                <div class="folder-line pl-8 text-rose-300 mt-2">└── modules/ <span class="text-slate-500 text-xs ml-4"># Domain Logic</span></div>
+                <div class="folder-line pl-12 text-slate-400">├── users/</div>
+                <div class="folder-line pl-12 text-slate-400">├── documents/</div>
+                <div class="folder-line pl-12 text-slate-400">├── applications/</div>
+                <div class="folder-line pl-12 text-slate-400">├── grievances/</div>
+                <div class="folder-line pl-12 text-slate-400">├── payments/</div>
+                <div class="folder-line pl-12 text-slate-400">├── rag/</div>
+                <div class="folder-line pl-12 text-slate-400">└── ... (16 total modules)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 6: BACKEND REQUEST FLOW
+         ============================================== -->
+    <section class="slide" id="slide-6">
+        <div class="max-w-3xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-16 text-center">Backend <span class="text-blue-400">Request Flow</span></h2>
+            
+            <div class="relative pl-8 md:pl-0">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-slate-800 md:-translate-x-1/2"></div>
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-blue-500 md:-translate-x-1/2 flow-progress origin-top scale-y-0 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="relative flex items-center md:justify-end md:w-1/2 md:pr-12 md:ml-0 ml-12 flow-step opacity-0 translate-y-8">
+                        <div class="absolute left-[-3rem] md:right-[-0.5rem] md:left-auto w-4 h-4 rounded-full bg-slate-800 border-2 border-blue-500 z-10 glow"></div>
+                        <div class="glass-panel p-6 rounded-2xl w-full">
+                            <span class="text-xs text-brand-400 font-mono mb-2 block">1. CLIENT</span>
+                            <h3 class="text-lg font-bold">Next.js / User</h3>
+                            <p class="text-sm text-slate-400 mt-2">HTTP GET /api/v1/applications</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="relative flex items-center md:justify-start md:w-1/2 md:pl-12 md:ml-auto ml-12 flow-step opacity-0 translate-y-8">
+                        <div class="absolute left-[-3rem] md:left-[-0.5rem] w-4 h-4 rounded-full bg-slate-800 border-2 border-blue-500 z-10 glow"></div>
+                        <div class="glass-panel p-6 rounded-2xl w-full">
+                            <span class="text-xs text-brand-400 font-mono mb-2 block">2. ENTRY</span>
+                            <h3 class="text-lg font-bold">FastAPI Router</h3>
+                            <p class="text-sm text-slate-400 mt-2">Routes request to specific module endpoint</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex items-center md:justify-end md:w-1/2 md:pr-12 md:ml-0 ml-12 flow-step opacity-0 translate-y-8">
+                        <div class="absolute left-[-3rem] md:right-[-0.5rem] md:left-auto w-4 h-4 rounded-full bg-slate-800 border-2 border-blue-500 z-10 glow"></div>
+                        <div class="glass-panel p-6 rounded-2xl w-full">
+                            <span class="text-xs text-brand-400 font-mono mb-2 block">3. MIDDLEWARE</span>
+                            <h3 class="text-lg font-bold">Dependency Injection</h3>
+                            <p class="text-sm text-slate-400 mt-2">Verify Clerk Token, inject `get_session`, inject `current_user`</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative flex items-center md:justify-start md:w-1/2 md:pl-12 md:ml-auto ml-12 flow-step opacity-0 translate-y-8">
+                        <div class="absolute left-[-3rem] md:left-[-0.5rem] w-4 h-4 rounded-full bg-slate-800 border-2 border-blue-500 z-10 glow"></div>
+                        <div class="glass-panel p-6 rounded-2xl w-full">
+                            <span class="text-xs text-brand-400 font-mono mb-2 block">4. DOMAIN</span>
+                            <h3 class="text-lg font-bold">Service Layer</h3>
+                            <p class="text-sm text-slate-400 mt-2">Executes business logic (e.g., check RBAC, prepare data)</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="relative flex items-center md:justify-end md:w-1/2 md:pr-12 md:ml-0 ml-12 flow-step opacity-0 translate-y-8">
+                        <div class="absolute left-[-3rem] md:right-[-0.5rem] md:left-auto w-4 h-4 rounded-full bg-slate-800 border-2 border-blue-500 z-10 glow"></div>
+                        <div class="glass-panel p-6 rounded-2xl w-full">
+                            <span class="text-xs text-brand-400 font-mono mb-2 block">5. DATA</span>
+                            <h3 class="text-lg font-bold">SQLModel & PostgreSQL</h3>
+                            <p class="text-sm text-slate-400 mt-2">ORM translates to SQL, fetches from Supabase DB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 7: AUTHENTICATION FLOW
+         ============================================== -->
+    <section class="slide" id="slide-7">
+        <div class="max-w-5xl w-full text-center">
+            <h2 class="text-4xl font-mono font-bold mb-16">Zero-Trust <span class="text-violet-400">Authentication</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center justify-center auth-container">
+                <!-- Next.js -->
+                <div class="glass-panel p-6 rounded-2xl col-span-1 auth-node">
+                    <div class="text-3xl mb-2">⚛️</div>
+                    <span class="font-bold text-sm block">Frontend</span>
+                    <span class="text-xs text-slate-400">User Logs In</span>
+                </div>
+                
+                <div class="text-violet-400 animate-pulse hidden md:block text-2xl">➔</div>
+                
+                <!-- Clerk -->
+                <div class="glass-panel p-6 rounded-2xl col-span-1 border-violet-500/50 auth-node shadow-[0_0_30px_rgba(139,92,246,0.2)]">
+                    <div class="text-3xl mb-2">🛡️</div>
+                    <span class="font-bold text-sm block text-violet-300">Clerk</span>
+                    <span class="text-xs text-slate-400">Issues JWT</span>
+                </div>
+
+                <div class="text-violet-400 animate-pulse hidden md:block text-2xl">➔</div>
+
+                <!-- FastAPI -->
+                <div class="glass-panel p-6 rounded-2xl col-span-1 auth-node">
+                    <div class="text-3xl mb-2">🐍</div>
+                    <span class="font-bold text-sm block">FastAPI</span>
+                    <span class="text-xs text-slate-400">Verifies Token<br>& Syncs DB</span>
+                </div>
+            </div>
+            
+            <div class="mt-16 glass-panel p-6 rounded-2xl max-w-2xl mx-auto border-l-4 border-l-violet-500 text-left">
+                <p class="font-mono text-sm text-slate-300">
+                    <span class="text-violet-400">Critical Rule:</span> "Clerk = Identity Provider. FastAPI = Resource Server. Frontend sends Authorization: Bearer <clerk_jwt> on every request."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 8: DATABASE DESIGN (ER DIAGRAM)
+         ============================================== -->
+    <section class="slide" id="slide-8">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-12 text-center">Entity <span class="text-emerald-400">Relationship</span> Model</h2>
+            
+            <div class="relative w-full h-[600px] glass-panel rounded-3xl overflow-hidden er-container flex items-center justify-center p-8">
+                <!-- Abstract nodes to represent ER -->
+                <div class="grid grid-cols-4 gap-6 w-full h-full relative z-10">
+                    <!-- Core -->
+                    <div class="col-span-1 flex flex-col justify-center gap-6">
+                        <div class="er-node bg-slate-900 border-2 border-emerald-500/50 p-4 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                            <h3 class="font-bold text-emerald-400 border-b border-slate-700 pb-2 mb-2">User</h3>
+                            <ul class="text-xs text-slate-400 space-y-1 font-mono">
+                                <li>PK id</li>
+                                <li>clerk_user_id</li>
+                                <li>role (USER|OFFICER|ADMIN)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Middle Modules -->
+                    <div class="col-span-2 flex flex-col justify-between gap-4">
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-blue-400 border-b border-slate-700 pb-2 mb-2">DocumentApplication</h3>
+                            <ul class="text-xs text-slate-400 space-y-1 font-mono">
+                                <li>PK id</li>
+                                <li>FK user_id</li>
+                                <li>FK document_type_id</li>
+                                <li>status</li>
+                            </ul>
+                        </div>
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-rose-400 border-b border-slate-700 pb-2 mb-2">Grievance</h3>
+                            <ul class="text-xs text-slate-400 space-y-1 font-mono">
+                                <li>PK id</li>
+                                <li>FK user_id</li>
+                                <li>status</li>
+                            </ul>
+                        </div>
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-amber-400 border-b border-slate-700 pb-2 mb-2">Payment</h3>
+                            <ul class="text-xs text-slate-400 space-y-1 font-mono">
+                                <li>PK id</li>
+                                <li>FK user_id</li>
+                                <li>provider_payment_id</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right Modules -->
+                    <div class="col-span-1 flex flex-col justify-center gap-4">
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-slate-300 border-b border-slate-700 pb-2 mb-2">AuditLog</h3>
+                            <span class="text-xs text-slate-400 font-mono">Tracks all admin actions</span>
+                        </div>
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-violet-400 border-b border-slate-700 pb-2 mb-2">KnowledgeChunk</h3>
+                            <span class="text-xs text-slate-400 font-mono">pgvector embeddings</span>
+                        </div>
+                        <div class="er-node bg-slate-900 border border-slate-700 p-4 rounded-xl">
+                            <h3 class="font-bold text-teal-400 border-b border-slate-700 pb-2 mb-2">AmenityBooking</h3>
+                            <span class="text-xs text-slate-400 font-mono">Facility reservations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 9: AI ASSISTANT FLOW (RAG)
+         ============================================== -->
+    <section class="slide" id="slide-9">
+        <div class="max-w-5xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-4 text-center">AI Powered <span class="text-violet-400">RAG Chatbot</span></h2>
+            <p class="text-slate-400 text-center mb-16 max-w-2xl mx-auto">Retrieval-Augmented Generation using Google Gemini and pgvector.</p>
+            
+            <div class="glass-panel p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 rag-container">
+                
+                <div class="flex-1 space-y-6">
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-brand-500 rag-step">
+                        <span class="text-xs font-mono text-slate-400">1. INPUT</span>
+                        <p class="font-bold">Citizen Question</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-blue-500 rag-step">
+                        <span class="text-xs font-mono text-slate-400">2. EMBED</span>
+                        <p class="font-bold">Gemini Embeddings API</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-500 rag-step">
+                        <span class="text-xs font-mono text-slate-400">3. RETRIEVE</span>
+                        <p class="font-bold">pgvector Similarity Search</p>
+                        <p class="text-xs text-slate-400 mt-1">Retrieves top-k relevant knowledge chunks</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-violet-500 rag-step">
+                        <span class="text-xs font-mono text-slate-400">4. GENERATE</span>
+                        <p class="font-bold">Gemini LLM Prompting</p>
+                    </div>
+                </div>
+
+                <div class="flex-1 flex justify-center relative">
+                    <div class="w-64 h-64 rounded-full border border-violet-500/30 flex items-center justify-center relative spin-slow">
+                        <div class="w-48 h-48 rounded-full border border-blue-500/30 flex items-center justify-center">
+                            <div class="text-6xl animate-pulse">🧠</div>
+                        </div>
+                        <!-- Orbiting dots -->
+                        <div class="absolute top-0 left-1/2 w-3 h-3 bg-brand-400 rounded-full shadow-[0_0_10px_#2dd4bf]"></div>
+                        <div class="absolute bottom-0 left-1/2 w-3 h-3 bg-violet-400 rounded-full shadow-[0_0_10px_#8b5cf6]"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 10: PAYMENT FLOW
+         ============================================== -->
+    <section class="slide" id="slide-10">
+        <div class="max-w-5xl w-full text-center">
+            <h2 class="text-4xl font-mono font-bold mb-16">Secure <span class="text-amber-400">Payment Flow</span></h2>
+            
+            <div class="flex flex-wrap justify-center items-center gap-4 payment-flow">
+                <div class="glass-panel py-3 px-6 rounded-full border border-slate-700">1. Create Order</div>
+                <div class="text-slate-500">→</div>
+                <div class="glass-panel py-3 px-6 rounded-full border border-amber-500/50 text-amber-300 glow shadow-[0_0_20px_rgba(245,158,11,0.2)]">2. Razorpay Checkout</div>
+                <div class="text-slate-500">→</div>
+                <div class="glass-panel py-3 px-6 rounded-full border border-slate-700">3. Webhook Trigger</div>
+                <div class="text-slate-500">→</div>
+                <div class="glass-panel py-3 px-6 rounded-full border border-slate-700">4. Signature Verification</div>
+                <div class="text-slate-500">→</div>
+                <div class="glass-panel py-3 px-6 rounded-full border border-emerald-500/50 text-emerald-400">5. DB Update & Receipt</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 11: SECURITY
+         ============================================== -->
+    <section class="slide" id="slide-11">
+        <div class="max-w-4xl w-full text-center">
+            <h2 class="text-4xl font-mono font-bold mb-16"><span class="text-emerald-400">Security</span> Architecture</h2>
+            
+            <div class="glass-panel p-12 rounded-3xl relative overflow-hidden">
+                <div class="absolute inset-0 bg-emerald-900/10 mix-blend-screen"></div>
+                <div class="text-6xl mb-6 animate-pulse">🛡️</div>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-4 text-left relative z-10 security-cards">
+                    <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl flex-1">
+                        <h3 class="font-bold text-emerald-400">SlowAPI</h3>
+                        <p class="text-xs text-slate-400 mt-1">Rate limiting based on Redis</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl flex-1">
+                        <h3 class="font-bold text-emerald-400">Clerk JWT</h3>
+                        <p class="text-xs text-slate-400 mt-1">Stateless token verification</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl flex-1">
+                        <h3 class="font-bold text-emerald-400">Pydantic</h3>
+                        <p class="text-xs text-slate-400 mt-1">Strict input validation & schemas</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-slate-700/50 flex justify-between items-center text-sm font-mono text-slate-300 max-w-2xl mx-auto security-flow">
+                    <span>Request</span>
+                    <span class="text-emerald-400">→</span>
+                    <span>Rate Limiter</span>
+                    <span class="text-emerald-400">→</span>
+                    <span>JWT</span>
+                    <span class="text-emerald-400">→</span>
+                    <span>Validation</span>
+                    <span class="text-emerald-400">→</span>
+                    <span>API</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 12: DEPLOYMENT
+         ============================================== -->
+    <section class="slide" id="slide-12" style="background: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=2034&q=80') center/cover no-repeat;">
+        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/80 to-dark-900/60"></div>
+        
+        <div class="max-w-5xl w-full text-center relative z-10">
+            <h2 class="text-4xl font-mono font-bold mb-16">Cloud <span class="text-blue-400">Deployment</span></h2>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 deploy-nodes">
+                <div class="glass-panel p-6 rounded-2xl border-white/20 w-40 h-40 flex flex-col items-center justify-center">
+                    <span class="text-3xl mb-2">🐙</span>
+                    <span class="font-bold">GitHub</span>
+                </div>
+                
+                <div class="text-slate-400 text-3xl rotate-90 md:rotate-0">➔</div>
+                
+                <div class="flex flex-col gap-4">
+                    <div class="glass-panel p-6 rounded-2xl border-brand-500/50 glow">
+                        <span class="font-bold text-brand-400">Vercel</span>
+                        <span class="text-xs block text-slate-400">Next.js Frontend</span>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                        <span class="font-bold text-blue-400">Render/Railway</span>
+                        <span class="text-xs block text-slate-400">FastAPI Backend</span>
+                    </div>
+                </div>
+                
+                <div class="text-slate-400 text-3xl rotate-90 md:rotate-0">➔</div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-panel p-4 rounded-xl text-sm">Supabase PostgreSQL</div>
+                    <div class="glass-panel p-4 rounded-xl text-sm">Upstash Redis</div>
+                    <div class="glass-panel p-4 rounded-xl text-sm">Gemini API</div>
+                    <div class="glass-panel p-4 rounded-xl text-sm">ImageKit</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 13: TECHNOLOGY STACK
+         ============================================== -->
+    <section class="slide" id="slide-13">
+        <div class="max-w-6xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-12 text-center">Technology <span class="gradient-text">Stack</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 tech-grid">
+                <!-- Frontend -->
+                <div class="glass-panel p-6 rounded-3xl tech-card group hover:-translate-y-2 transition-transform">
+                    <h3 class="font-mono text-brand-400 mb-4 border-b border-slate-700 pb-2">Frontend</h3>
+                    <ul class="space-y-3 font-bold text-lg">
+                        <li class="flex items-center gap-2"><span class="text-2xl">▲</span> Next.js</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-blue-400">⚛</span> React</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-blue-500">TS</span> TypeScript</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-teal-400">🌊</span> Tailwind CSS</li>
+                    </ul>
+                </div>
+                
+                <!-- Backend -->
+                <div class="glass-panel p-6 rounded-3xl tech-card group hover:-translate-y-2 transition-transform">
+                    <h3 class="font-mono text-emerald-400 mb-4 border-b border-slate-700 pb-2">Backend</h3>
+                    <ul class="space-y-3 font-bold text-lg">
+                        <li class="flex items-center gap-2"><span class="text-2xl text-emerald-500">⚡</span> FastAPI</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-slate-300">🗃️</span> SQLModel</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-yellow-400">🐍</span> Python</li>
+                    </ul>
+                </div>
+
+                <!-- Database / AI -->
+                <div class="glass-panel p-6 rounded-3xl tech-card group hover:-translate-y-2 transition-transform">
+                    <h3 class="font-mono text-violet-400 mb-4 border-b border-slate-700 pb-2">Data & AI</h3>
+                    <ul class="space-y-3 font-bold text-lg">
+                        <li class="flex items-center gap-2"><span class="text-2xl text-blue-400">🐘</span> PostgreSQL</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-red-500">🟥</span> Redis</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-violet-500">✨</span> Gemini</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-slate-300">🦜</span> LangChain</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-emerald-300">▤</span> pgvector</li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="glass-panel p-6 rounded-3xl tech-card group hover:-translate-y-2 transition-transform">
+                    <h3 class="font-mono text-amber-400 mb-4 border-b border-slate-700 pb-2">Services</h3>
+                    <ul class="space-y-3 font-bold text-lg">
+                        <li class="flex items-center gap-2"><span class="text-2xl">🛡️</span> Clerk</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-blue-300">🖼️</span> ImageKit</li>
+                        <li class="flex items-center gap-2"><span class="text-2xl text-blue-600">💳</span> Razorpay</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 14: CHALLENGES & SOLUTIONS
+         ============================================== -->
+    <section class="slide" id="slide-14">
+        <div class="max-w-5xl w-full">
+            <h2 class="text-4xl font-mono font-bold mb-12 text-center"><span class="text-rose-400">Challenges</span> & Solutions</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-500 challenge-card">
+                    <h3 class="text-xl font-bold mb-2">State Synchronization</h3>
+                    <p class="text-slate-400 text-sm mb-4">Keeping user state synced between Clerk (auth provider) and the FastAPI database.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-emerald-500/30 text-emerald-400 text-sm">
+                        <strong>Solution:</strong> Custom dependency `get_current_user` that intercepts the JWT, verifies it via public keys, and upserts the user to PostgreSQL transparently on every request.
+                    </div>
+                </div>
+                
+                <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-rose-500 challenge-card">
+                    <h3 class="text-xl font-bold mb-2">AI Hallucinations</h3>
+                    <p class="text-slate-400 text-sm mb-4">Gemini providing inaccurate answers about Panchayat laws.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-emerald-500/30 text-emerald-400 text-sm">
+                        <strong>Solution:</strong> Implemented RAG pipeline with `pgvector` to strictly inject contextual knowledge chunks into the Gemini prompt.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================================
+         SLIDE 15: FUTURE SCOPE
+         ============================================== -->
+    <section class="slide" id="slide-15">
+        <div class="max-w-4xl w-full text-center">
+            <h2 class="text-4xl md:text-6xl font-mono font-bold mb-8"><span class="gradient-text">Future</span> Scope</h2>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-16 future-pills">
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-brand-300">🔍 OCR Verification</span>
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-blue-300">📱 Mobile App</span>
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-purple-300">🗣️ Voice Assistant</span>
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-amber-300">🌐 Regional Languages</span>
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-emerald-300">🔌 Gov API Integration</span>
+                <span class="glass-panel px-6 py-3 rounded-full font-mono text-rose-300">📶 Offline Sync</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold font-mono tracking-tight glow-text mt-12">
+                <span class="text-white">Thank</span> <span class="text-brand-400">You</span>
+            </h1>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script>
+        // 1. Initialize Lenis Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // 2. Initialize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Update ScrollTrigger on Lenis scroll
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
+        // --- Global Progress Bar ---
+        gsap.to('#progress-bar', {
+            width: '100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 0.3
+            }
+        });
+
+        // --- Parallax Background Blobs ---
+        gsap.to('.parallax-blob', {
+            yPercent: 50,
+            scale: 1.5,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1
+            }
+        });
+        gsap.to('.parallax-blob-2', {
+            yPercent: -50,
+            scale: 1.5,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1
+            }
+        });
+
+        // --- Slide 1: Hero ---
+        gsap.from('.hero-content', {
+            y: 50,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'power3.out'
+        });
+
+        // --- Slide 2: Problem Statement ---
+        gsap.from('.step', {
+            scrollTrigger: {
+                trigger: '#slide-2',
+                start: 'top center',
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'back.out(1.7)'
+        });
+        gsap.from('.step-arrow', {
+            scrollTrigger: {
+                trigger: '#slide-2',
+                start: 'top center',
+            },
+            opacity: 0,
+            scale: 0,
+            duration: 0.5,
+            stagger: 0.2,
+            delay: 0.4
+        });
+
+        // --- Slide 3: Bento Grid ---
+        gsap.from('.bento-item', {
+            scrollTrigger: {
+                trigger: '#slide-3',
+                start: 'top center',
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out'
+        });
+
+        // --- Slide 4: Architecture (Lines drawing) ---
+        // Draw lines between nodes manually using absolute positions
+        function updateConnections() {
+            const svg = document.getElementById('arch-svg');
+            const nodes = ['node-frontend', 'node-clerk', 'node-backend', 'node-pg', 'node-redis', 'node-gemini', 'node-imagekit', 'node-razorpay'];
+            
+            // Generate paths connecting backend to everything else
+            const backend = document.getElementById('node-backend');
+            if(!backend) return;
+            
+            const bRect = backend.getBoundingClientRect();
+            const containerRect = svg.getBoundingClientRect();
+            
+            const bCenter = {
+                x: bRect.left + bRect.width/2 - containerRect.left,
+                y: bRect.top + bRect.height/2 - containerRect.top
+            };
+
+            let svgContent = `<defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#2dd4bf" />
+                    <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+            </defs>`;
+
+            nodes.forEach(nodeId => {
+                if(nodeId === 'node-backend') return;
+                const node = document.getElementById(nodeId);
+                const nRect = node.getBoundingClientRect();
+                const nCenter = {
+                    x: nRect.left + nRect.width/2 - containerRect.left,
+                    y: nRect.top + nRect.height/2 - containerRect.top
+                };
+                
+                // Draw bezier curve
+                svgContent += `<path class="connection" d="M ${bCenter.x} ${bCenter.y} C ${bCenter.x + (nCenter.x - bCenter.x)/2} ${bCenter.y}, ${bCenter.x + (nCenter.x - bCenter.x)/2} ${nCenter.y}, ${nCenter.x} ${nCenter.y}" />`;
+            });
+            
+            svg.innerHTML = svgContent;
+
+            // Animate lines
+            gsap.to('.connection', {
+                scrollTrigger: {
+                    trigger: '#slide-4',
+                    start: 'top center',
+                },
+                strokeDashoffset: 0,
+                duration: 2,
+                ease: 'power2.inOut',
+                stagger: 0.1
+            });
+        }
+        
+        // Wait for layout to settle before drawing lines
+        setTimeout(updateConnections, 500);
+        window.addEventListener('resize', updateConnections);
+        
+        gsap.from('.arch-node', {
+            scrollTrigger: {
+                trigger: '#slide-4',
+                start: 'top center',
+            },
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'back.out(1.5)'
+        });
+
+        // --- Slide 5: Folder Tree ---
+        gsap.from('.folder-line', {
+            scrollTrigger: {
+                trigger: '#slide-5',
+                start: 'top center',
+            },
+            x: -20,
+            opacity: 0,
+            duration: 0.3,
+            stagger: 0.05
+        });
+
+        // --- Slide 6: Request Flow Timeline ---
+        const flowTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '#slide-6',
+                start: 'top 30%',
+                end: 'bottom 20%',
+                scrub: 1, // Tie strictly to scroll
+                pin: true
+            }
+        });
+        
+        flowTl.to('.flow-progress', { scaleY: 1, duration: 5, ease: 'none' }, 0);
+        
+        // Animate each step fading in
+        const steps = document.querySelectorAll('.flow-step');
+        steps.forEach((step, i) => {
+            flowTl.to(step, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out'
+            }, i); // Stagger based on index
+        });
+
+        // --- Slide 7: Auth Flow ---
+        gsap.from('.auth-node', {
+            scrollTrigger: {
+                trigger: '#slide-7',
+                start: 'top center',
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.3,
+            ease: 'power2.out'
+        });
+
+        // --- Slide 8: ER Diagram ---
+        gsap.from('.er-node', {
+            scrollTrigger: {
+                trigger: '#slide-8',
+                start: 'top center',
+            },
+            scale: 0,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'back.out(1.5)'
+        });
+
+        // --- Slide 9: RAG Flow ---
+        gsap.from('.rag-step', {
+            scrollTrigger: {
+                trigger: '#slide-9',
+                start: 'top center',
+            },
+            x: -50,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: 'power2.out'
+        });
+        
+        gsap.to('.spin-slow', {
+            rotation: 360,
+            duration: 20,
+            repeat: -1,
+            ease: 'none'
+        });
+
+        // --- Slide 10: Payment Flow ---
+        gsap.from('.payment-flow > div', {
+            scrollTrigger: {
+                trigger: '#slide-10',
+                start: 'top center',
+            },
+            y: 20,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1
+        });
+
+        // --- Slide 11: Security ---
+        gsap.from('.security-cards > div', {
+            scrollTrigger: {
+                trigger: '#slide-11',
+                start: 'top center',
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+        gsap.from('.security-flow > span', {
+            scrollTrigger: {
+                trigger: '#slide-11',
+                start: 'top center',
+            },
+            opacity: 0,
+            x: -10,
+            duration: 0.4,
+            stagger: 0.1,
+            delay: 0.5
+        });
+
+        // --- Slide 12: Deployment ---
+        gsap.from('.deploy-nodes > div', {
+            scrollTrigger: {
+                trigger: '#slide-12',
+                start: 'top center',
+            },
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'back.out(1.5)'
+        });
+
+        // --- Slide 13: Tech Stack ---
+        gsap.from('.tech-card', {
+            scrollTrigger: {
+                trigger: '#slide-13',
+                start: 'top center',
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out'
+        });
+
+        // --- Slide 14: Challenges ---
+        gsap.from('.challenge-card', {
+            scrollTrigger: {
+                trigger: '#slide-14',
+                start: 'top center',
+            },
+            rotationX: -45,
+            transformOrigin: 'top',
+            opacity: 0,
+            duration: 1,
+            stagger: 0.3,
+            ease: 'power3.out'
+        });
+
+        // --- Slide 15: Future Scope ---
+        gsap.from('.future-pills > span', {
+            scrollTrigger: {
+                trigger: '#slide-15',
+                start: 'top center',
+            },
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'back.out(2)'
+        });
+        
+    </script>
+</body>
+</html>
