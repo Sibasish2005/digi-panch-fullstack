@@ -25,7 +25,7 @@ export default function LatestNews() {
           setNewsList(data);
         }
       } catch (e) {
-        console.error("Failed to load news from backend, falling back to static data", e);
+        console.error("Failed to load news from backend", e);
       }
     }
     loadNews();
@@ -71,12 +71,65 @@ export default function LatestNews() {
         `}</style>
 
         {/* Desktop: Infinite Marquee */}
-        <div className="hidden md:block mt-14 overflow-hidden relative w-full group">
-          <div className="flex w-max animate-marquee gap-8 pb-8 group-hover:[animation-play-state:paused]">
-            {[...newsList, ...newsList, ...newsList, ...newsList].map((news, index) => (
+        {newsList.length > 0 ? (
+          <div className="hidden md:block mt-14 overflow-hidden relative w-full group">
+            <div className="flex w-max animate-marquee gap-8 pb-8 group-hover:[animation-play-state:paused]">
+              {[...newsList, ...newsList, ...newsList, ...newsList].map((news, index) => (
+                <div
+                  key={`${news.id}-${index}`}
+                  className="w-[350px] lg:w-[400px] flex-shrink-0"
+                >
+                  <Card className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-sm h-full flex flex-col bg-white">
+                    {/* Image */}
+                    <div className="relative h-56 w-full overflow-hidden">
+                      <Image
+                        src={news.image_url || news.image}
+                        alt={news.title}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <CardContent className="p-6 flex flex-col flex-grow">
+                      {/* Category + Date */}
+                      <div className="flex items-center justify-between mb-4">
+                        <Badge variant="secondary" className="rounded-sm bg-slate-100 text-[#0f2a5e]">
+                          {news.category}
+                        </Badge>
+                        <span className="text-sm text-gray-500">
+                          {news.published_date || news.date}
+                        </span>
+                      </div>
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-[#0f2a5e] font-inter leading-snug">
+                        {news.title}
+                      </h3>
+                      {/* Description */}
+                      <p className="mt-3 text-gray-600 text-sm leading-relaxed flex-grow">
+                        {news.description}
+                      </p>
+                      {/* Read More */}
+                      <Link href={`/news/${news.id}`} className="mt-5 inline-block text-[#0f2a5e] font-bold hover:text-[#0a1e46] transition-colors uppercase text-sm tracking-wide">
+                        Read More →
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="hidden md:flex mt-14 justify-center text-gray-500 italic">
+            No news and announcements available at the moment.
+          </div>
+        )}
+
+        {/* Mobile: Vertical Stack */}
+        {newsList.length > 0 ? (
+          <div className="md:hidden mt-10 flex flex-col gap-6">
+            {newsList.map((news, index) => (
               <div
-                key={`${news.id}-${index}`}
-                className="w-[350px] lg:w-[400px] flex-shrink-0"
+                key={news.id}
+                className="w-full"
               >
                 <Card className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-sm h-full flex flex-col bg-white">
                   {/* Image */}
@@ -115,52 +168,11 @@ export default function LatestNews() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Mobile: Vertical Stack */}
-        <div className="md:hidden mt-10 flex flex-col gap-6">
-          {newsList.map((news, index) => (
-            <div
-              key={news.id}
-              className="w-full"
-            >
-              <Card className="overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-sm h-full flex flex-col bg-white">
-                {/* Image */}
-                <div className="relative h-56 w-full overflow-hidden">
-                  <Image
-                    src={news.image_url || news.image}
-                    alt={news.title}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <CardContent className="p-6 flex flex-col flex-grow">
-                  {/* Category + Date */}
-                  <div className="flex items-center justify-between mb-4">
-                    <Badge variant="secondary" className="rounded-sm bg-slate-100 text-[#0f2a5e]">
-                      {news.category}
-                    </Badge>
-                    <span className="text-sm text-gray-500">
-                      {news.published_date || news.date}
-                    </span>
-                  </div>
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-[#0f2a5e] font-inter leading-snug">
-                    {news.title}
-                  </h3>
-                  {/* Description */}
-                  <p className="mt-3 text-gray-600 text-sm leading-relaxed flex-grow">
-                    {news.description}
-                  </p>
-                  {/* Read More */}
-                  <Link href={`/news/${news.id}`} className="mt-5 inline-block text-[#0f2a5e] font-bold hover:text-[#0a1e46] transition-colors uppercase text-sm tracking-wide">
-                    Read More →
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
+        ) : (
+          <div className="md:hidden mt-10 flex justify-center text-gray-500 italic">
+            No news and announcements available at the moment.
+          </div>
+        )}
       </div>
     </section>
   );
