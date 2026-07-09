@@ -73,7 +73,7 @@ export default function AdminNewsPage() {
     setLoading(true);
     try {
       const token = await getToken();
-      const data = await fetchAPI('/news', { token });
+      const data = await fetchAPI('/news/', { token });
       setNewsItems(data);
     } catch (e) {
       console.error(e);
@@ -185,7 +185,7 @@ export default function AdminNewsPage() {
           body: JSON.stringify(payload)
         });
       } else {
-        await fetchAPI('/news', {
+        await fetchAPI('/news/', {
           method: 'POST',
           token,
           body: JSON.stringify(payload)

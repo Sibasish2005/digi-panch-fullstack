@@ -20,7 +20,7 @@ export default function LatestNews() {
     async function loadNews() {
       try {
         // Fetch up to 10 latest news items for the horizontal scroll
-        const data = await fetchAPI('/news?active_only=true&limit=10');
+        const data = await fetchAPI('/news/?active_only=true&limit=10');
         if (data) {
           setNewsList(data);
         }

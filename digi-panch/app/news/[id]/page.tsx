@@ -13,7 +13,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ id
     // Note: We use the public endpoint directly, bypassing the need for a token.
     // If there is no specific /news/:id endpoint for public, we can fetch all active and find it.
     // Assuming /news fetches all news (or active only) in the backend.
-    const data = await fetchAPI('/news?active_only=true');
+    const data = await fetchAPI('/news/?active_only=true');
     newsItem = data.find((n: any) => n.id === unwrappedParams.id);
   } catch (error) {
     console.error("Failed to load news article", error);
