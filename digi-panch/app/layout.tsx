@@ -33,6 +33,9 @@ const notoSerif = Noto_Serif({
 export const metadata: Metadata = {
   title: "Digi Panch",
   description: "Modern Village Administration System",
+  icons: {
+    icon: "/images/icon.png",
+  },
 };
 
 export default function RootLayout({
