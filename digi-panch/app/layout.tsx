@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   title: "Digi Panch",
   description: "Modern Village Administration System",
   icons: {
-    icon: "/images/icon.png",
+    icon: "/images/icon.jpg",
   },
 };
 
