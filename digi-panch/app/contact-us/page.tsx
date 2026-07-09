@@ -151,9 +151,10 @@ export default function ContactPage() {
                 <Separator className="my-6" />
 
                 {/* Form */}
-                <form action="https://formsubmit.co/sibasishchakraborty000@gmail.com" method="POST" className="space-y-5">
-                  <input type="hidden" name="_next" value="https://digi-panch-fullstack.vercel.app/contact-us" />
-                  <input type="hidden" name="_captcha" value="false" />
+                <form action="https://api.web3forms.com/submit" method="POST" className="space-y-5">
+                  {/* TODO: Replace YOUR_ACCESS_KEY_HERE with your actual access key from https://web3forms.com/ (It's free) */}
+                  <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+                  <input type="hidden" name="redirect" value="https://digi-panch-fullstack.vercel.app/contact-us" />
 
                   {/* Name */}
                   <div>
