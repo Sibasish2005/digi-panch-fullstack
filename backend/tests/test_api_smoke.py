@@ -144,6 +144,7 @@ def make_payment_payload(status: str = "SUCCESS") -> dict:
         "id": str(PAYMENT_ID),
         "user_id": str(USER_ID),
         "application_id": str(APPLICATION_ID),
+        "booking_id": None,
         "payment_type": "CERTIFICATE_FEE",
         "amount": 100.0,
         "currency": "INR",
@@ -225,6 +226,11 @@ class ApiSmokeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.stack = ExitStack()
+        
+        # Disable rate limiting for tests
+        from app.core.rate_limit import limiter
+        limiter.enabled = False
+
         app.dependency_overrides[get_session] = fake_session
         app.dependency_overrides[get_current_user] = fake_current_user
 
@@ -467,7 +473,7 @@ class ApiSmokeTests(unittest.TestCase):
             (
                 "POST",
                 f"/api/v1/officer/applications/{APPLICATION_ID}/issue-document",
-                None,
+                {"file_url": "https://example.com/certificate.pdf"},
                 None,
                 None,
             ),
