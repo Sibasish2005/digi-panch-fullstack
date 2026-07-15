@@ -22,7 +22,8 @@ export default function ChatbotPage() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [sending, setSending] = useState(false);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const desktopMessagesEndRef = useRef<HTMLDivElement>(null);
+  const mobileMessagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function loadSessions() {
@@ -71,7 +72,8 @@ export default function ChatbotPage() {
 
   const scrollToBottom = () => {
     setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      desktopMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      mobileMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
 
@@ -149,7 +151,8 @@ export default function ChatbotPage() {
 
   return (
     <div className="max-w-4xl mx-auto h-[80vh] flex flex-col">
-      <Card className="flex-1 flex flex-col overflow-hidden">
+      {/* Desktop view */}
+      <Card className="hidden md:flex flex-1 flex-col overflow-hidden">
         <CardHeader className="bg-slate-50 border-b flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="flex items-center gap-2">
             <Bot className="h-6 w-6 text-blue-600" />
@@ -192,7 +195,7 @@ export default function ChatbotPage() {
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
+          <div ref={desktopMessagesEndRef} />
         </CardContent>
         
         <CardFooter className="border-t p-4 bg-white">
@@ -210,6 +213,71 @@ export default function ChatbotPage() {
           </form>
         </CardFooter>
       </Card>
+
+      {/* Mobile view */}
+      <div className="flex md:hidden flex-col flex-1 overflow-hidden bg-slate-50 border border-slate-200 rounded-xl shadow-sm">
+        {/* Mobile Header */}
+        <div className="bg-white border-b px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bot className="h-5 w-5 text-blue-600" />
+            <span className="font-semibold text-slate-800 text-sm">AI Assistant</span>
+          </div>
+          <Button variant="ghost" size="sm" onClick={clearChat} disabled={sending} className="text-gray-500 hover:text-red-600 h-8 px-2">
+            <Trash2 className="h-4 w-4 mr-2" />
+            <span className="text-xs">Clear</span>
+          </Button>
+        </div>
+        
+        {/* Mobile Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+          {messages.length === 0 && (
+            <div className="text-center text-muted-foreground mt-10 text-sm px-4">
+              Ask me anything about Panchayat rules, applications, or your documents.
+            </div>
+          )}
+          {messages.map((msg, idx) => (
+            <div key={msg.id || idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`p-3 px-4 rounded-2xl text-sm max-w-[85%] shadow-sm ${
+                msg.role === 'user' 
+                  ? 'bg-blue-600 text-white rounded-tr-sm' 
+                  : 'bg-white border text-gray-800 rounded-tl-sm'
+              }`}>
+                <span className="whitespace-pre-wrap">{msg.message}</span>
+              </div>
+            </div>
+          ))}
+          {sending && (
+            <div className="flex justify-start">
+              <div className="p-3 px-4 bg-white border text-gray-800 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-2 max-w-[85%]">
+                <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                <span className="text-sm text-slate-500">Thinking...</span>
+              </div>
+            </div>
+          )}
+          <div ref={mobileMessagesEndRef} />
+        </div>
+        
+        {/* Mobile Input (Floating pill style) */}
+        <div className="px-4 pb-4 pt-2 bg-slate-50">
+          <form onSubmit={sendMessage} className="flex items-center w-full gap-2 bg-white border border-slate-200 rounded-full p-1 pl-4 pr-1 shadow-sm focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all">
+            <input 
+              placeholder="Type your question..." 
+              value={inputMsg} 
+              onChange={e => setInputMsg(e.target.value)}
+              disabled={sending}
+              className="flex-1 bg-transparent border-0 outline-none focus:outline-none focus:ring-0 text-sm py-2 px-1 text-slate-800 placeholder-slate-400"
+            />
+            <Button 
+              type="submit" 
+              size="icon"
+              disabled={!inputMsg.trim() || sending}
+              className="rounded-full h-8 w-8 shrink-0 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center disabled:bg-slate-100 disabled:text-slate-400"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
