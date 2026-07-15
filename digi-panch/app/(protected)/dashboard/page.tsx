@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { 
   FileText, CheckCircle, Clock, Bell, Home, Sprout, 
   PiggyBank, FolderOpen, FileDown, PlusCircle, ChevronRight,
-  ArrowRight
+  ArrowRight, LayoutGrid
 } from "lucide-react";
 import FloatingChatbotButton from "../chatbot/chatbot";
 
@@ -29,52 +29,43 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Section */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:gap-6 xl:grid-cols-4">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
+          {/* Card 1: Total Applications */}
           <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-200 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">Total Applications</p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">12</h2>
+            <div className="flex items-start justify-between">
+              <div style={{ fontFamily: "var(--font-noto-serif)" }} className="text-base font-semibold leading-tight text-slate-800">
+                Total<br />Applications
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
-                <FileText className="h-6 w-6" />
-              </div>
+              <LayoutGrid className="h-6 w-6 text-slate-400 transition-colors group-hover:text-blue-500" />
+            </div>
+            <div style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-5xl font-black text-[#0f2a5e]">
+              5
             </div>
           </div>
 
-          <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-green-200 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">Approved Certificates</p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">7</h2>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600 transition-colors group-hover:bg-green-100">
-                <CheckCircle className="h-6 w-6" />
-              </div>
-            </div>
-          </div>
-
+          {/* Card 2: Pending Status */}
           <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-orange-200 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">Pending Requests</p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">3</h2>
+            <div className="flex items-start justify-between">
+              <div style={{ fontFamily: "var(--font-noto-serif)" }} className="text-base font-semibold leading-tight text-slate-800">
+                Pending<br />Status
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition-colors group-hover:bg-orange-100">
-                <Clock className="h-6 w-6" />
-              </div>
+              <FileText className="h-6 w-6 text-slate-400 transition-colors group-hover:text-orange-500" />
+            </div>
+            <div style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-5xl font-black text-[#0f2a5e]">
+              2
             </div>
           </div>
 
-          <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-purple-200 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">Notifications</p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">5</h2>
+          {/* Card 3: Approved Documents */}
+          <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-green-200 hover:shadow-md">
+            <div className="flex items-start justify-between">
+              <div style={{ fontFamily: "var(--font-noto-serif)" }} className="text-base font-semibold leading-tight text-slate-800">
+                Approved<br />Documents
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-100">
-                <Bell className="h-6 w-6" />
-              </div>
+              <CheckCircle className="h-6 w-6 text-slate-400 transition-colors group-hover:text-green-500" />
+            </div>
+            <div style={{ fontFamily: "var(--font-noto-serif)" }} className="mt-8 text-5xl font-black text-[#0f2a5e]">
+              3
             </div>
           </div>
         </div>
