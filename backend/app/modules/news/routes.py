@@ -9,12 +9,12 @@ from app.modules.news import schemas, service
 
 router = APIRouter()
 
-@router.get("", response_model=List[schemas.NewsItemRead])
+@router.get("/", response_model=List[schemas.NewsItemRead])
 def get_news_items(active_only: bool = False, limit: Optional[int] = None, db: Session = Depends(get_session)):
     """Get all news items. Public endpoint."""
     return service.get_news(db, active_only=active_only, limit=limit)
 
-@router.post("", response_model=schemas.NewsItemRead, dependencies=[Depends(require_admin)])
+@router.post("/", response_model=schemas.NewsItemRead, dependencies=[Depends(require_admin)])
 def create_news_item(data: schemas.NewsItemCreate, db: Session = Depends(get_session)):
     """Create a new news item (Admin only)."""
     return service.create_news_item(db, data)
