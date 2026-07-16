@@ -28,7 +28,7 @@ class AmenityRead(AmenityBase):
     created_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AmenityBookingBase(BaseModel):
@@ -57,10 +57,10 @@ class AmenityBookingRead(AmenityBookingBase):
     created_at: datetime
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AmenityBookingWithAmenity(AmenityBookingRead):
     amenity: AmenityRead
     
     class Config:
-        orm_mode = True
+        from_attributes = True
