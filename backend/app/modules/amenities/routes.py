@@ -11,7 +11,7 @@ from app.modules.amenities import schemas, service
 
 router = APIRouter()
 
-@router.get("/", response_model=List[schemas.AmenityRead])
+@router.get("", response_model=List[schemas.AmenityRead])
 def get_amenities(active_only: bool = False, db: Session = Depends(get_session)):
     """Get all amenities."""
     return service.get_all_amenities(db, active_only=active_only)
@@ -21,7 +21,7 @@ def get_amenity(slug: str, db: Session = Depends(get_session)):
     """Get amenity by slug."""
     return service.get_amenity_by_slug(db, slug)
 
-@router.post("/", response_model=schemas.AmenityRead, dependencies=[Depends(require_admin)])
+@router.post("", response_model=schemas.AmenityRead, dependencies=[Depends(require_admin)])
 def create_amenity(data: schemas.AmenityCreate, db: Session = Depends(get_session)):
     """Create a new amenity (Admin only)."""
     return service.create_amenity(db, data)
